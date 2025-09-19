@@ -1,18 +1,26 @@
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { onLogin } = useAuth();
   const router = useRouter();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor ingresa email y contraseña');
+      Alert.alert("Error", "Por favor ingresa email y contraseña");
       return;
     }
 
@@ -20,25 +28,25 @@ export default function Login() {
     try {
       const result = await onLogin?.(email, password);
       if (result?.error) {
-        Alert.alert('Error', result.msg || 'Error al iniciar sesión');
+        Alert.alert("Error", result.msg || "Error al iniciar sesión");
       } else {
-        router.replace('./welcome' as any);
+        router.replace("./welcome" as any);
       }
     } catch {
-      Alert.alert('Error', 'Error de conexión');
+      Alert.alert("Error", "Error de conexión");
     }
     setLoading(false);
   };
 
   const navigateToRegister = () => {
-    router.push('./register' as any);
+    router.push("./register" as any);
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Iniciar Sesión</Text>
-        
+
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -48,7 +56,7 @@ export default function Login() {
           autoCapitalize="none"
           autoCorrect={false}
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -56,9 +64,9 @@ export default function Login() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]} 
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
           onPress={handleLogin}
           disabled={loading}
         >
@@ -68,8 +76,11 @@ export default function Login() {
             <Text style={styles.buttonText}>Iniciar Sesión</Text>
           )}
         </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.linkButton} onPress={navigateToRegister}>
+
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={navigateToRegister}
+        >
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
@@ -80,15 +91,15 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
     paddingHorizontal: 20,
   },
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -99,40 +110,40 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 30,
-    color: '#333',
+    color: "#333",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 15,
     borderRadius: 8,
     marginBottom: 15,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   linkButton: {
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   linkText: {
-    color: '#007bff',
+    color: "#007bff",
     fontSize: 16,
   },
 });

@@ -1,31 +1,40 @@
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
-  const [username, setUsername] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { onRegister } = useAuth();
   const router = useRouter();
 
   const handleRegister = async () => {
     if (!username || !nombre || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
+      Alert.alert("Error", "Por favor completa todos los campos");
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Las contraseñas no coinciden');
+      Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
 
     if (password.length < 6) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres');
+      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
       return;
     }
 
@@ -33,21 +42,21 @@ export default function Register() {
     try {
       const result = await onRegister?.(username, nombre, email, password);
       if (result?.error) {
-        Alert.alert('Error', result.msg || 'Error al registrarse');
+        Alert.alert("Error", result.msg || "Error al registrarse");
       } else {
         Alert.alert(
-          'Registro exitoso',
-          'Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.',
+          "Registro exitoso",
+          "Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.",
           [
             {
-              text: 'OK',
-              onPress: () => router.replace('./login' as any),
+              text: "OK",
+              onPress: () => router.replace("./login" as any),
             },
-          ]
+          ],
         );
       }
     } catch {
-      Alert.alert('Error', 'Error de conexión');
+      Alert.alert("Error", "Error de conexión");
     }
     setLoading(false);
   };
@@ -60,7 +69,7 @@ export default function Register() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.form}>
         <Text style={styles.title}>Registro</Text>
-        
+
         <TextInput
           style={styles.input}
           placeholder="Nombre de usuario"
@@ -69,7 +78,7 @@ export default function Register() {
           autoCapitalize="none"
           autoCorrect={false}
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Nombre completo"
@@ -77,7 +86,7 @@ export default function Register() {
           onChangeText={setNombre}
           autoCapitalize="words"
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -87,7 +96,7 @@ export default function Register() {
           autoCapitalize="none"
           autoCorrect={false}
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -95,7 +104,7 @@ export default function Register() {
           onChangeText={setPassword}
           secureTextEntry
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Confirmar contraseña"
@@ -103,9 +112,9 @@ export default function Register() {
           onChangeText={setConfirmPassword}
           secureTextEntry
         />
-        
-        <TouchableOpacity 
-          style={[styles.button, loading && styles.buttonDisabled]} 
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
           onPress={handleRegister}
           disabled={loading}
         >
@@ -115,7 +124,7 @@ export default function Register() {
             <Text style={styles.buttonText}>Registrarse</Text>
           )}
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
           <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia sesión</Text>
         </TouchableOpacity>
@@ -127,16 +136,16 @@ export default function Register() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
     paddingHorizontal: 20,
     paddingVertical: 40,
   },
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -147,40 +156,40 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 30,
-    color: '#333',
+    color: "#333",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     padding: 15,
     borderRadius: 8,
     marginBottom: 15,
     fontSize: 16,
   },
   button: {
-    backgroundColor: '#28a745',
+    backgroundColor: "#28a745",
     padding: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   linkButton: {
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   linkText: {
-    color: '#007bff',
+    color: "#007bff",
     fontSize: 16,
   },
 });

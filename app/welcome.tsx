@@ -1,7 +1,7 @@
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from "expo-router";
+import React from "react";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 export default function Welcome() {
   const { onLogout, authState } = useAuth();
@@ -9,22 +9,22 @@ export default function Welcome() {
 
   const handleLogout = async () => {
     Alert.alert(
-      'Cerrar sesión',
-      '¿Estás seguro de que quieres cerrar sesión?',
+      "Cerrar sesión",
+      "¿Estás seguro de que quieres cerrar sesión?",
       [
         {
-          text: 'Cancelar',
-          style: 'cancel',
+          text: "Cancelar",
+          style: "cancel",
         },
         {
-          text: 'Cerrar sesión',
-          style: 'destructive',
+          text: "Cerrar sesión",
+          style: "destructive",
           onPress: async () => {
             await onLogout?.();
-            router.replace('./' as any);
+            router.replace("./" as any);
           },
         },
-      ]
+      ],
     );
   };
 
@@ -33,23 +33,27 @@ export default function Welcome() {
       <View style={styles.welcomeCard}>
         <Text style={styles.title}>¡Bienvenido!</Text>
         <Text style={styles.subtitle}>Has iniciado sesión exitosamente</Text>
-        
+
         {authState?.token && (
           <View style={styles.tokenInfo}>
             <Text style={styles.tokenLabel}>Token de autenticación:</Text>
-            <Text style={styles.tokenText} numberOfLines={3} ellipsizeMode="middle">
+            <Text
+              style={styles.tokenText}
+              numberOfLines={3}
+              ellipsizeMode="middle"
+            >
               {authState.token}
             </Text>
           </View>
         )}
-        
+
         <View style={styles.statusContainer}>
           <Text style={styles.statusLabel}>Estado de autenticación:</Text>
           <View style={[styles.statusIndicator, styles.authenticated]}>
             <Text style={styles.statusText}>Autenticado ✓</Text>
           </View>
         </View>
-        
+
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
@@ -61,15 +65,15 @@ export default function Welcome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
     paddingHorizontal: 20,
   },
   welcomeCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 30,
     borderRadius: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -80,34 +84,34 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
-    color: '#333',
+    color: "#333",
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 30,
-    color: '#666',
+    color: "#666",
   },
   tokenInfo: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
     padding: 15,
     borderRadius: 8,
     marginBottom: 20,
   },
   tokenLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 8,
-    color: '#495057',
+    color: "#495057",
   },
   tokenText: {
     fontSize: 12,
-    fontFamily: 'monospace',
-    color: '#6c757d',
-    backgroundColor: '#e9ecef',
+    fontFamily: "monospace",
+    color: "#6c757d",
+    backgroundColor: "#e9ecef",
     padding: 8,
     borderRadius: 4,
   },
@@ -116,34 +120,34 @@ const styles = StyleSheet.create({
   },
   statusLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 10,
-    color: '#333',
+    color: "#333",
   },
   statusIndicator: {
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   authenticated: {
-    backgroundColor: '#d4edda',
-    borderColor: '#c3e6cb',
+    backgroundColor: "#d4edda",
+    borderColor: "#c3e6cb",
     borderWidth: 1,
   },
   statusText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#155724',
+    fontWeight: "600",
+    color: "#155724",
   },
   logoutButton: {
-    backgroundColor: '#dc3545',
+    backgroundColor: "#dc3545",
     padding: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   logoutButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

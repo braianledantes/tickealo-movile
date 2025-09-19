@@ -1,7 +1,7 @@
-import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 export default function Index() {
   const { authState } = useAuth();
@@ -11,9 +11,9 @@ export default function Index() {
     // Esperar a que se cargue el estado de autenticación
     if (authState && authState.authenticated !== null) {
       if (authState.authenticated) {
-        router.replace('./welcome' as any);
+        router.replace("./welcome" as any);
       } else {
-        router.replace('./login' as any);
+        router.replace("./login" as any);
       }
     }
   }, [authState, router]);
@@ -30,13 +30,13 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
   },
   loadingText: {
     marginTop: 20,
     fontSize: 16,
-    color: '#666',
+    color: "#666",
   },
 });
