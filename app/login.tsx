@@ -1,15 +1,15 @@
+import { Button } from "@/components/Button";
+import { EmailInput } from "@/components/EmailInput";
+import { PasswordInput } from "@/components/PasswordInput";
+import { Title } from "@/components/Title";
+
+import { Footer } from "@/components/Footer";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
+
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -44,46 +44,21 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      <View></View>
       <View style={styles.form}>
-        <Text style={styles.title}>Iniciar Sesión</Text>
+        <Title text="Hola!" />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+        <EmailInput value={email} onChangeText={setEmail} />
+        <PasswordInput value={password} onChangeText={setPassword} />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <Button onPress={handleLogin} disabled={loading} title="Iniciar Sesión" />
 
-        <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleLogin}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.linkButton}
-          onPress={navigateToRegister}
-        >
+        <TouchableOpacity style={styles.linkButton} onPress={navigateToRegister}>
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
+
+      <Footer />
     </View>
   );
 }
@@ -91,59 +66,38 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    justifyContent: "center",
-    paddingHorizontal: 20,
+    gap: 16,
+    backgroundColor: "#00000B",
+    justifyContent: "space-between",
   },
   form: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 30,
-    color: "#333",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#ccc",
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    gap: 16,
+    paddingHorizontal: 40,
   },
   linkButton: {
-    marginTop: 20,
+    marginTop: 8,
     alignItems: "center",
   },
   linkText: {
-    color: "#007bff",
+    color: "#AEDFEF",
     fontSize: 16,
   },
+  footer: {
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  logotipo: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    gap: 8,
+  },
+  logotipo_text: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+
 });
