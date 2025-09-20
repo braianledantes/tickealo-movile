@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 16,
-    backgroundColor: "#00000B",
+    backgroundColor: "#05081b",
     justifyContent: "space-between",
   },
   form: {

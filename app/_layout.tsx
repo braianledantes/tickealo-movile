@@ -6,7 +6,7 @@ import { AuthProvider } from "../context/AuthContext";
 export default function RootLayout() {
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#00000B" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
       <StatusBar style="light" />
       <AuthProvider>
         <Stack screenOptions={{ headerShown: false }} />
