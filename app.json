@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Tickealo-Movile",
-    "slug": "Tickealo-Movile",
+    "name": "Tickealo",
+    "slug": "tickealo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "tickealomovile",
+    "scheme": "tickealo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Tickealo-Movile"
+      "bundleIdentifier": "com.tickealo.tickealo"
     },
     "android": {
       "adaptiveIcon": {
