@@ -1,15 +1,12 @@
 import { Button } from "@/components/Button";
 import { EmailInput } from "@/components/EmailInput";
+import { Footer } from "@/components/Footer";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Title } from "@/components/Title";
-
-import { Footer } from "@/components/Footer";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
-
-
 
 export default function Login() {
   const [email, setEmail] = useState("");
