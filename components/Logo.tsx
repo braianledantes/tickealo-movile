@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 const icon = require("../assets/images/tickealo.svg");
 
-export function Footer() {
+export function Logo() {
   return (
     <View style={styles.container}>
       <View style={styles.logotipo}>

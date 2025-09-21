@@ -1,6 +1,6 @@
 import { Button } from "@/components/Button";
 import { EmailInput } from "@/components/EmailInput";
-import { Footer } from "@/components/Footer";
+import { Logo } from "@/components/Logo";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Title } from "@/components/Title";
 import { useRouter } from "expo-router";
@@ -62,7 +62,7 @@ export default function Login() {
         </TouchableOpacity>
       </View>
 
-      <Footer />
+      <Logo />
     </View>
   );
 }
