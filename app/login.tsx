@@ -48,9 +48,16 @@ export default function Login() {
         <EmailInput value={email} onChangeText={setEmail} />
         <PasswordInput value={password} onChangeText={setPassword} />
 
-        <Button onPress={handleLogin} disabled={loading} title="Iniciar Sesión" />
+        <Button
+          onPress={handleLogin}
+          disabled={loading}
+          title="Iniciar Sesión"
+        />
 
-        <TouchableOpacity style={styles.linkButton} onPress={navigateToRegister}>
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={navigateToRegister}
+        >
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
@@ -96,5 +103,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 8,
   },
-
 });

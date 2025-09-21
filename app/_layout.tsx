@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthProvider } from "../context/AuthContext";
 
 export default function RootLayout() {
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
       <StatusBar style="light" />

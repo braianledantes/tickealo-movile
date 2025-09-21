@@ -18,7 +18,12 @@ export function EmailInput({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused]}>
-      <MaterialIcons style={styles.icon} name="alternate-email" size={24} color="black" />
+      <MaterialIcons
+        style={styles.icon}
+        name="alternate-email"
+        size={24}
+        color="black"
+      />
       <TextInput
         keyboardType="email-address"
         style={[styles.input]}

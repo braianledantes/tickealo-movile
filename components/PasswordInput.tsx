@@ -24,7 +24,12 @@ export function PasswordInput({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused, style]}>
-      <Ionicons style={styles.icon} name="key-outline" size={24} color="black" />
+      <Ionicons
+        style={styles.icon}
+        name="key-outline"
+        size={24}
+        color="black"
+      />
       <TextInput
         style={[styles.input]}
         value={value}

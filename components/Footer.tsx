@@ -12,7 +12,7 @@ export function Footer() {
           source={icon}
           style={{ width: 30, height: 30 }}
           contentFit="contain"
-          />
+        />
       </View>
     </View>
   );
