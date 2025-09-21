@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyIcon } from "./Icons";
 
 interface PasswordInputProps {
   value: string;
@@ -24,12 +25,7 @@ export function PasswordInput({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused, style]}>
-      <Ionicons
-        style={styles.icon}
-        name="key-outline"
-        size={24}
-        color="black"
-      />
+      <KeyIcon style={styles.icon} />
       <TextInput
         style={[styles.input]}
         value={value}

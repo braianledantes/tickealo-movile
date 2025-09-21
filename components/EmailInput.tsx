@@ -1,6 +1,6 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
+import { EmailIcon } from "./Icons";
 
 interface EmailInputProps {
   value?: string;
@@ -18,12 +18,7 @@ export function EmailInput({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused]}>
-      <MaterialIcons
-        style={styles.icon}
-        name="alternate-email"
-        size={24}
-        color="black"
-      />
+      <EmailIcon style={styles.icon} />
       <TextInput
         keyboardType="email-address"
         style={[styles.input]}
