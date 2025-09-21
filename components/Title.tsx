@@ -2,10 +2,11 @@ import { StyleSheet, Text } from "react-native";
 
 export type TitleProps = {
   text: string;
+  style?: object;
 };
 
-export function Title({ text }: TitleProps) {
-  return <Text style={styles.title}>{text}</Text>;
+export function Title({ text, style }: TitleProps) {
+  return <Text style={[styles.title, style]}>{text}</Text>;
 }
 
 const styles = StyleSheet.create({

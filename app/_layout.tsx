@@ -8,7 +8,11 @@ export default function RootLayout() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
       <StatusBar style="light" />
       <AuthProvider>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        />
       </AuthProvider>
     </SafeAreaView>
   );

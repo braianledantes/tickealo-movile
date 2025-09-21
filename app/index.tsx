@@ -1,6 +1,7 @@
+import { Screen } from "@/components/Screen";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function Index() {
@@ -20,10 +21,10 @@ export default function Index() {
 
   // Mostrar pantalla de carga mientras se verifica la autenticación
   return (
-    <View style={styles.container}>
+    <Screen style={styles.container}>
       <ActivityIndicator size="large" color="#007bff" />
       <Text style={styles.loadingText}>Cargando...</Text>
-    </View>
+    </Screen>
   );
 }
 

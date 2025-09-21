@@ -10,11 +10,19 @@ import {
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
-  onRegister?: (
+  onRegisterValidador?: (
     username: string,
     nombre: string,
     email: string,
     password: string,
+  ) => Promise<any>;
+  onRegisterCliente?: (
+    username: string,
+    nombre: string,
+    apellido: string,
+    email: string,
+    password: string,
+    telefono: string,
   ) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
@@ -47,19 +55,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loadToken();
   }, []);
 
-  const register = async (
+  const saveToken = async (access_token: string) => {
+    setAuthState({ token: access_token, authenticated: true });
+    axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+    await SecureStore.setItemAsync(TOKEN_KEY, access_token);
+  };
+
+  const registerValidador = async (
     username: string,
     nombre: string,
     email: string,
     password: string,
   ) => {
     try {
-      return await axios.post(`${API_URL}/auth/register-validador`, {
+      const result = await axios.post(`${API_URL}/auth/register-validador`, {
         username,
         nombre,
         email,
         password,
       });
+
+      await saveToken(result.data.access_token);
+
+      return result;
+    } catch (e) {
+      return { error: true, msg: (e as any).response.data.msg };
+    }
+  };
+
+  const registerCliente = async (
+    username: string,
+    nombre: string,
+    apellido: string,
+    email: string,
+    password: string,
+    telefono: string,
+  ) => {
+    try {
+      const result = await axios.post(`${API_URL}/auth/register-cliente`, {
+        username,
+        nombre,
+        apellido,
+        email,
+        password,
+        telefono,
+      });
+
+      await saveToken(result.data.access_token);
+
+      return result;
     } catch (e) {
       return { error: true, msg: (e as any).response.data.msg };
     }
@@ -72,11 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
       });
 
-      const access_token = result.data.access_token;
-      setAuthState({ token: access_token, authenticated: true });
-      axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-
-      await SecureStore.setItemAsync(TOKEN_KEY, access_token);
+      await saveToken(result.data.access_token);
 
       return result;
     } catch (e) {
@@ -91,7 +131,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const value = {
-    onRegister: register,
+    onRegisterValidador: registerValidador,
+    onRegisterCliente: registerCliente,
     onLogin: login,
     onLogout: logout,
     authState,

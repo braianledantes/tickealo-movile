@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import { EmailInput } from "@/components/EmailInput";
 import { Logo } from "@/components/Logo";
 import { PasswordInput } from "@/components/PasswordInput";
+import { Screen } from "@/components/Screen";
 import { Title } from "@/components/Title";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -35,12 +36,16 @@ export default function Login() {
     setLoading(false);
   };
 
-  const navigateToRegister = () => {
-    router.push("./register" as any);
+  const navigateToRegisterCliente = () => {
+    router.push("./register-cliente" as any);
+  };
+
+  const navigateToRegisterValidador = () => {
+    router.push("./register-validador" as any);
   };
 
   return (
-    <View style={styles.container}>
+    <Screen style={styles.container}>
       <View></View>
       <View style={styles.form}>
         <Title text="Hola!" />
@@ -56,14 +61,21 @@ export default function Login() {
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={navigateToRegister}
+          onPress={navigateToRegisterCliente}
         >
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.linkButton}
+          onPress={navigateToRegisterValidador}
+        >
+          <Text style={styles.linkText}>Regístrate como Validador</Text>
         </TouchableOpacity>
       </View>
 
       <Logo />
-    </View>
+    </Screen>
   );
 }
 
@@ -71,7 +83,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 16,
-    backgroundColor: "#05081b",
     justifyContent: "space-between",
   },
   form: {
