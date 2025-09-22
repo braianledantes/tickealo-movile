@@ -4,76 +4,42 @@ import { Logo } from "@/components/Logo";
 import { NameInput } from "@/components/NameInput";
 import { PasswordInput } from "@/components/PasswordInput";
 import { PhoneInput } from "@/components/PhoneInput";
-import { Screen } from "@/components/Screen";
 import { Title } from "@/components/Title";
 import { UsernameInput } from "@/components/UsernameInput";
-import { useRouter } from "expo-router";
+import { Screen } from "@/screens/main";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterCliente() {
+  const { registerCliente } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [username, setUsername] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { onRegisterCliente } = useAuth();
-  const router = useRouter();
 
   const handleRegister = async () => {
-    if (
-      !username ||
-      !nombre ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !apellido ||
-      !telefono
-    ) {
-      Alert.alert("Error", "Por favor completa todos los campos");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden");
-      return;
-    }
-
-    if (password.length < 6) {
-      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
-      return;
-    }
-
-    setLoading(true);
     try {
-      const result = await onRegisterCliente?.(
+      setIsLoading(true);
+      await registerCliente({
         username,
-        nombre,
-        apellido,
         email,
         password,
+        nombre,
+        apellido,
         telefono,
-      );
-      if (result?.error) {
-        Alert.alert("Error", result.msg || "Error al registrarse");
-      } else {
-        router.replace("./welcome" as any);
-      }
+      });
+      router.replace("/");
     } catch {
-      Alert.alert("Error", "Error de conexión");
+      Alert.alert("Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-    setLoading(false);
   };
 
   const navigateToLogin = () => {
@@ -81,89 +47,56 @@ export default function RegisterCliente() {
   };
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.form}>
-          <Title text="Registrar Usuario" style={styles.title} />
+    <Screen style={styles.container}>
+      <View></View>
+      <View style={styles.form}>
+        <Title text="Regístrate como cliente" />
 
-          <NameInput
-            placeholder="Nombre"
-            value={nombre}
-            onChangeText={setNombre}
-          />
+        <UsernameInput value={username} onChangeText={setUsername} />
+        <NameInput
+          value={nombre}
+          onChangeText={setNombre}
+          placeholder="Nombre"
+        />
+        <NameInput
+          value={apellido}
+          onChangeText={setApellido}
+          placeholder="Apellido"
+        />
+        <PhoneInput value={telefono} onChangeText={setTelefono} />
 
-          <NameInput
-            placeholder="Apellido"
-            value={apellido}
-            onChangeText={setApellido}
-          />
+        <EmailInput value={email} onChangeText={setEmail} />
+        <PasswordInput value={password} onChangeText={setPassword} />
 
-          <PhoneInput
-            placeholder="Teléfono"
-            value={telefono}
-            onChangeText={setTelefono}
-          />
+        <Button
+          onPress={handleRegister}
+          disabled={isLoading}
+          title="Crear Cuenta"
+        />
 
-          <UsernameInput
-            placeholder="Nombre de usuario"
-            value={username}
-            onChangeText={setUsername}
-          />
-
-          <EmailInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-          />
-
-          <PasswordInput
-            placeholder="Contraseña"
-            value={password}
-            onChangeText={setPassword}
-          />
-
-          <PasswordInput
-            placeholder="Confirmar contraseña"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-
-          <Button
-            onPress={handleRegister}
-            disabled={loading}
-            title="Registrarse"
-          />
-
-          <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
-            <Text style={styles.linkText}>
-              ¿Ya tienes cuenta? Inicia sesión
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Logo />
-      </ScrollView>
+        <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
+          <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia Sesión</Text>
+        </TouchableOpacity>
+      </View>
+      <Logo />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     justifyContent: "space-between",
+    padding: 20,
   },
   form: {
-    paddingHorizontal: 40,
-    gap: 16,
-  },
-  title: {
-    marginBottom: 16,
+    gap: 10,
   },
   linkButton: {
-    marginTop: 20,
-    alignItems: "center",
+    marginTop: 10,
+    alignSelf: "center",
   },
   linkText: {
-    color: "#007bff",
-    fontSize: 16,
+    color: "#1E90FF",
   },
 });

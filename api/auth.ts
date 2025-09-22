@@ -17,3 +17,8 @@ export async function registerCliente(dto: RegisterClienteDto) {
   const response = await api.post("/auth/register-cliente", dto);
   return response;
 }
+
+export async function admin() {
+  const response = await api.get("/auth/admin");
+  return response;
+}
