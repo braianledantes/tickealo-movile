@@ -1,19 +1,31 @@
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AuthProvider } from "../context/AuthContext";
 
-export default function RootLayout() {
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import { SplashScreenController } from "../screens/splash";
+
+export default function Root() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
-      <StatusBar style="light" />
-      <AuthProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-          }}
-        />
-      </AuthProvider>
-    </SafeAreaView>
+    <AuthProvider>
+      <SplashScreenController />
+      <RootNavigator />
+    </AuthProvider>
+  );
+}
+
+function RootNavigator() {
+  const { accessToken } = useAuth();
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={!!accessToken}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!accessToken}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register-cliente" />
+        <Stack.Screen name="register-validador" />
+      </Stack.Protected>
+    </Stack>
   );
 }

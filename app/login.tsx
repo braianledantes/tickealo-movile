@@ -2,46 +2,38 @@ import { Button } from "@/components/Button";
 import { EmailInput } from "@/components/EmailInput";
 import { Logo } from "@/components/Logo";
 import { PasswordInput } from "@/components/PasswordInput";
-import { Screen } from "@/components/Screen";
 import { Title } from "@/components/Title";
-import { useRouter } from "expo-router";
+import { Screen } from "@/screens/main";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { onLogin } = useAuth();
-  const router = useRouter();
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Por favor ingresa email y contraseña");
-      return;
-    }
-
-    setLoading(true);
     try {
-      const result = await onLogin?.(email, password);
-      if (result?.error) {
-        Alert.alert("Error", result.msg || "Error al iniciar sesión");
-      } else {
-        router.replace("./welcome" as any);
-      }
+      setIsLoading(true);
+      await login({ email, password });
+      router.replace("/");
     } catch {
-      Alert.alert("Error", "Error de conexión");
+      Alert.alert("Error", "Failed to sign in. Please check your credentials.");
+    } finally {
+      setIsLoading(false);
     }
-    setLoading(false);
   };
 
   const navigateToRegisterCliente = () => {
-    router.push("./register-cliente" as any);
+    router.push("/register-cliente");
   };
 
   const navigateToRegisterValidador = () => {
-    router.push("./register-validador" as any);
+    router.push("/register-validador");
   };
 
   return (
@@ -55,7 +47,7 @@ export default function Login() {
 
         <Button
           onPress={handleLogin}
-          disabled={loading}
+          disabled={isLoading}
           title="Iniciar Sesión"
         />
 
@@ -100,18 +92,5 @@ const styles = StyleSheet.create({
   footer: {
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-  logotipo: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    gap: 8,
-  },
-  logotipo_text: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 8,
   },
 });

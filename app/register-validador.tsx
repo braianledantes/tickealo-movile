@@ -3,11 +3,12 @@ import { EmailInput } from "@/components/EmailInput";
 import { Logo } from "@/components/Logo";
 import { NameInput } from "@/components/NameInput";
 import { PasswordInput } from "@/components/PasswordInput";
-import { Screen } from "@/components/Screen";
 import { Title } from "@/components/Title";
 import { UsernameInput } from "@/components/UsernameInput";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { Screen } from "@/screens/main";
+import { router } from "expo-router";
+import { useState } from "react";
 import {
   Alert,
   ScrollView,
@@ -16,7 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useAuth } from "../context/AuthContext";
 
 export default function RegisterValidador() {
   const [username, setUsername] = useState("");
@@ -25,42 +25,24 @@ export default function RegisterValidador() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { onRegisterValidador } = useAuth();
-  const router = useRouter();
+
+  const { registerValidador } = useAuth();
 
   const handleRegister = async () => {
-    if (!username || !nombre || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Por favor completa todos los campos");
-      return;
-    }
-
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden");
-      return;
-    }
-
-    if (password.length < 6) {
-      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
+      alert("Passwords do not match");
       return;
     }
 
     setLoading(true);
     try {
-      const result = await onRegisterValidador?.(
-        username,
-        nombre,
-        email,
-        password,
-      );
-      if (result?.error) {
-        Alert.alert("Error", result.msg || "Error al registrarse");
-      } else {
-        router.replace("./welcome" as any);
-      }
+      await registerValidador({ username, nombre, email, password });
+      // Navigate to home or login screen after successful registration
     } catch {
-      Alert.alert("Error", "Error de conexión");
+      Alert.alert("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const navigateToLogin = () => {
@@ -72,7 +54,7 @@ export default function RegisterValidador() {
       <ScrollView contentContainerStyle={styles.container}>
         <View />
         <View style={styles.form}>
-          <Title text="Registrar Validador" style={styles.title} />
+          <Title text="Registrarse como validador" style={styles.title} />
 
           <UsernameInput
             placeholder="Nombre de usuario"

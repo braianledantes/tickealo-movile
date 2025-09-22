@@ -1,142 +1,79 @@
-import axios from "axios";
-import * as SecureStore from "expo-secure-store";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, use, type PropsWithChildren } from "react";
 
-interface AuthProps {
-  authState?: { token: string | null; authenticated: boolean | null };
-  onRegisterValidador?: (
-    username: string,
-    nombre: string,
-    email: string,
-    password: string,
-  ) => Promise<any>;
-  onRegisterCliente?: (
-    username: string,
-    nombre: string,
-    apellido: string,
-    email: string,
-    password: string,
-    telefono: string,
-  ) => Promise<any>;
-  onLogin?: (email: string, password: string) => Promise<any>;
-  onLogout?: () => Promise<any>;
+import { login, registerCliente, registerValidador } from "@/api/auth";
+import { LoginDto } from "@/api/dto/login.dto";
+import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
+import { RegisterValidadorDto } from "@/api/dto/register-validador.dto";
+import { useStorageState } from "../hooks/useStorageState";
+
+import * as api from "@/api/axiosConfig";
+
+const AuthContext = createContext<{
+  login: (dto: LoginDto) => void;
+  registerCliente: (dto: RegisterClienteDto) => void;
+  registerValidador: (dto: RegisterValidadorDto) => void;
+  logout: () => void;
+  accessToken?: string | null;
+  isLoading: boolean;
+}>({
+  login: () => null,
+  registerCliente: () => null,
+  registerValidador: () => null,
+  logout: () => null,
+  accessToken: null,
+  isLoading: false,
+});
+
+// Use this hook to access the user info.
+export function useAuth() {
+  const value = use(AuthContext);
+  if (!value) {
+    throw new Error("useSession must be wrapped in a <AuthProvider />");
+  }
+
+  return value;
 }
 
-const API_URL = "https://tickealo-backend-nest-development.up.railway.app/api";
-const TOKEN_KEY = "authToken";
-const AuthContext = createContext<AuthProps>({});
+export function AuthProvider({ children }: PropsWithChildren) {
+  const [[isLoading, accessToken], setAccessToken] =
+    useStorageState("access_token");
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+  // TODO: Esto se puede mejorar
+  // (ver por que con useEffect no funciona, se ejecutra
+  // despues de reendirizar los otros componentes)
+  // De esta manera se asegura que siempre este actualizado
+  if (accessToken) {
+    api.addHeaderAuthorization(accessToken);
+  } else {
+    api.removeHeaderAuthorization();
+  }
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authState, setAuthState] = useState<{
-    token: string | null;
-    authenticated: boolean | null;
-  }>({ token: null, authenticated: null });
-
-  useEffect(() => {
-    const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      if (token) {
-        setAuthState({ token, authenticated: true });
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      } else {
-        setAuthState({ token: null, authenticated: false });
-      }
-    };
-    loadToken();
-  }, []);
-
-  const saveToken = async (access_token: string) => {
-    setAuthState({ token: access_token, authenticated: true });
-    axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-    await SecureStore.setItemAsync(TOKEN_KEY, access_token);
-  };
-
-  const registerValidador = async (
-    username: string,
-    nombre: string,
-    email: string,
-    password: string,
-  ) => {
-    try {
-      const result = await axios.post(`${API_URL}/auth/register-validador`, {
-        username,
-        nombre,
-        email,
-        password,
-      });
-
-      await saveToken(result.data.access_token);
-
-      return result;
-    } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
-    }
-  };
-
-  const registerCliente = async (
-    username: string,
-    nombre: string,
-    apellido: string,
-    email: string,
-    password: string,
-    telefono: string,
-  ) => {
-    try {
-      const result = await axios.post(`${API_URL}/auth/register-cliente`, {
-        username,
-        nombre,
-        apellido,
-        email,
-        password,
-        telefono,
-      });
-
-      await saveToken(result.data.access_token);
-
-      return result;
-    } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
-    }
-  };
-
-  const login = async (email: string, password: string) => {
-    try {
-      const result = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-      });
-
-      await saveToken(result.data.access_token);
-
-      return result;
-    } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
-    }
-  };
-
-  const logout = async () => {
-    await SecureStore.deleteItemAsync(TOKEN_KEY);
-    axios.defaults.headers.common["Authorization"] = "";
-    setAuthState({ token: null, authenticated: false });
-  };
-
-  const value = {
-    onRegisterValidador: registerValidador,
-    onRegisterCliente: registerCliente,
-    onLogin: login,
-    onLogout: logout,
-    authState,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+  return (
+    <AuthContext
+      value={{
+        login: async (dto: LoginDto) => {
+          const result = await login(dto);
+          const token = result.data.access_token;
+          setAccessToken(token);
+        },
+        registerCliente: async (dto: RegisterClienteDto) => {
+          const result = await registerCliente(dto);
+          const token = result.data.access_token;
+          setAccessToken(token);
+        },
+        registerValidador: async (dto: RegisterValidadorDto) => {
+          const result = await registerValidador(dto);
+          const token = result.data.access_token;
+          setAccessToken(token);
+        },
+        logout: () => {
+          setAccessToken(null);
+        },
+        accessToken,
+        isLoading,
+      }}
+    >
+      {children}
+    </AuthContext>
+  );
+}
