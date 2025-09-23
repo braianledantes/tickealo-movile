@@ -1,48 +1,60 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
-import { EyeIcon, EyeOffIcon, KeyIcon } from "./Icons";
+import {
+  EmailIcon,
+  EyeIcon,
+  EyeOffIcon,
+  KeyIcon,
+  PhoneIcon,
+  UserIcon,
+} from "./Icons";
 
-interface PasswordInputProps {
+export type InputProps = {
   value: string;
-  onChangeText: (text: string) => void;
+  type?: "text" | "password" | "email" | "phone" | "default";
+  onChangeValue: (value: string) => void;
   placeholder?: string;
-  style?: any;
-}
+};
 
-export function PasswordInput({
+export function Input({
+  type = "default",
   value,
-  onChangeText,
-  placeholder = "Contraseña",
-  style,
-}: PasswordInputProps) {
+  onChangeValue,
+  placeholder = "",
+}: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(
+    type !== "password",
+  );
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
   return (
-    <View style={[styles.container, isFocused && styles.inputFocused, style]}>
-      <KeyIcon style={styles.icon} />
+    <View style={[styles.container, isFocused && styles.inputFocused]}>
+      {type === "email" && <EmailIcon style={styles.icon} />}
+      {type === "password" && <KeyIcon style={styles.icon} />}
+      {type === "phone" && <PhoneIcon style={styles.icon} />}
+      {type === "text" && <UserIcon style={styles.icon} />}
       <TextInput
+        keyboardType="email-address"
         style={[styles.input]}
         value={value}
-        onChangeText={onChangeText}
+        onChangeText={onChangeValue}
         placeholder={placeholder}
         placeholderTextColor="#A5A6AD"
-        secureTextEntry={!isPasswordVisible}
         autoCapitalize="none"
         autoCorrect={false}
+        secureTextEntry={type === "password" && !isPasswordVisible}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
-      <TouchableOpacity
-        style={styles.eyeButton}
-        onPress={togglePasswordVisibility}
-      >
-        {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
-      </TouchableOpacity>
+      {type === "password" && (
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

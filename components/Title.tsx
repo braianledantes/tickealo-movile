@@ -1,19 +1,17 @@
-import { StyleSheet, Text } from "react-native";
+import { cn } from "@/utils/cn";
+import { Text, TextProps } from "react-native";
 
-export type TitleProps = {
-  text: string;
-  style?: object;
-};
+export type TitleProps = TextProps & {};
 
-export function Title({ text, style }: TitleProps) {
-  return <Text style={[styles.title, style]}>{text}</Text>;
+export function Title({ ...rest }: TitleProps) {
+  return (
+    <Text
+      className={cn(
+        rest.className,
+        "text-4xl font-bold text-center text-white",
+      )}
+    >
+      {rest.children}
+    </Text>
+  );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#fff",
-  },
-});

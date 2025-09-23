@@ -1,22 +1,13 @@
 import { Button } from "@/components/Button";
-import { EmailInput } from "@/components/EmailInput";
+import { Input } from "@/components/Input";
+import { LinkButton } from "@/components/LinkButton";
 import { Logo } from "@/components/Logo";
-import { NameInput } from "@/components/NameInput";
-import { PasswordInput } from "@/components/PasswordInput";
 import { Title } from "@/components/Title";
-import { UsernameInput } from "@/components/UsernameInput";
 import { useAuth } from "@/context/AuthContext";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 
 export default function RegisterValidador() {
   const [username, setUsername] = useState("");
@@ -50,40 +41,44 @@ export default function RegisterValidador() {
   };
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View />
-        <View style={styles.form}>
-          <Title text="Registrarse como validador" style={styles.title} />
+    <Screen className="flex-1 justify-between p-10">
+      <View className="flex-1" />
+      <ScrollView>
+        <View className="gap-4">
+          <Title>Registrarse como validador</Title>
 
-          <UsernameInput
-            placeholder="Nombre de usuario"
+          <Input
+            type="text"
             value={username}
-            onChangeText={setUsername}
+            onChangeValue={setUsername}
+            placeholder="Nombre de usuario"
           />
 
-          <NameInput
-            placeholder="Nombre completo"
+          <Input
+            type="text"
             value={nombre}
-            onChangeText={setNombre}
+            onChangeValue={setNombre}
+            placeholder="Nombre completo"
           />
 
-          <EmailInput
-            placeholder="Email"
+          <Input
+            type="email"
             value={email}
-            onChangeText={setEmail}
+            onChangeValue={setEmail}
+            placeholder="Correo electrónico"
           />
-
-          <PasswordInput
-            placeholder="Contraseña"
+          <Input
+            type="password"
             value={password}
-            onChangeText={setPassword}
+            onChangeValue={setPassword}
+            placeholder="Contraseña"
           />
 
-          <PasswordInput
-            placeholder="Confirmar contraseña"
+          <Input
+            type="password"
             value={confirmPassword}
-            onChangeText={setConfirmPassword}
+            onChangeValue={setConfirmPassword}
+            placeholder="Confirmar contraseña"
           />
 
           <Button
@@ -92,36 +87,14 @@ export default function RegisterValidador() {
             title="Registrarse"
           />
 
-          <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
-            <Text style={styles.linkText}>
-              ¿Ya tienes cuenta? Inicia sesión
-            </Text>
-          </TouchableOpacity>
+          <LinkButton
+            className="self-center mt-2"
+            onPress={navigateToLogin}
+            text="Volver al inicio de sesión"
+          />
         </View>
-        <Logo />
       </ScrollView>
+      <Logo />
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: "space-between",
-  },
-  form: {
-    paddingHorizontal: 40,
-    gap: 16,
-  },
-  title: {
-    marginBottom: 16,
-  },
-  linkButton: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  linkText: {
-    color: "#007bff",
-    fontSize: 16,
-  },
-});

@@ -1,12 +1,12 @@
 import { Button } from "@/components/Button";
-import { EmailInput } from "@/components/EmailInput";
+import { Input } from "@/components/Input";
+import { LinkButton } from "@/components/LinkButton";
 import { Logo } from "@/components/Logo";
-import { PasswordInput } from "@/components/PasswordInput";
 import { Title } from "@/components/Title";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
@@ -37,60 +37,47 @@ export default function Login() {
   };
 
   return (
-    <Screen style={styles.container}>
+    <Screen className="flex-1 justify-between">
       <View></View>
-      <View style={styles.form}>
-        <Title text="Hola!" />
+      <View className="gap-2 p-10">
+        <Title>Hola!</Title>
 
-        <EmailInput value={email} onChangeText={setEmail} />
-        <PasswordInput value={password} onChangeText={setPassword} />
+        <View className="mt-6 gap-4">
+          <Input
+            type="email"
+            value={email}
+            onChangeValue={setEmail}
+            placeholder="Correo electrónico"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChangeValue={setPassword}
+            placeholder="Contraseña"
+          />
 
-        <Button
-          onPress={handleLogin}
-          disabled={isLoading}
-          title="Iniciar Sesión"
+          <Button
+            className="mt-2"
+            onPress={handleLogin}
+            disabled={isLoading}
+            title="Iniciar Sesión"
+          />
+        </View>
+
+        <LinkButton
+          className="self-center mt-2"
+          text="Regístrate como cliente"
+          onPress={navigateToRegisterCliente}
         />
 
-        <TouchableOpacity
-          style={styles.linkButton}
-          onPress={navigateToRegisterCliente}
-        >
-          <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.linkButton}
+        <LinkButton
+          className="self-center mt-2"
+          text="Regístrate como validador"
           onPress={navigateToRegisterValidador}
-        >
-          <Text style={styles.linkText}>Regístrate como Validador</Text>
-        </TouchableOpacity>
+        />
       </View>
 
       <Logo />
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 16,
-    justifyContent: "space-between",
-  },
-  form: {
-    gap: 16,
-    paddingHorizontal: 40,
-  },
-  linkButton: {
-    marginTop: 8,
-    alignItems: "center",
-  },
-  linkText: {
-    color: "#AEDFEF",
-    fontSize: 16,
-  },
-  footer: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-});

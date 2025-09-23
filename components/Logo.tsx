@@ -1,13 +1,13 @@
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const icon = require("../assets/images/tickealo.svg");
 
 export function Logo() {
   return (
-    <View style={styles.container}>
-      <View style={styles.logotipo}>
-        <Text style={styles.logotipo_text}>TICKEALO</Text>
+    <View className="justify-end items-center">
+      <View className="flex-row items-start justify-center gap-2">
+        <Text className="color-white text-xl font-bold">TICKEALO</Text>
         <Image
           source={icon}
           style={{ width: 30, height: 30 }}
@@ -17,22 +17,3 @@ export function Logo() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  logotipo: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "center",
-    gap: 8,
-  },
-  logotipo_text: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});

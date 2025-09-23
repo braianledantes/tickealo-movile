@@ -4,5 +4,10 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "headerClassName"
+  ]
 }

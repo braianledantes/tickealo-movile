@@ -19,9 +19,9 @@ export default function Index() {
   }, []);
 
   return (
-    <Screen style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Screen className="justify-center items-center">
       <Text
-        style={{ color: "white", fontSize: 18, marginBottom: 20 }}
+        className="mb-4 text-white"
         onPress={() => {
           // The `app/(app)/_layout.tsx` redirects to the sign-in screen.
           logout();

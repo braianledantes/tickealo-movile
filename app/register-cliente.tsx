@@ -1,15 +1,12 @@
 import { Button } from "@/components/Button";
-import { EmailInput } from "@/components/EmailInput";
+import { Input } from "@/components/Input";
+import { LinkButton } from "@/components/LinkButton";
 import { Logo } from "@/components/Logo";
-import { NameInput } from "@/components/NameInput";
-import { PasswordInput } from "@/components/PasswordInput";
-import { PhoneInput } from "@/components/PhoneInput";
 import { Title } from "@/components/Title";
-import { UsernameInput } from "@/components/UsernameInput";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterCliente() {
@@ -19,11 +16,17 @@ export default function RegisterCliente() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [telefono, setTelefono] = useState("");
 
   const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
     try {
       setIsLoading(true);
       await registerCliente({
@@ -47,56 +50,72 @@ export default function RegisterCliente() {
   };
 
   return (
-    <Screen style={styles.container}>
-      <View></View>
-      <View style={styles.form}>
-        <Title text="Regístrate como cliente" />
+    <Screen className="flex-1 justify-between p-10">
+      <View className="flex-1" />
+      <ScrollView>
+        <View className="gap-4">
+          <Title className="mb-4">Regístrate como cliente</Title>
 
-        <UsernameInput value={username} onChangeText={setUsername} />
-        <NameInput
-          value={nombre}
-          onChangeText={setNombre}
-          placeholder="Nombre"
-        />
-        <NameInput
-          value={apellido}
-          onChangeText={setApellido}
-          placeholder="Apellido"
-        />
-        <PhoneInput value={telefono} onChangeText={setTelefono} />
+          <Input
+            type="text"
+            value={username}
+            onChangeValue={setUsername}
+            placeholder="Nombre de usuario"
+          />
+          <Input
+            type="text"
+            value={nombre}
+            onChangeValue={setNombre}
+            placeholder="Nombre"
+          />
+          <Input
+            type="text"
+            value={apellido}
+            onChangeValue={setApellido}
+            placeholder="Apellido"
+          />
+          <Input
+            type="phone"
+            value={telefono}
+            onChangeValue={setTelefono}
+            placeholder="Teléfono"
+          />
 
-        <EmailInput value={email} onChangeText={setEmail} />
-        <PasswordInput value={password} onChangeText={setPassword} />
+          <Input
+            type="email"
+            value={email}
+            onChangeValue={setEmail}
+            placeholder="Correo electrónico"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChangeValue={setPassword}
+            placeholder="Contraseña"
+          />
 
-        <Button
-          onPress={handleRegister}
-          disabled={isLoading}
-          title="Crear Cuenta"
-        />
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChangeValue={setConfirmPassword}
+            placeholder="Confirmar contraseña"
+          />
 
-        <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
-          <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia Sesión</Text>
-        </TouchableOpacity>
-      </View>
+          <Button
+            className="mt-2"
+            onPress={handleRegister}
+            disabled={isLoading}
+            title="Crear Cuenta"
+          />
+
+          <LinkButton
+            className="self-center mt-2"
+            text="¿Ya tienes cuenta? Inicia Sesión"
+            onPress={navigateToLogin}
+          />
+        </View>
+      </ScrollView>
       <Logo />
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-between",
-    padding: 20,
-  },
-  form: {
-    gap: 10,
-  },
-  linkButton: {
-    marginTop: 10,
-    alignSelf: "center",
-  },
-  linkText: {
-    color: "#1E90FF",
-  },
-});
