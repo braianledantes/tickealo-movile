@@ -18,7 +18,7 @@ export async function registerCliente(dto: RegisterClienteDto) {
   return response;
 }
 
-export async function admin() {
-  const response = await api.get("/auth/admin");
+export async function currentUser() {
+  const response = await api.get("/auth/me");
   return response;
 }

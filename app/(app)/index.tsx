@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-import { admin } from "@/api/auth";
+import { currentUser } from "@/api/auth";
 import { Screen } from "@/screens/main";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -9,9 +9,9 @@ export default function Index() {
   const { logout } = useAuth();
 
   useEffect(() => {
-    admin()
+    currentUser()
       .then((response) => {
-        console.log("Admin response:", response.data.user.email);
+        console.log("Admin response:", response.data);
       })
       .catch((error) => {
         console.log("Error fetching admin data:");
