@@ -31,29 +31,35 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
   },
-  image: { 
-    width: 120, 
-    height: 120 },
+  image: {
+    width: 120,
+    height: 120,
+  },
 
-  info: { 
-    flex: 1, 
-    padding: 10 },
+  info: {
+    flex: 1,
+    padding: 10,
+  },
 
-  title: { 
-    color: "#fff", 
-    fontSize: 16, 
-    fontWeight: "bold" },
+  title: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 
-  date: { 
-    color: "#ccc", 
-    marginTop: 4 },
+  date: {
+    color: "#ccc",
+    marginTop: 4,
+  },
 
-  location: { 
-    color: "#999", 
-    marginTop: 2 },
+  location: {
+    color: "#999",
+    marginTop: 2,
+  },
 
-  link: { 
-    color: "#4da6ff", 
-    marginTop: 6, 
-    fontWeight: "bold" },
+  link: {
+    color: "#4da6ff",
+    marginTop: 6,
+    fontWeight: "bold",
+  },
 });

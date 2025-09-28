@@ -5,7 +5,15 @@ import { Header } from "@/components/Header";
 import { getUserProvince } from "@/utils/location";
 import { PROVINCIAS_AR } from "@/utils/provincias";
 import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type Event = {
@@ -51,7 +59,7 @@ export default function Index() {
             // provincia: province ?? undefined,
           },
         });
-setUpcoming(res.data.data);
+        setUpcoming(res.data.data);
       } catch (err) {
         console.error("Error cargando eventos:", err);
       } finally {
@@ -62,9 +70,9 @@ setUpcoming(res.data.data);
   }, [province]);
 
   const upcomingFiltered = useMemo(() => {
-  if (!province) return upcoming;
-  return upcoming.filter((e) => e.lugar?.provincia === province);
-}, [upcoming, province]);
+    if (!province) return upcoming;
+    return upcoming.filter((e) => e.lugar?.provincia === province);
+  }, [upcoming, province]);
 
   if (loading) {
     return (
@@ -76,55 +84,81 @@ setUpcoming(res.data.data);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#010030" }}>
-    <View style={{ flex: 1, backgroundColor: "#010030" }}>
-      <Header
-        userImage="https://example.com/user.jpg"
-        onMenuPress={() => console.log("Menu pressed")}
-      />
+      <View style={{ flex: 1, backgroundColor: "#010030" }}>
+        <Header
+          userImage="https://example.com/user.jpg"
+          onMenuPress={() => console.log("Menu pressed")}
+        />
 
-    <Busqueda
-    location={province ?? "Selecciona provincia"}
-    onPress={() => setPickerOpen(true)}
-  />
+        <Busqueda
+          location={province ?? "Selecciona provincia"}
+          onPress={() => setPickerOpen(true)}
+        />
 
-      <ScrollView style={styles.content}>
-        {/* Sección de Próximos Eventos */}
-        <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
-        {upcomingFiltered.length > 0 ? (
-          upcomingFiltered.map((event) => (
-            <EventCard
-              key={event.id}
-              image={event.portadaUrl ?? "https://placehold.co/600x400"}
-              title={event.nombre}
-              date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
-              location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
-              onPress={() => console.log("Ver evento", event.id)}
-            />
-          ))
-        ) : (
-          <Text style={styles.empty}>No hay próximos eventos.</Text>
-        )}
-      </ScrollView>
-      {/* Selector de provincias */}
-      <Modal visible={pickerOpen} transparent animationType="fade" onRequestClose={() => setPickerOpen(false)}>
-        <Pressable style={styles.modalOverlay} onPress={() => setPickerOpen(false)} />
-        <View style={styles.modalCard}>
-          <Text style={styles.modalTitle}>Selecciona tu provincia</Text>
-          <ScrollView style={{ maxHeight: 360 }}>
-            {PROVINCIAS_AR.map((p) => (
-              <Pressable key={p} style={styles.option} onPress={() => { setProvince(p); setPickerOpen(false); }}>
-                <Text style={styles.optionText}>{p}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-          <Pressable style={[styles.option, { borderTopWidth: 1, borderTopColor: "#223" }]} onPress={async () => { const p = await getUserProvince(); setProvince(p); setPickerOpen(false); }}>
-            <Text style={[styles.optionText, { color: "#4da6ff" }]}>Detectar automáticamente</Text>
-          </Pressable>
-        </View>
-      </Modal>
+        <ScrollView style={styles.content}>
+          {/* Sección de Próximos Eventos */}
+          <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
+          {upcomingFiltered.length > 0 ? (
+            upcomingFiltered.map((event) => (
+              <EventCard
+                key={event.id}
+                image={event.portadaUrl ?? "https://placehold.co/600x400"}
+                title={event.nombre}
+                date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
+                location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
+                onPress={() => console.log("Ver evento", event.id)}
+              />
+            ))
+          ) : (
+            <Text style={styles.empty}>No hay próximos eventos.</Text>
+          )}
+        </ScrollView>
+        {/* Selector de provincias */}
+        <Modal
+          visible={pickerOpen}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setPickerOpen(false)}
+        >
+          <Pressable
+            style={styles.modalOverlay}
+            onPress={() => setPickerOpen(false)}
+          />
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Selecciona tu provincia</Text>
+            <ScrollView style={{ maxHeight: 360 }}>
+              {PROVINCIAS_AR.map((p) => (
+                <Pressable
+                  key={p}
+                  style={styles.option}
+                  onPress={() => {
+                    setProvince(p);
+                    setPickerOpen(false);
+                  }}
+                >
+                  <Text style={styles.optionText}>{p}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+            <Pressable
+              style={[
+                styles.option,
+                { borderTopWidth: 1, borderTopColor: "#223" },
+              ]}
+              onPress={async () => {
+                const p = await getUserProvince();
+                setProvince(p);
+                setPickerOpen(false);
+              }}
+            >
+              <Text style={[styles.optionText, { color: "#4da6ff" }]}>
+                Detectar automáticamente
+              </Text>
+            </Pressable>
+          </View>
+        </Modal>
       </View>
-      </SafeAreaView>
-
+    </SafeAreaView>
   );
 }
 

@@ -23,12 +23,10 @@ export function Input({
   placeholder = "",
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(
-    type !== "password",
-  );
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
+    setIsPasswordVisible((prev) => !prev);
   };
 
   return (
@@ -37,22 +35,27 @@ export function Input({
       {type === "password" && <KeyIcon style={styles.icon} />}
       {type === "phone" && <PhoneIcon style={styles.icon} />}
       {type === "text" && <UserIcon style={styles.icon} />}
+
       <TextInput
-        keyboardType="email-address"
-        style={[styles.input]}
+        keyboardType={type === "email" ? "email-address" : "default"}
+        style={styles.input}
         value={value}
         onChangeText={onChangeValue}
         placeholder={placeholder}
         placeholderTextColor="#A5A6AD"
         autoCapitalize="none"
         autoCorrect={false}
-        secureTextEntry={type === "password" && !isPasswordVisible}
+        secureTextEntry={type === "password" && !isPasswordVisible} // 👈 se oculta por defecto
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
+
       {type === "password" && (
-        <TouchableOpacity onPress={togglePasswordVisibility}>
-          {isPasswordVisible ? <EyeOffIcon /> : <EyeIcon />}
+        <TouchableOpacity
+          style={styles.eyeButton}
+          onPress={togglePasswordVisibility}
+        >
+          {isPasswordVisible ? <EyeIcon /> : <EyeOffIcon />}
         </TouchableOpacity>
       )}
     </View>

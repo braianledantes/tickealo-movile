@@ -6,6 +6,7 @@ import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterCliente() {
@@ -49,67 +50,73 @@ export default function RegisterCliente() {
   };
 
   return (
-    <Screen className="flex-1 px-8">
-      <Title className="mb-4">Regístrate como cliente</Title>
-      <View className="gap-4">
-        <Input
-        type="text"
-        value={username}
-        onChangeValue={setUsername}
-        placeholder="Nombre de usuario"
-      />
-      <Input
-        type="text"
-        value={nombre}
-        onChangeValue={setNombre}
-        placeholder="Nombre"
-      />
-      <Input
-        type="text"
-        value={apellido}
-        onChangeValue={setApellido}
-        placeholder="Apellido"
-      />
-      <Input
-        type="phone"
-        value={telefono}
-        onChangeValue={setTelefono}
-        placeholder="Teléfono"
-      />
+    <KeyboardAwareScrollView
+      style={{ flex: 1, backgroundColor: "#010030" }} // 👈 ocupa toda la pantalla, color de fondo
+      contentContainerStyle={{ flexGrow: 1 }}
+      enableOnAndroid
+      extraScrollHeight={40}
+      keyboardShouldPersistTaps="handled"
+    >
+      <Screen className="flex-1 px-8">
+        <Title className="mb-4">Regístrate como cliente</Title>
+        <View className="gap-4">
+          <Input
+            type="text"
+            value={username}
+            onChangeValue={setUsername}
+            placeholder="Nombre de usuario"
+          />
+          <Input
+            type="text"
+            value={nombre}
+            onChangeValue={setNombre}
+            placeholder="Nombre"
+          />
+          <Input
+            type="text"
+            value={apellido}
+            onChangeValue={setApellido}
+            placeholder="Apellido"
+          />
+          <Input
+            type="phone"
+            value={telefono}
+            onChangeValue={setTelefono}
+            placeholder="Teléfono"
+          />
+          <Input
+            type="email"
+            value={email}
+            onChangeValue={setEmail}
+            placeholder="Correo electrónico"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChangeValue={setPassword}
+            placeholder="Contraseña"
+          />
+          <Input
+            type="password"
+            value={confirmPassword}
+            onChangeValue={setConfirmPassword}
+            placeholder="Confirmar contraseña"
+          />
+        </View>
 
-      <Input
-        type="email"
-        value={email}
-        onChangeValue={setEmail}
-        placeholder="Correo electrónico"
-      />
-      <Input
-        type="password"
-        value={password}
-        onChangeValue={setPassword}
-        placeholder="Contraseña"
-      />
+        <Button
+          className="mt-2"
+          onPress={handleRegister}
+          disabled={isLoading}
+          title="Crear Cuenta"
+        />
 
-      <Input
-        type="password"
-        value={confirmPassword}
-        onChangeValue={setConfirmPassword}
-        placeholder="Confirmar contraseña"
-      />
-      </View>
-
-      <Button
-        className="mt-2"
-        onPress={handleRegister}
-        disabled={isLoading}
-        title="Crear Cuenta"
-      />
-
-      <LinkButton
-        className="self-center mt-2"
-        text="¿Ya tienes cuenta? Inicia Sesión"
-        onPress={navigateToLogin}
-      />
-    </Screen>
+        <LinkButton
+          className="self-center mt-2"
+          text="¿Ya tienes cuenta? Inicia Sesión"
+          onPress={navigateToLogin}
+        />
+      </Screen>
+    </KeyboardAwareScrollView>
   );
 }

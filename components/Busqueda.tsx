@@ -3,8 +3,8 @@ import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface BusquedaProps {
-  onPress: () => void;       // abrir modal o dropdown
-  location: string;          // provincia actual o "Selecciona provincia"
+  onPress: () => void; // abrir modal o dropdown
+  location: string; // provincia actual o "Selecciona provincia"
 }
 
 export const Busqueda: React.FC<BusquedaProps> = ({ onPress, location }) => {

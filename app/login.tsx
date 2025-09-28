@@ -31,7 +31,6 @@ export default function Login() {
     router.push("/register-cliente");
   };
 
-
   return (
     <Screen className="flex-1 justify-center gap-2 p-10">
       <Title>Hola!</Title>
@@ -62,7 +61,6 @@ export default function Login() {
         text="Regístrate como cliente"
         onPress={navigateToRegisterCliente}
       />
-      
     </Screen>
   );
 }
