@@ -9,8 +9,11 @@
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.tickealo.tickealo"
+    "supportsTablet": true,
+    "bundleIdentifier": "com.tickealo.tickealo",
+    "infoPlist": {
+      "NSLocationWhenInUseUsageDescription": "Necesitamos acceder a tu ubicación para mostrar eventos cercanos en tu provincia."
+    }
     },
     "android": {
       "adaptiveIcon": {
@@ -20,7 +23,11 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "output": "static",
@@ -41,7 +48,14 @@
           }
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permitir que Tickealo acceda a tu ubicación para sugerir eventos cercanos.",
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

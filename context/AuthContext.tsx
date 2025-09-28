@@ -1,9 +1,8 @@
 import { createContext, use, type PropsWithChildren } from "react";
 
-import { login, registerCliente, registerValidador } from "@/api/auth";
+import { login, registerCliente } from "@/api/auth";
 import { LoginDto } from "@/api/dto/login.dto";
 import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
-import { RegisterValidadorDto } from "@/api/dto/register-validador.dto";
 import { useStorageState } from "../hooks/useStorageState";
 
 import * as api from "@/api/axiosConfig";
@@ -11,14 +10,12 @@ import * as api from "@/api/axiosConfig";
 const AuthContext = createContext<{
   login: (dto: LoginDto) => void;
   registerCliente: (dto: RegisterClienteDto) => void;
-  registerValidador: (dto: RegisterValidadorDto) => void;
   logout: () => void;
   accessToken?: string | null;
   isLoading: boolean;
 }>({
   login: () => null,
   registerCliente: () => null,
-  registerValidador: () => null,
   logout: () => null,
   accessToken: null,
   isLoading: false,
@@ -58,11 +55,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
         },
         registerCliente: async (dto: RegisterClienteDto) => {
           const result = await registerCliente(dto);
-          const token = result.data.access_token;
-          setAccessToken(token);
-        },
-        registerValidador: async (dto: RegisterValidadorDto) => {
-          const result = await registerValidador(dto);
           const token = result.data.access_token;
           setAccessToken(token);
         },

@@ -1,12 +1,11 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { LinkButton } from "@/components/LinkButton";
-import { Logo } from "@/components/Logo";
 import { Title } from "@/components/Title";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, ScrollView, View } from "react-native";
+import { Alert, View } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterCliente() {
@@ -50,72 +49,67 @@ export default function RegisterCliente() {
   };
 
   return (
-    <Screen className="flex-1 justify-between p-10">
-      <View className="flex-1" />
-      <ScrollView>
-        <View className="gap-4">
-          <Title className="mb-4">Regístrate como cliente</Title>
+    <Screen className="flex-1 px-8">
+      <Title className="mb-4">Regístrate como cliente</Title>
+      <View className="gap-4">
+        <Input
+        type="text"
+        value={username}
+        onChangeValue={setUsername}
+        placeholder="Nombre de usuario"
+      />
+      <Input
+        type="text"
+        value={nombre}
+        onChangeValue={setNombre}
+        placeholder="Nombre"
+      />
+      <Input
+        type="text"
+        value={apellido}
+        onChangeValue={setApellido}
+        placeholder="Apellido"
+      />
+      <Input
+        type="phone"
+        value={telefono}
+        onChangeValue={setTelefono}
+        placeholder="Teléfono"
+      />
 
-          <Input
-            type="text"
-            value={username}
-            onChangeValue={setUsername}
-            placeholder="Nombre de usuario"
-          />
-          <Input
-            type="text"
-            value={nombre}
-            onChangeValue={setNombre}
-            placeholder="Nombre"
-          />
-          <Input
-            type="text"
-            value={apellido}
-            onChangeValue={setApellido}
-            placeholder="Apellido"
-          />
-          <Input
-            type="phone"
-            value={telefono}
-            onChangeValue={setTelefono}
-            placeholder="Teléfono"
-          />
+      <Input
+        type="email"
+        value={email}
+        onChangeValue={setEmail}
+        placeholder="Correo electrónico"
+      />
+      <Input
+        type="password"
+        value={password}
+        onChangeValue={setPassword}
+        placeholder="Contraseña"
+      />
 
-          <Input
-            type="email"
-            value={email}
-            onChangeValue={setEmail}
-            placeholder="Correo electrónico"
-          />
-          <Input
-            type="password"
-            value={password}
-            onChangeValue={setPassword}
-            placeholder="Contraseña"
-          />
+      <Input
+        type="password"
+        value={confirmPassword}
+        onChangeValue={setConfirmPassword}
+        placeholder="Confirmar contraseña"
+      />
+      </View>
 
-          <Input
-            type="password"
-            value={confirmPassword}
-            onChangeValue={setConfirmPassword}
-            placeholder="Confirmar contraseña"
-          />
+      <Button
+        className="mt-2"
+        onPress={handleRegister}
+        disabled={isLoading}
+        title="Crear Cuenta"
+      />
 
-          <Button
-            className="mt-2"
-            onPress={handleRegister}
-            disabled={isLoading}
-            title="Crear Cuenta"
-          />
-
-          <LinkButton
-            className="self-center mt-2"
-            text="¿Ya tienes cuenta? Inicia Sesión"
-            onPress={navigateToLogin}
-          />
-        </View>
-      </ScrollView>
-      <Logo />
+      <LinkButton
+        className="self-center mt-2"
+        text="¿Ya tienes cuenta? Inicia Sesión"
+        onPress={navigateToLogin}
+      />
     </Screen>
   );
 }

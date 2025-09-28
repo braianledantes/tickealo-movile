@@ -1,7 +1,6 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { LinkButton } from "@/components/LinkButton";
-import { Logo } from "@/components/Logo";
 import { Title } from "@/components/Title";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
@@ -32,52 +31,38 @@ export default function Login() {
     router.push("/register-cliente");
   };
 
-  const navigateToRegisterValidador = () => {
-    router.push("/register-validador");
-  };
 
   return (
-    <Screen className="flex-1 justify-between">
-      <View></View>
-      <View className="gap-2 p-10">
-        <Title>Hola!</Title>
-
-        <View className="mt-6 gap-4">
-          <Input
-            type="email"
-            value={email}
-            onChangeValue={setEmail}
-            placeholder="Correo electrónico"
-          />
-          <Input
-            type="password"
-            value={password}
-            onChangeValue={setPassword}
-            placeholder="Contraseña"
-          />
-
-          <Button
-            className="mt-2"
-            onPress={handleLogin}
-            disabled={isLoading}
-            title="Iniciar Sesión"
-          />
-        </View>
-
-        <LinkButton
-          className="self-center mt-2"
-          text="Regístrate como cliente"
-          onPress={navigateToRegisterCliente}
+    <Screen className="flex-1 justify-center gap-2 p-10">
+      <Title>Hola!</Title>
+      <View className="mt-6 gap-4">
+        <Input
+          type="email"
+          value={email}
+          onChangeValue={setEmail}
+          placeholder="Correo electrónico"
+        />
+        <Input
+          type="password"
+          value={password}
+          onChangeValue={setPassword}
+          placeholder="Contraseña"
         />
 
-        <LinkButton
-          className="self-center mt-2"
-          text="Regístrate como validador"
-          onPress={navigateToRegisterValidador}
+        <Button
+          className="mt-2"
+          onPress={handleLogin}
+          disabled={isLoading}
+          title="Iniciar Sesión"
         />
       </View>
 
-      <Logo />
+      <LinkButton
+        className="self-center mt-2"
+        text="Regístrate como cliente"
+        onPress={navigateToRegisterCliente}
+      />
+      
     </Screen>
   );
 }
