@@ -1,6 +1,6 @@
 import api from "@/api/axiosConfig";
 import { Busqueda } from "@/components/Busqueda";
-import { EventCard } from "@/components/EventCard";
+import { EventList } from "@/components/EventList";
 import { Header } from "@/components/Header";
 import { getUserProvince } from "@/utils/location";
 import { PROVINCIAS_AR } from "@/utils/provincias";
@@ -35,44 +35,48 @@ export default function Index() {
   const [loading, setLoading] = useState(true);
   const [province, setProvince] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-  // Detectar provincia del usuario al inicio
-  useEffect(() => {
-    (async () => {
-      const p = await getUserProvince();
-      setProvince(p);
-    })();
-  }, []);
-
-  // Cargar eventos (se puede extender para pasar provincia como filtro si el backend lo admite)
+  // 🔹 Cargar eventos desde backend
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const today = new Date().toISOString().split("T")[0];
-        const res = await api.get("/eventos", {
-          params: {
-            page: 1,
-            limit: 50,
-            search: "",
-            orderDir: "ASC",
-            //fechaInicio: today,
-            // provincia: province ?? undefined,
-          },
-        });
+        const params: any = {
+          page: 1,
+          limit: 50,
+          orderDir: "ASC",
+        };
+
+        if (search && search.trim() !== "") {
+          params.search = search.trim();
+        }
+
+        const res = await api.get("/eventos", { params });
         setUpcoming(res.data.data);
-      } catch (err) {
-        console.error("Error cargando eventos:", err);
+      } catch (err: any) {
+        console.error(
+          "Error cargando eventos:",
+          err?.response?.data || err.message || err,
+        );
       } finally {
         setLoading(false);
       }
     };
-    loadEvents();
-  }, [province]);
 
+    loadEvents();
+  }, [search]); // province se filtra en frontend
+
+  // 🔹 Filtrado en frontend (provincia + search)
   const upcomingFiltered = useMemo(() => {
-    if (!province) return upcoming;
-    return upcoming.filter((e) => e.lugar?.provincia === province);
-  }, [upcoming, province]);
+    return upcoming.filter((e) => {
+      const matchesSearch =
+        !search || e.nombre.toLowerCase().includes(search.toLowerCase());
+
+      const matchesProvincia = !province || e.lugar?.provincia === province;
+
+      return matchesSearch && matchesProvincia;
+    });
+  }, [upcoming, search, province]);
 
   if (loading) {
     return (
@@ -85,35 +89,24 @@ export default function Index() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#010030" }}>
       <View style={{ flex: 1, backgroundColor: "#010030" }}>
-        <Header
-          userImage="https://example.com/user.jpg"
-          onMenuPress={() => console.log("Menu pressed")}
-        />
+        {/* Header */}
+        <Header />
 
+        {/* Buscador con ubicación */}
         <Busqueda
           location={province ?? "Selecciona provincia"}
           onPress={() => setPickerOpen(true)}
+          search={search}
+          setSearch={setSearch}
         />
 
-        <ScrollView style={styles.content}>
-          {/* Sección de Próximos Eventos */}
-          <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
-          {upcomingFiltered.length > 0 ? (
-            upcomingFiltered.map((event) => (
-              <EventCard
-                key={event.id}
-                image={event.portadaUrl ?? "https://placehold.co/600x400"}
-                title={event.nombre}
-                date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
-                location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
-                onPress={() => console.log("Ver evento", event.id)}
-              />
-            ))
-          ) : (
-            <Text style={styles.empty}>No hay próximos eventos.</Text>
-          )}
-        </ScrollView>
-        {/* Selector de provincias */}
+        {/* Título */}
+        <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
+
+        {/* Lista de eventos */}
+        <EventList events={upcomingFiltered} />
+
+        {/* Modal de provincias */}
         <Modal
           visible={pickerOpen}
           transparent
@@ -147,7 +140,7 @@ export default function Index() {
               ]}
               onPress={async () => {
                 const p = await getUserProvince();
-                setProvince(p);
+                if (p) setProvince(p);
                 setPickerOpen(false);
               }}
             >
@@ -163,16 +156,12 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 15 },
   sectionTitle: {
-    color: "#4da6ff",
+    color: "#90e0ef",
     fontWeight: "bold",
     fontSize: 14,
     marginVertical: 8,
-  },
-  empty: {
-    color: "#aaa",
-    marginBottom: 15,
+    paddingHorizontal: 15,
   },
   center: {
     flex: 1,

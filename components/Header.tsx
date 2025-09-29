@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
@@ -16,21 +15,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../assets/images/logotipo.png";
 import { useAuth } from "../context/AuthContext";
 
-interface HeaderProps {
-  userImage: string;
-  onMenuPress?: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ userImage }) => {
+export const Header: React.FC = () => {
   const [menuVisible, setMenuVisible] = useState(false);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth(); // 👈 traemos user del contexto
   const insets = useSafeAreaInsets();
-  const slideX = useRef(new Animated.Value(0)).current; // 0 cerrado, 1 abierto
-  const overlayOp = useRef(new Animated.Value(0)).current; // 0 transparente, 1 visible
+
+  const slideX = useRef(new Animated.Value(0)).current;
+  const overlayOp = useRef(new Animated.Value(0)).current;
 
   const openMenu = () => {
     setMenuVisible(true);
-    // Ejecutar animaciones al siguiente frame para asegurar montaje
     requestAnimationFrame(() => {
       Animated.parallel([
         Animated.timing(slideX, {
@@ -79,8 +73,16 @@ export const Header: React.FC<HeaderProps> = ({ userImage }) => {
         style={{ width: 100, height: 40, resizeMode: "contain" }}
       />
 
-      {/* Imagen de usuario */}
-      <Image source={{ uri: userImage }} style={styles.userImage} />
+      {/* Avatar de usuario */}
+      {user?.image ? (
+        <Image source={{ uri: user.image }} style={styles.userImage} />
+      ) : (
+        <View style={styles.avatarPlaceholder}>
+          <Text style={styles.avatarInitial}>
+            {user?.username?.charAt(0).toUpperCase() || "?"}
+          </Text>
+        </View>
+      )}
 
       {/* Menú lateral */}
       <Modal
@@ -89,12 +91,12 @@ export const Header: React.FC<HeaderProps> = ({ userImage }) => {
         animationType="none"
         onRequestClose={closeMenu}
       >
-        {/* Overlay animado */}
+        {/* Overlay */}
         <Animated.View style={[styles.overlay, { opacity: overlayOp }]}>
           <Pressable style={StyleSheet.absoluteFill} onPress={closeMenu} />
         </Animated.View>
 
-        {/* Menú animado deslizándose desde la izquierda */}
+        {/* Menú deslizante */}
         <Animated.View
           style={[
             styles.menu,
@@ -105,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ userImage }) => {
                 {
                   translateX: slideX.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [-220, 0], // igual al ancho del menú
+                    outputRange: [-220, 0],
                   }),
                 },
               ],
@@ -113,8 +115,6 @@ export const Header: React.FC<HeaderProps> = ({ userImage }) => {
           ]}
         >
           <View style={styles.menuContent}>
-            {/* Otros items del menú podrían ir aquí */}
-
             <View style={styles.spacer} />
             <TouchableOpacity style={styles.menuItem} onPress={logout}>
               <Ionicons name="log-out-outline" size={22} color="#fff" />
@@ -136,16 +136,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 15,
   },
-  logo: {
-    color: "#4da6ff",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
   userImage: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: "#666",
+    borderWidth: 2,
+    borderColor: "#4da6ff",
+  },
+  avatarPlaceholder: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#0077B6",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarInitial: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
   overlay: {
     flex: 1,

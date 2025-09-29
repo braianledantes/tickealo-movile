@@ -1,0 +1,98 @@
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useRef } from "react";
+import {
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from "react-native";
+import { EventCard } from "./EventCard";
+
+type Event = {
+  id: number;
+  nombre: string;
+  inicioAt: string;
+  portadaUrl?: string;
+  lugar?: {
+    ciudad?: string;
+    provincia?: string;
+  };
+};
+
+export function EventList({ events }: { events: Event[] }) {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === "dark";
+
+  const iconColor = isDark ? "#90e0ef" : "#007AFF";
+  const textColor = isDark ? "#ccc" : "#555";
+
+  // 👇 Animación bounce
+  const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (events.length === 0) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(bounceAnim, {
+            toValue: -10,
+            duration: 400,
+            easing: Easing.out(Easing.quad),
+            useNativeDriver: true,
+          }),
+          Animated.timing(bounceAnim, {
+            toValue: 0,
+            duration: 400,
+            easing: Easing.in(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    }
+  }, [events.length]);
+
+  if (events.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Animated.View style={{ transform: [{ translateY: bounceAnim }] }}>
+          <Ionicons name="calendar-outline" size={56} color={iconColor} />
+        </Animated.View>
+        <Text style={[styles.empty, { color: textColor }]}>
+          No hay próximos eventos
+        </Text>
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.content}>
+      {events.map((event) => (
+        <EventCard
+          key={event.id}
+          image={event.portadaUrl ?? "https://placehold.co/600x400"}
+          title={event.nombre}
+          date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
+          location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
+          onPress={() => console.log("Ver evento", event.id)}
+        />
+      ))}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: { padding: 15 },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 60,
+  },
+  empty: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 12,
+  },
+});

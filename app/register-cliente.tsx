@@ -38,10 +38,14 @@ export default function RegisterCliente() {
         telefono,
       });
       router.replace("/");
-    } catch {
-      Alert.alert("Registration failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+    } catch (err: any) {
+      console.error("Error en registro:", err.response?.data || err);
+
+      const backendMsg =
+        err.response?.data?.message ||
+        "No se pudo registrar. Intente nuevamente.";
+
+      Alert.alert("Error", backendMsg.toString());
     }
   };
 
