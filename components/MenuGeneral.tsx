@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     marginLeft: 10,
+    fontFamily: "Poppins_400Regular",
   },
   icon: {
     fontSize: 20,

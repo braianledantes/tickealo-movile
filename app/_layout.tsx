@@ -1,11 +1,32 @@
-import { Stack } from "expo-router";
-import "../global.css";
-
 import { Logo } from "@/components/Logo";
+import {
+  Poppins_400Regular,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+  useFonts,
+} from "@expo-google-fonts/poppins";
+import AppLoading from "expo-app-loading";
+import { Stack } from "expo-router";
+import { Text as RNText } from "react-native";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import "../global.css";
 import { SplashScreenController } from "../screens/splash";
 
 export default function Root() {
+  const [fontsLoaded] = useFonts({
+    Poppins_400Regular,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+  (RNText as any).defaultProps = (RNText as any).defaultProps || {};
+  (RNText as any).defaultProps.style = {
+    fontFamily: "Poppins_400Regular",
+    color: "#fff",
+  };
   return (
     <AuthProvider>
       <SplashScreenController />
@@ -20,7 +41,7 @@ function RootNavigator() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // 👈 por defecto no mostrar header
+        headerShown: false,
       }}
     >
       {/* Pantallas privadas (logueado) */}
@@ -28,12 +49,12 @@ function RootNavigator() {
         <Stack.Screen name="(app)" />
       </Stack.Protected>
 
-      {/* Pantallas públicas (sin login) */}
+      {/* Pantallas públicas */}
       <Stack.Protected guard={!accessToken}>
         <Stack.Screen
           name="login"
           options={{
-            headerShown: true, // 👈 activar header
+            headerShown: true,
             title: "",
             headerTintColor: "#1E90FF",
             headerStyle: { backgroundColor: "#05081b" },
@@ -44,7 +65,7 @@ function RootNavigator() {
         <Stack.Screen
           name="register-cliente"
           options={{
-            headerShown: true, // 👈 activar header
+            headerShown: true,
             title: "",
             headerTintColor: "#1E90FF",
             headerStyle: { backgroundColor: "#05081b" },

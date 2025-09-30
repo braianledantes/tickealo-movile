@@ -1,5 +1,6 @@
 // src/components/MenuUsuario.tsx
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Modal,
@@ -9,47 +10,66 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 
-interface Props {
-  avatarContent: React.ReactNode;
-}
-
-export const MenuUsuario: React.FC<Props> = ({ avatarContent }) => {
-  const { logout, user } = useAuth();
+export const MenuUsuario: React.FC = () => {
+  const { user, logout } = useAuth();
   const [visible, setVisible] = useState(false);
-  const insets = useSafeAreaInsets();
 
   return (
     <>
-      {/* Avatar botón */}
-      <TouchableOpacity onPress={() => setVisible(true)}>
-        {avatarContent}
+      {/* Botón avatar */}
+      <TouchableOpacity
+        onPress={() => setVisible(true)}
+        style={styles.avatarButton}
+      >
+        {user?.username ? (
+          <View style={styles.avatarCircle}>
+            <Text style={styles.avatarInitial}>
+              {user.username.charAt(0).toUpperCase()}
+            </Text>
+          </View>
+        ) : (
+          <Ionicons name="person-circle-outline" size={32} color="#90e0ef" />
+        )}
       </TouchableOpacity>
 
-      {/* Modal menú usuario */}
-      <Modal transparent visible={visible} animationType="fade">
+      {/* Modal tipo popover */}
+      <Modal
+        transparent
+        visible={visible}
+        animationType="fade"
+        onRequestClose={() => setVisible(false)}
+      >
         <Pressable style={styles.overlay} onPress={() => setVisible(false)} />
-        <View style={[styles.menu, { top: insets.top + 60 }]}>
-          <Text style={styles.title}>{user?.username ?? "Invitado"}</Text>
-          {user?.email && <Text style={styles.email}>{user.email}</Text>}
+        <View style={styles.menu}>
+          <Text style={styles.userText}>
+            {user?.username || user?.email || "Usuario"}
+          </Text>
 
-          <Pressable
-            style={styles.logoutBtn}
+          <TouchableOpacity
+            style={styles.menuItem}
             onPress={() => {
-              logout();
               setVisible(false);
+              router.push("/profile"); //
             }}
           >
-            <Ionicons
-              name="log-out-outline"
-              size={20}
-              color="#ff4d4d"
-              style={{ marginRight: 8 }}
-            />
-            <Text style={styles.logout}>Cerrar sesión</Text>
-          </Pressable>
+            <Ionicons name="person-outline" size={20} color="#90e0ef" />
+            <Text style={styles.menuText}>Mi perfil</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => {
+              setVisible(false);
+              logout();
+            }}
+          >
+            <Ionicons name="log-out-outline" size={20} color="red" />
+            <Text style={[styles.menuText, { color: "red" }]}>
+              Cerrar sesión
+            </Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </>
@@ -57,41 +77,52 @@ export const MenuUsuario: React.FC<Props> = ({ avatarContent }) => {
 };
 
 const styles = StyleSheet.create({
+  avatarButton: {
+    padding: 4,
+  },
+  avatarCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#0077B6",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarInitial: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
   overlay: {
     flex: 1,
   },
   menu: {
     position: "absolute",
-    top: 120,
+    top: 60, // debajo del header
     right: 15,
-    width: 200,
-    backgroundColor: "#0b1030",
-    borderRadius: 12,
+    backgroundColor: "#05081b",
+    borderRadius: 8,
     padding: 12,
+    width: 180,
     shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
     shadowRadius: 6,
-    elevation: 6,
+    elevation: 5,
   },
-  title: {
+  userText: {
     color: "#fff",
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 10,
   },
-  email: {
-    color: "#aaa",
-    marginBottom: 12,
-  },
-  logoutBtn: {
+  menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
-
-  logout: {
-    color: "#ff4d4d",
-    fontSize: 16,
-    fontWeight: "600",
+  menuText: {
+    color: "#fff",
+    marginLeft: 8,
+    fontSize: 15,
+    fontFamily: "Poppins-Regular",
   },
 });

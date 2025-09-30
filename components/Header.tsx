@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import Logo from "../assets/images/logotipo.png";
 import { useAuth } from "../context/AuthContext";
 import { MenuGeneral } from "./MenuGeneral";
@@ -19,19 +19,7 @@ export const Header: React.FC = () => {
       />
 
       {/* Avatar / Menú usuario */}
-      <MenuUsuario
-        avatarContent={
-          user?.image ? (
-            <Image source={{ uri: user.image }} style={styles.userImage} />
-          ) : (
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarInitial}>
-                {user?.username?.charAt(0).toUpperCase() || "?"}
-              </Text>
-            </View>
-          )
-        }
-      />
+      <MenuUsuario />
     </View>
   );
 };

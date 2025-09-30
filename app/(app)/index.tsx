@@ -156,12 +156,19 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
+  text: {
+    color: "white",
+    fontSize: 16,
+    marginLeft: 6,
+    fontFamily: "Poppins_600Regular",
+  },
   sectionTitle: {
     color: "#90e0ef",
     fontWeight: "bold",
     fontSize: 14,
     marginVertical: 8,
     paddingHorizontal: 15,
+    fontFamily: "Poppins_600SemiBold",
   },
   center: {
     flex: 1,
