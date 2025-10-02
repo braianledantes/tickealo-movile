@@ -1,3 +1,4 @@
+
 import api from "@/api/axiosConfig";
 import { Busqueda } from "@/components/Busqueda";
 import { EventList } from "@/components/EventList";

@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { LinkButton } from "@/components/LinkButton";
+import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
@@ -56,11 +57,14 @@ export default function Login() {
         />
       </View>
 
-      <LinkButton
-        className="self-center mt-2"
-        text="Regístrate como cliente"
-        onPress={navigateToRegisterCliente}
-      />
+      <View className="flex-row mt-6  justify-center">
+        <Texto medium className="text-gray-200"> ¿No tienes una cuenta?{' '}</Texto>
+        <LinkButton
+          text="Regístrate aquí."
+          onPress={navigateToRegisterCliente}
+        />
+      </View>
+
     </Screen>
   );
 }

@@ -31,6 +31,7 @@ export function Input({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused]}>
+      
       {type === "email" && <EmailIcon style={styles.icon} />}
       {type === "password" && <KeyIcon style={styles.icon} />}
       {type === "phone" && <PhoneIcon style={styles.icon} />}
@@ -66,24 +67,34 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#2f2f2fff",
-    borderRadius: 100,
     paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 100,
     backgroundColor: "#080C22",
+    shadowColor: "#fff",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    borderWidth:1,
+    borderColor:"#0F1D4C",
   },
   input: {
     flex: 1,
-    borderColor: "#2f2f2fff",
-    paddingVertical: 16,
-    fontSize: 16,
     color: "#fff",
+    fontSize: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 0,
+    fontFamily: "Poppins_400Regular",
   },
   eyeButton: {
-    padding: 4,
+    position: "absolute",
+    right: 16,
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputFocused: {
-    borderColor: "#007AFF",
+    borderColor: "#1E40AF",
+    borderWidth: 2,
   },
   icon: {
     color: "#fff",

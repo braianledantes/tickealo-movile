@@ -1,5 +1,6 @@
+import { Texto } from "@/components/Texto";
 import { cn } from "@/utils/cn";
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 
 export function LinkButton({
   className,
@@ -12,7 +13,7 @@ export function LinkButton({
 }) {
   return (
     <Pressable className={cn(className)} onPress={onPress}>
-      <Text className="color-[#1E90FF]">{text}</Text>
+      <Texto medium className="color-[#1E90FF]">{text}</Texto>
     </Pressable>
   );
 }

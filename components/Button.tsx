@@ -1,6 +1,7 @@
+import { Texto } from "@/components/Texto";
 import { cn } from "@/utils/cn";
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, PressableProps, Text } from "react-native";
+import { Pressable, PressableProps } from "react-native";
 
 export type ButtonProps = PressableProps & {
   title: string;
@@ -28,14 +29,14 @@ export function Button({
           end={{ x: 1, y: 0 }}
           style={{ padding: 16, borderRadius: 100 }}
         >
-          <Text className="text-white text-base font-bold text-center">
+          <Texto semiBold className="text-white tracking-wider text-base text-center">
             {title}
-          </Text>
+          </Texto>
         </LinearGradient>
       ) : (
-        <Text className="text-white text-base font-bold bg-gray-600 px-4 py-4 rounded-full text-center w-full">
+        <Texto semiBold className="text-white tracking-wider text-base bg-gray-600 px-4 py-4 rounded-full text-center w-full">
           {title}
-        </Text>
+        </Texto>
       )}
     </Pressable>
   );
