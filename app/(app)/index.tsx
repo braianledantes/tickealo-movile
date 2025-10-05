@@ -1,10 +1,10 @@
-
 import api from "@/api/axiosConfig";
 import { Busqueda } from "@/components/Busqueda";
 import { EventList } from "@/components/EventList";
 import { Header } from "@/components/Header";
 import { getUserProvince } from "@/utils/location";
 import { PROVINCIAS_AR } from "@/utils/provincias";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -37,6 +37,7 @@ export default function Index() {
   const [province, setProvince] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   // 🔹 Cargar eventos desde backend
   useEffect(() => {
@@ -105,7 +106,12 @@ export default function Index() {
         <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
 
         {/* Lista de eventos */}
-        <EventList events={upcomingFiltered} />
+        <EventList
+          events={upcomingFiltered}
+          onPressEvent={(id) =>
+            router.push({ pathname: "/info-evento", params: { eventoId: id } })
+          }
+        />
 
         {/* Modal de provincias */}
         <Modal

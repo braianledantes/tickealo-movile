@@ -29,12 +29,18 @@ export function Button({
           end={{ x: 1, y: 0 }}
           style={{ padding: 16, borderRadius: 100 }}
         >
-          <Texto semiBold className="text-white tracking-wider text-base text-center">
+          <Texto
+            semiBold
+            className="text-white tracking-wider text-base text-center"
+          >
             {title}
           </Texto>
         </LinearGradient>
       ) : (
-        <Texto semiBold className="text-white tracking-wider text-base bg-gray-600 px-4 py-4 rounded-full text-center w-full">
+        <Texto
+          semiBold
+          className="text-white tracking-wider text-base bg-gray-600 px-4 py-4 rounded-full text-center w-full"
+        >
           {title}
         </Texto>
       )}

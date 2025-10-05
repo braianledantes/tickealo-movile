@@ -13,7 +13,9 @@ export function LinkButton({
 }) {
   return (
     <Pressable className={cn(className)} onPress={onPress}>
-      <Texto medium className="color-[#1E90FF]">{text}</Texto>
+      <Texto medium className="color-[#1E90FF]">
+        {text}
+      </Texto>
     </Pressable>
   );
 }

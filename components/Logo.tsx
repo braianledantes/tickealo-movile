@@ -24,5 +24,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     paddingVertical: 4,
     fontFamily: "Poppins_700Bold",
-  }
+  },
 });

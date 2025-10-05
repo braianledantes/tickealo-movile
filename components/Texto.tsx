@@ -5,7 +5,7 @@ type AppTextProps = TextProps & {
   thin?: boolean;
   extraLight?: boolean;
   light?: boolean;
-  regular?:boolean;
+  regular?: boolean;
   medium?: boolean;
   semiBold?: boolean;
   bold?: boolean;
@@ -31,12 +31,12 @@ export function Texto({
   if (thin) fontFamily = "Poppins_100Thin";
   else if (extraLight) fontFamily = "Poppins_200ExtraLight";
   else if (light) fontFamily = "Poppins_300Light";
-  else if (regular) fontFamily = "Poppins_400Regular"; 
+  else if (regular) fontFamily = "Poppins_400Regular";
   else if (medium) fontFamily = "Poppins_500Medium";
   else if (semiBold) fontFamily = "Poppins_600SemiBold";
   else if (bold) fontFamily = "Poppins_700Bold";
   else if (extraBold) fontFamily = "Poppins_800ExtraBold";
   else if (black) fontFamily = "Poppins_900Black";
 
-  return <Text {...props} style={[{ fontFamily}, style]} />;
+  return <Text {...props} style={[{ fontFamily }, style]} />;
 }

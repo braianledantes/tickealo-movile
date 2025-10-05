@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -22,7 +23,13 @@ type Event = {
   };
 };
 
-export function EventList({ events }: { events: Event[] }) {
+export function EventList({
+  events = [],
+  onPressEvent,
+}: {
+  events?: Event[];
+  onPressEvent?: (id: number) => void;
+}) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 
@@ -31,6 +38,7 @@ export function EventList({ events }: { events: Event[] }) {
 
   // 👇 Animación bounce
   const bounceAnim = useRef(new Animated.Value(0)).current;
+  const router = useRouter();
 
   useEffect(() => {
     if (events.length === 0) {
@@ -75,7 +83,15 @@ export function EventList({ events }: { events: Event[] }) {
           title={event.nombre}
           date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
           location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
-          onPress={() => console.log("Ver evento", event.id)}
+          // 👇 Aquí usamos la prop si existe, o el router si no
+          onPress={() =>
+            onPressEvent
+              ? onPressEvent(event.id)
+              : router.push({
+                  pathname: "/info-evento",
+                  params: { eventoId: String(event.id) },
+                })
+          }
         />
       ))}
     </ScrollView>

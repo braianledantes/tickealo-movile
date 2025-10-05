@@ -31,7 +31,6 @@ export function Input({
 
   return (
     <View style={[styles.container, isFocused && styles.inputFocused]}>
-      
       {type === "email" && <EmailIcon style={styles.icon} />}
       {type === "password" && <KeyIcon style={styles.icon} />}
       {type === "phone" && <PhoneIcon style={styles.icon} />}
@@ -75,8 +74,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
-    borderWidth:1,
-    borderColor:"#0F1D4C",
+    borderWidth: 1,
+    borderColor: "#0F1D4C",
   },
   input: {
     flex: 1,

@@ -6,7 +6,8 @@ export type TitleProps = TextProps & {};
 
 export function Title({ ...rest }: TitleProps) {
   return (
-    <Texto medium
+    <Texto
+      medium
       className={cn(
         rest.className,
         "text-4xl font-regular text-center text-white/90",
