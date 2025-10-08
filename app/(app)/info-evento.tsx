@@ -1,7 +1,9 @@
 import api from "@/api/axiosConfig";
 import { Button } from "@/components/Button";
+import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { EntradaCard } from "@/components/EntradaCard";
 import { HeaderBack } from "@/components/HeaderBack";
+import { useSeguidores } from "@/hooks/useSeguidores";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -25,6 +27,17 @@ type Entrada = {
   id_evento: number;
 };
 
+type Productora = {
+  userId: number;
+  nombre: string;
+  cuit?: string;
+  direccion?: string;
+  imagenUrl?: string;
+  telefono?: string;
+  calificacion?: number;
+  creditosDisponibles?: number;
+}
+
 type Evento = {
   id: number;
   nombre: string;
@@ -38,19 +51,24 @@ type Evento = {
     provincia?: string;
   };
   entradas?: Entrada[];
+  productora?: Productora;
 };
 
 export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
+  const { seguidores, seguir, dejarSeguir } = useSeguidores()
+  const [estaSiguiendo, setEstaSiguiendo] = useState(false);
 
-  // 🔹 Cargar detalle del evento desde backend
+  const productoraId = evento?.productora?.userId; 
+
   useEffect(() => {
     const fetchEvento = async () => {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
+        console.log(res.data)
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {
@@ -59,6 +77,13 @@ export default function InfoEvento() {
     };
     if (eventoId) fetchEvento();
   }, [eventoId]);
+
+    useEffect(() => {
+    if (productoraId) {
+      const seguido = seguidores.some(s => s.userId === productoraId);
+      setEstaSiguiendo(seguido);
+    }
+  }, [seguidores, productoraId]);
 
   if (loading) {
     return (
@@ -92,15 +117,35 @@ export default function InfoEvento() {
 
         {/* Botón seguir productora y campanita */}
         <View style={styles.followContainer}>
-          <Button
-            title="Seguir Productora"
-            onPress={() => console.log("seguir productora")}
-            style={styles.followButton}
-          />
+          {!estaSiguiendo ? (
+            <Button
+              title="Seguir Productora"
+              onPress={async () => {
+                if (productoraId) {
+                  await seguir(productoraId);
+                  setEstaSiguiendo(true);
+                }
+              }}
+              style={styles.followButton}
+            />
+          ) : (
+            <SecondaryButton
+              title="Dejar de seguir"
+              onPress={async () => {
+                if (productoraId) {
+                  await dejarSeguir(productoraId);
+                  setEstaSiguiendo(false);
+                }
+              }}
+              style={styles.followButton}
+            />
+          )}
+
           <TouchableOpacity style={styles.bellButton}>
             <Ionicons name="notifications-outline" size={22} color="#fff" />
           </TouchableOpacity>
         </View>
+
 
         {/* Descripción del evento */}
         <View style={styles.infoBox}>

@@ -1,4 +1,5 @@
 import { Logo } from "@/components/Logo";
+import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import {
   Poppins_100Thin,
   Poppins_200ExtraLight,
@@ -41,8 +42,10 @@ export default function Root() {
   };
   return (
     <AuthProvider>
-      <SplashScreenController />
-      <RootNavigator />
+      <SeguidoresProvider>
+        <SplashScreenController />
+        <RootNavigator />
+      </SeguidoresProvider>
     </AuthProvider>
   );
 }
