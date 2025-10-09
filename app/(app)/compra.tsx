@@ -6,7 +6,13 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useCompras } from "@/hooks/useCompras";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 type Entrada = {
   id: number;
@@ -33,7 +39,7 @@ export default function Compra() {
 
         // Buscar la entrada específica
         const entradaSeleccionada = eventoData.entradas.find(
-          (e: any) => e.id === entradaIdNum
+          (e: any) => e.id === entradaIdNum,
         );
 
         setEntrada(entradaSeleccionada);
@@ -92,18 +98,15 @@ export default function Compra() {
             key={entrada.id}
             tipo={entrada.tipo}
             precio={entrada.precio}
-            onPress={() => {}} 
+            onPress={() => {}}
           />
 
-          <InputImageUpLoader label="Sube el comprobante de Transferencia"/>
+          <InputImageUpLoader label="Sube el comprobante de Transferencia" />
         </View>
       </ScrollView>
 
       <View style={styles.entradasConfirm}>
-        <Button
-          title="Confirmar compra"
-          onPress={handleComprar}
-        />
+        <Button title="Confirmar compra" onPress={handleComprar} />
       </View>
     </View>
   );

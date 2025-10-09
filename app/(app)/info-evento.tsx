@@ -37,7 +37,7 @@ type Productora = {
   telefono?: string;
   calificacion?: number;
   creditosDisponibles?: number;
-}
+};
 
 type Evento = {
   id: number;
@@ -59,18 +59,18 @@ export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
-  const { seguidores, seguir, dejarSeguir } = useSeguidores()
+  const { seguidores, seguir, dejarSeguir } = useSeguidores();
   const [estaSiguiendo, setEstaSiguiendo] = useState(false);
   const router = useRouter();
 
-  const productoraId = evento?.productora?.userId; 
+  const productoraId = evento?.productora?.userId;
 
   useEffect(() => {
     const fetchEvento = async () => {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
-        console.log(res.data)
+        console.log(res.data);
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {
@@ -80,9 +80,9 @@ export default function InfoEvento() {
     if (eventoId) fetchEvento();
   }, [eventoId]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (productoraId) {
-      const seguido = seguidores.some(s => s.userId === productoraId);
+      const seguido = seguidores.some((s) => s.userId === productoraId);
       setEstaSiguiendo(seguido);
     }
   }, [seguidores, productoraId]);
@@ -103,7 +103,10 @@ export default function InfoEvento() {
     );
   }
 
-  const banner = evento.bannerUrl && evento.bannerUrl.trim() !== "" ? {uri: evento.bannerUrl } : defaultEvent;
+  const banner =
+    evento.bannerUrl && evento.bannerUrl.trim() !== ""
+      ? { uri: evento.bannerUrl }
+      : defaultEvent;
 
   return (
     <View style={{ flex: 1, backgroundColor: "#05081b" }}>
@@ -143,7 +146,6 @@ export default function InfoEvento() {
             <Ionicons name="notifications-outline" size={22} color="#fff" />
           </TouchableOpacity>
         </View>
-
 
         {/* Descripción del evento */}
         <View style={styles.infoBox}>
@@ -189,7 +191,15 @@ export default function InfoEvento() {
                 key={entrada.id}
                 tipo={entrada.tipo}
                 precio={entrada.precio}
-                onPress={() => router.push({ pathname: "/compra", params: { eventoId: eventoId , entradaId: entrada.id.toString() } })}
+                onPress={() =>
+                  router.push({
+                    pathname: "/compra",
+                    params: {
+                      eventoId: eventoId,
+                      entradaId: entrada.id.toString(),
+                    },
+                  })
+                }
               />
             ))
           ) : (
@@ -235,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     marginBottom: 6,
-    letterSpacing:1,
+    letterSpacing: 1,
   },
   locationRow: {
     flexDirection: "row",

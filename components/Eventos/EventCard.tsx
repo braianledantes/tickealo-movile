@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   image: {
-    width: 140, 
+    width: 140,
     height: 160,
   },
   info: {

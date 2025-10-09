@@ -12,7 +12,6 @@ interface ImageUploaderInputProps {
   readOnly?: boolean;
 }
 
-
 export function InputImageUpLoader({
   label,
   placeholder = "Subir imagen",
@@ -28,7 +27,10 @@ export function InputImageUpLoader({
 
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert("Permiso denegado", "Necesitamos acceso a la galería para seleccionar una imagen.");
+      Alert.alert(
+        "Permiso denegado",
+        "Necesitamos acceso a la galería para seleccionar una imagen.",
+      );
       return;
     }
 
@@ -64,7 +66,10 @@ export function InputImageUpLoader({
             <Texto style={styles.fileName}>{fileName}</Texto>
           </View>
           {!readOnly && (
-            <TouchableOpacity onPress={handleRemove} style={styles.removeButton}>
+            <TouchableOpacity
+              onPress={handleRemove}
+              style={styles.removeButton}
+            >
               <Feather name="trash-2" size={20} color="red" />
             </TouchableOpacity>
           )}
@@ -81,7 +86,7 @@ export function InputImageUpLoader({
 
 const styles = StyleSheet.create({
   container: { width: "100%", marginVertical: 6 },
-  label: { color: "#fff", fontSize: 14, marginBottom: 4, marginLeft:8 },
+  label: { color: "#fff", fontSize: 14, marginBottom: 4, marginLeft: 8 },
   placeholder: {
     flexDirection: "row",
     alignItems: "center",
@@ -93,7 +98,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: "#080C22",
   },
-  placeholderText: { color: "#888", fontSize: 14},
+  placeholderText: { color: "#888", fontSize: 14 },
   previewContainer: {
     flexDirection: "row",
     alignItems: "center",

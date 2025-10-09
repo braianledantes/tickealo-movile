@@ -2,17 +2,19 @@ import { getCompras, realizarCompra } from "@/api/compras";
 import { ComprasResponse } from "@/api/dto/compras.dto";
 import React, { createContext } from "react";
 
-interface ComprasContextProps { 
+interface ComprasContextProps {
   comprar: (formData: FormData) => Promise<ComprasResponse | undefined>;
   misCompras: () => Promise<ComprasResponse | void>;
-
 }
 
-export const ComprasContext = createContext<ComprasContextProps | undefined>(undefined);
+export const ComprasContext = createContext<ComprasContextProps | undefined>(
+  undefined,
+);
 
-export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
-  const comprar = async (formData : FormData) => {
+export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const comprar = async (formData: FormData) => {
     try {
       const response = await realizarCompra(formData);
       return response;

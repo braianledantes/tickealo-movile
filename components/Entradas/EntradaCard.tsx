@@ -23,20 +23,20 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
       activeOpacity={0.9}
       onPress={onPress}
     >
-
-
       <View style={styles.card}>
         <LinearGradient
           colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
-          start={{ x: 0.5, y: 0 }}   // comienza arriba
-          end={{ x: 0.5, y: 1 }}     // termina abajo (degradado vertical)
+          start={{ x: 0.5, y: 0 }} // comienza arriba
+          end={{ x: 0.5, y: 1 }} // termina abajo (degradado vertical)
           style={styles.gradientBar}
         />
-        
+
         {/* Lado izquierdo: texto */}
         <View style={styles.left}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            <Texto semiBold style={styles.label}>ENTRADA</Texto>
+            <Texto semiBold style={styles.label}>
+              ENTRADA
+            </Texto>
             <Texto style={[styles.tipo, { color: tipoColor }]}>
               {tipo.toUpperCase()}
             </Texto>
@@ -49,7 +49,8 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
             }}
           >
             <Text style={styles.precio}>
-              ${Number(precio).toLocaleString("es-AR", {
+              $
+              {Number(precio).toLocaleString("es-AR", {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               })}
@@ -82,14 +83,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: 8,
     borderTopRightRadius: 100,
-    borderBottomRightRadius: 100, 
+    borderBottomRightRadius: 100,
   },
   card: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#0b1030",
     borderTopEndRadius: 30,
-    borderBottomRightRadius:30,
+    borderBottomRightRadius: 30,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "#1b1e5e",
@@ -112,13 +113,13 @@ const styles = StyleSheet.create({
   tipo: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom:5,
+    marginBottom: 5,
   },
   precio: {
     color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
-    letterSpacing:1,
+    letterSpacing: 1,
   },
   porPersona: {
     color: "#999",
