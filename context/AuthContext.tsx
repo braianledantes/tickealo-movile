@@ -2,7 +2,7 @@ import { login, registerCliente } from "@/api/auth";
 import * as api from "@/api/axiosConfig";
 import { LoginDto } from "@/api/dto/login.dto";
 import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
-import { createContext, use, useState, type PropsWithChildren } from "react";
+import { createContext, useState, type PropsWithChildren } from "react";
 import { useStorageState } from "../hooks/useStorageState";
 
 type User = {
@@ -11,7 +11,7 @@ type User = {
   image?: string;
 };
 
-const AuthContext = createContext<{
+export const AuthContext = createContext<{
   login: (dto: LoginDto) => void;
   registerCliente: (dto: RegisterClienteDto) => void;
   logout: () => void;
@@ -26,16 +26,6 @@ const AuthContext = createContext<{
   isLoading: false,
   user: null,
 });
-
-// Use this hook to access the user info.
-export function useAuth() {
-  const value = use(AuthContext);
-  if (!value) {
-    throw new Error("useSession must be wrapped in a <AuthProvider />");
-  }
-
-  return value;
-}
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [[isLoading, accessToken], setAccessToken] =

@@ -1,6 +1,7 @@
 import { Logo } from "@/components/Logo";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Poppins_100Thin,
   Poppins_200ExtraLight,
@@ -16,7 +17,7 @@ import {
 import AppLoading from "expo-app-loading";
 import { Stack } from "expo-router";
 import { Text as RNText } from "react-native";
-import { AuthProvider, useAuth } from "../context/AuthContext";
+import { AuthProvider } from "../context/AuthContext";
 import "../global.css";
 import { SplashScreenController } from "../screens/splash";
 

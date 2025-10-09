@@ -1,6 +1,6 @@
+import { useAuth } from "@/hooks/useAuth";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
 
 export function SplashScreenController() {
   const { isLoading } = useAuth();

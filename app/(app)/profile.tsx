@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button/Button";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { useAuth } from "@/hooks/useAuth";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import {
@@ -11,7 +12,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useAuth } from "../../context/AuthContext";
 
 export default function Profile() {
   const { user } = useAuth();

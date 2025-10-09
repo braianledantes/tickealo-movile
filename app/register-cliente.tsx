@@ -2,12 +2,12 @@ import { Button } from "@/components/Button/Button";
 import { LinkButton } from "@/components/Button/LinkButton";
 import { Input } from "@/components/Input/Input";
 import { Title } from "@/components/Title";
+import { useAuth } from "@/hooks/useAuth";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Alert, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useAuth } from "../context/AuthContext";
 
 export default function RegisterCliente() {
   const { registerCliente } = useAuth();
