@@ -1,4 +1,5 @@
 import { Logo } from "@/components/Logo";
+import { ComprasProvider } from "@/context/ComprasContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import {
   Poppins_100Thin,
@@ -43,8 +44,10 @@ export default function Root() {
   return (
     <AuthProvider>
       <SeguidoresProvider>
-        <SplashScreenController />
-        <RootNavigator />
+        <ComprasProvider>
+          <SplashScreenController />
+          <RootNavigator />
+        </ComprasProvider>
       </SeguidoresProvider>
     </AuthProvider>
   );

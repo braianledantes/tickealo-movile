@@ -89,8 +89,8 @@ export default function Index() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#010030" }}>
-      <View style={{ flex: 1, backgroundColor: "#010030" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
+      <View style={{ flex: 1, backgroundColor: "#05081b" }}>
         {/* Header */}
         <Header />
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#010030",
+    backgroundColor: "#05081b",
   },
   modalOverlay: {
     position: "absolute",

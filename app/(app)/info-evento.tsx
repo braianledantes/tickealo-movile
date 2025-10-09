@@ -3,9 +3,10 @@ import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { Texto } from "@/components/Texto";
 import { useSeguidores } from "@/hooks/useSeguidores";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -44,7 +45,7 @@ type Evento = {
   descripcion: string;
   inicioAt: string;
   finAt: string;
-  portadaUrl?: string;
+  bannerUrl?: string;
   lugar?: {
     direccion?: string;
     ciudad?: string;
@@ -60,6 +61,7 @@ export default function InfoEvento() {
   const [loading, setLoading] = useState(true);
   const { seguidores, seguir, dejarSeguir } = useSeguidores()
   const [estaSiguiendo, setEstaSiguiendo] = useState(false);
+  const router = useRouter();
 
   const productoraId = evento?.productora?.userId; 
 
@@ -68,7 +70,7 @@ export default function InfoEvento() {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
-        // console.log(res.data)
+        console.log(res.data)
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {
@@ -101,19 +103,15 @@ export default function InfoEvento() {
     );
   }
 
-  // 🖼️ Portada con fallback a defaultEvent
-  const portada =
-    evento.portadaUrl && evento.portadaUrl.trim() !== ""
-      ? { uri: evento.portadaUrl }
-      : defaultEvent;
+  const banner = evento.bannerUrl && evento.bannerUrl.trim() !== "" ? {uri: evento.bannerUrl } : defaultEvent;
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#010030" }}>
+    <View style={{ flex: 1, backgroundColor: "#05081b" }}>
       <HeaderBack />
 
       <ScrollView style={styles.container}>
         {/* Imagen portada */}
-        <Image source={portada} style={styles.image} />
+        <Image source={banner} style={styles.image} />
 
         {/* Botón seguir productora y campanita */}
         <View style={styles.followContainer}>
@@ -149,7 +147,7 @@ export default function InfoEvento() {
 
         {/* Descripción del evento */}
         <View style={styles.infoBox}>
-          <Text style={styles.title}>{evento.nombre}</Text>
+          <Texto style={styles.title}>{evento.nombre}</Texto>
 
           {/* Lugar */}
           <View style={styles.locationRow}>
@@ -159,19 +157,19 @@ export default function InfoEvento() {
               color="#4da6ff"
               style={{ marginRight: 6 }}
             />
-            <Text style={styles.locationText}>
+            <Texto style={styles.locationText}>
               {evento.lugar?.direccion
                 ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
                 : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
-            </Text>
+            </Texto>
           </View>
 
-          <Text style={styles.description}>{evento.descripcion}</Text>
+          <Texto style={styles.description}>{evento.descripcion}</Texto>
         </View>
 
         {/* Fecha */}
         <View style={styles.dateBox}>
-          <Text style={styles.dateTitle}>
+          <Texto style={styles.dateTitle}>
             {new Date(evento.inicioAt)
               .toLocaleDateString("es-AR", {
                 weekday: "long",
@@ -180,7 +178,7 @@ export default function InfoEvento() {
                 year: "numeric",
               })
               .toUpperCase()}
-          </Text>
+          </Texto>
         </View>
 
         {/* Entradas */}
@@ -191,13 +189,13 @@ export default function InfoEvento() {
                 key={entrada.id}
                 tipo={entrada.tipo}
                 precio={entrada.precio}
-                onPress={() => console.log("Seleccionó", entrada.tipo)}
+                onPress={() => router.push({ pathname: "/compra", params: { eventoId: eventoId , entradaId: entrada.id.toString() } })}
               />
             ))
           ) : (
-            <Text style={styles.sinEntradas}>
+            <Texto style={styles.sinEntradas}>
               No hay entradas disponibles por ahora.
-            </Text>
+            </Texto>
           )}
         </View>
       </ScrollView>
@@ -208,10 +206,9 @@ export default function InfoEvento() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   image: {
-    width: "100%",
-    height: 200,
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
+    width: "100%", // o '100%' si querés que se adapte al ancho del contenedor
+    aspectRatio: 11 / 4, // relación de aspecto (ancho / alto)
+    resizeMode: "cover", // asegura que la imagen llene el espacio
   },
   followContainer: {
     flexDirection: "row",
@@ -234,10 +231,11 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   title: {
-    color: "#fff",
-    fontSize: 22,
+    color: "#96B5C5",
+    fontSize: 25,
     fontWeight: "bold",
     marginBottom: 6,
+    letterSpacing:1,
   },
   locationRow: {
     flexDirection: "row",
@@ -262,10 +260,11 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   dateTitle: {
-    color: "#fff",
+    color: "#A5A6AD",
     fontWeight: "bold",
-    fontSize: 14,
+    fontSize: 18,
     textTransform: "uppercase",
+    letterSpacing: 1,
   },
   entradasContainer: {
     marginTop: 16,
@@ -282,6 +281,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#010030",
+    backgroundColor: "#05081b",
   },
 });

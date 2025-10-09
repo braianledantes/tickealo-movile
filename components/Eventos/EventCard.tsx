@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   image: {
-    width: 140, // ancho fijo para mantener proporción visual
+    width: 140, 
     height: 160,
   },
   info: {

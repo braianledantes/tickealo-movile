@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Texto } from "../Texto";
 
 type EntradaCardProps = {
   tipo: string;
@@ -23,22 +23,24 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
       activeOpacity={0.9}
       onPress={onPress}
     >
-      {/* 🔹 Barra luminosa lateral izquierda */}
-      <LinearGradient
-        colors={["#4da6ff", "#7df9ff", "transparent"]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={styles.gradientBar}
-      />
 
-      {/* 🔹 Contenido principal del ticket */}
+
       <View style={styles.card}>
+        <LinearGradient
+          colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
+          start={{ x: 0.5, y: 0 }}   // comienza arriba
+          end={{ x: 0.5, y: 1 }}     // termina abajo (degradado vertical)
+          style={styles.gradientBar}
+        />
+        
         {/* Lado izquierdo: texto */}
         <View style={styles.left}>
-          <Text style={styles.label}>ENTRADA</Text>
-          <Text style={[styles.tipo, { color: tipoColor }]}>
-            {tipo.toUpperCase()}
-          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+            <Texto semiBold style={styles.label}>ENTRADA</Texto>
+            <Texto style={[styles.tipo, { color: tipoColor }]}>
+              {tipo.toUpperCase()}
+            </Texto>
+          </View>
           <View
             style={{
               flexDirection: "row",
@@ -46,8 +48,13 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
               marginTop: 4,
             }}
           >
-            <Text style={styles.precio}>${precio.toLocaleString("es-AR")}</Text>
-            <Text style={styles.porPersona}> por persona</Text>
+            <Text style={styles.precio}>
+              ${Number(precio).toLocaleString("es-AR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </Text>
+            <Texto style={styles.porPersona}> por persona</Texto>
           </View>
         </View>
 
@@ -66,7 +73,6 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     marginVertical: 8,
-    borderRadius: 14,
     overflow: "hidden",
   },
   gradientBar: {
@@ -74,15 +80,16 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    width: 4,
-    borderTopLeftRadius: 14,
-    borderBottomLeftRadius: 14,
+    width: 8,
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 100, 
   },
   card: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#0b1030",
-    borderRadius: 14,
+    borderTopEndRadius: 30,
+    borderBottomRightRadius:30,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "#1b1e5e",
@@ -99,19 +106,19 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#bbb",
-    fontSize: 11,
-    fontWeight: "600",
+    fontSize: 14,
     letterSpacing: 0.5,
   },
   tipo: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginTop: -2,
+    marginBottom:5,
   },
   precio: {
     color: "#fff",
-    fontSize: 17,
+    fontSize: 20,
     fontWeight: "bold",
+    letterSpacing:1,
   },
   porPersona: {
     color: "#999",
@@ -129,6 +136,6 @@ const styles = StyleSheet.create({
     width: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#101347",
+    backgroundColor: "#0b1030",
   },
 });

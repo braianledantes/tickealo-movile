@@ -41,7 +41,7 @@ export default function Profile() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#010030" }}>
+    <View style={{ flex: 1, backgroundColor: "#05081b" }}>
       <HeaderBack />
       <ScrollView
         style={styles.container}

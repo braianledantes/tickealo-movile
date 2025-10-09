@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     height: 60,
-    backgroundColor: "#010030",
+    backgroundColor: "#05081b",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

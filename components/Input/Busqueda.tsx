@@ -44,7 +44,7 @@ export const Busqueda: React.FC<BusquedaProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#010030",
+    backgroundColor: "#05081b",
     borderBottomWidth: 1,
     borderBottomColor: "gray",
     paddingVertical: 10,
