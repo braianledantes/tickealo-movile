@@ -1,6 +1,6 @@
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { LinkButton } from "@/components/LinkButton";
+import { Button } from "@/components/Button/Button";
+import { LinkButton } from "@/components/Button/LinkButton";
+import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
 import { Screen } from "@/screens/main";

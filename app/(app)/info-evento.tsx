@@ -1,8 +1,8 @@
 import api from "@/api/axiosConfig";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
-import { EntradaCard } from "@/components/EntradaCard";
-import { HeaderBack } from "@/components/HeaderBack";
+import { EntradaCard } from "@/components/Entradas/EntradaCard";
+import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useSeguidores } from "@/hooks/useSeguidores";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -68,7 +68,7 @@ export default function InfoEvento() {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
-        console.log(res.data)
+        // console.log(res.data)
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {

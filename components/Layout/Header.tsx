@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View } from "react-native";
-import Logo from "../assets/images/logotipo.png";
-import { useAuth } from "../context/AuthContext";
+import Logo from "../../assets/images/logotipo.png";
+import { useAuth } from "../../context/AuthContext";
 import { MenuGeneral } from "./MenuGeneral";
 import { MenuUsuario } from "./MenuUsuario";
 

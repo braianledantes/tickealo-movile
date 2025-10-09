@@ -1,7 +1,7 @@
 import api from "@/api/axiosConfig";
-import { Busqueda } from "@/components/Busqueda";
-import { EventList } from "@/components/EventList";
-import { Header } from "@/components/Header";
+import { EventList } from "@/components/Eventos/EventList";
+import { Busqueda } from "@/components/Input/Busqueda";
+import { Header } from "@/components/Layout/Header";
 import { getUserProvince } from "@/utils/location";
 import { PROVINCIAS_AR } from "@/utils/provincias";
 import { useRouter } from "expo-router";

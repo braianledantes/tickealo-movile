@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button";
-import { HeaderBack } from "@/components/HeaderBack";
+import { Button } from "@/components/Button/Button";
+import { HeaderBack } from "@/components/Layout/HeaderBack";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import {

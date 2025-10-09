@@ -7,7 +7,7 @@ import {
   KeyIcon,
   PhoneIcon,
   UserIcon,
-} from "./Icons";
+} from "../Icons";
 
 export type InputProps = {
   value: string;
