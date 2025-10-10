@@ -1,4 +1,4 @@
-import { login, registerCliente } from "@/api/auth";
+import { currentUser, login, registerCliente } from "@/api/auth";
 import * as api from "@/api/axiosConfig";
 import { LoginDto } from "@/api/dto/login.dto";
 import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
@@ -9,19 +9,25 @@ type User = {
   username: string;
   email?: string;
   image?: string;
+  roles?: {
+    name?: string;
+    description?: string;
+  };
 };
 
 export const AuthContext = createContext<{
-  login: (dto: LoginDto) => void;
-  registerCliente: (dto: RegisterClienteDto) => void;
+  login: (dto: LoginDto) => Promise<void>;
+  registerCliente: (dto: RegisterClienteDto) => Promise<void>;
   logout: () => void;
+  me: () => Promise<any>;
   accessToken?: string | null;
   isLoading: boolean;
   user?: User | null;
 }>({
-  login: () => null,
-  registerCliente: () => null,
-  logout: () => null,
+  login: async () => {},
+  registerCliente: async () => {},
+  logout: () => {},
+  me: async () => {},
   accessToken: null,
   isLoading: false,
   user: null,
@@ -30,27 +36,33 @@ export const AuthContext = createContext<{
 export function AuthProvider({ children }: PropsWithChildren) {
   const [[isLoading, accessToken], setAccessToken] =
     useStorageState("access_token");
-
   const [user, setUser] = useState<User | null>(null);
 
-  // TODO: Esto se puede mejorar
-  // (ver porque con useEffect no funciona, se ejecutra
-  // despues de reendirizar los otros componentes)
-  // De esta manera se asegura que siempre este actualizado
+  // Configura el header global
   if (accessToken) {
     api.addHeaderAuthorization(accessToken);
   } else {
     api.removeHeaderAuthorization();
   }
 
+  const me = async () => {
+    try {
+      const response = await currentUser();
+      return response;
+    } catch (err) {
+      console.error("Error obtenieindo al usuario logueado:", err);
+    }
+  };
+
   return (
-    <AuthContext
+    <AuthContext.Provider
       value={{
         login: async (dto: LoginDto) => {
           const result = await login(dto);
           const token = result.data.access_token;
           setAccessToken(token);
-          //usamos la inicial del email como userName temporal si se loguea
+
+          // Usar inicial del email como username temporal
           const fakeUsername = dto.email.split("@")[0];
           setUser({ username: fakeUsername, email: dto.email });
         },
@@ -67,9 +79,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         accessToken,
         isLoading,
         user,
+        me,
       }}
     >
       {children}
-    </AuthContext>
+    </AuthContext.Provider>
   );
 }

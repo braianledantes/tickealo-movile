@@ -1,6 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
 import { SeguidorDTO } from "../api/dto/seguidor.dto";
-import { dejarSeguirProductora, getSeguidores, seguirProductora } from "../api/seguidores";
+import {
+  dejarSeguirProductora,
+  getSeguidores,
+  seguirProductora,
+} from "../api/seguidores";
 
 interface SeguidoresContextProps {
   seguidores: SeguidorDTO[];
@@ -8,9 +12,13 @@ interface SeguidoresContextProps {
   dejarSeguir: (idProductora: number) => Promise<void>;
 }
 
-export const SeguidoresContext = createContext<SeguidoresContextProps | undefined>(undefined);
+export const SeguidoresContext = createContext<
+  SeguidoresContextProps | undefined
+>(undefined);
 
-export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [seguidores, setSeguidores] = useState<SeguidorDTO[]>([]);
 
   // 🔹 Cargar seguidores al montar
@@ -29,7 +37,7 @@ export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const seguir = async (idProductora: number) => {
     try {
       const nuevoSeguidor = await seguirProductora(idProductora);
-      setSeguidores(prev => [...prev, nuevoSeguidor]);
+      setSeguidores((prev) => [...prev, nuevoSeguidor]);
     } catch (err) {
       console.error("Error siguiendo productora:", err);
     }
@@ -38,7 +46,9 @@ export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const dejarSeguir = async (idProductora: number) => {
     try {
       const eliminado = await dejarSeguirProductora(idProductora);
-      setSeguidores(prev => prev.filter(s => s.userId !== eliminado.userId));
+      setSeguidores((prev) =>
+        prev.filter((s) => s.userId !== eliminado.userId),
+      );
     } catch (err) {
       console.error("Error dejando de seguir productora:", err);
     }

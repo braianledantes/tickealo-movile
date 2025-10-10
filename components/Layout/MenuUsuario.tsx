@@ -2,25 +2,20 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState } from "react";
-import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const MenuUsuario: React.FC = () => {
-  const { user, logout } = useAuth();
-  const [visible, setVisible] = useState(false);
+  const { user } = useAuth();
+  // const [visible, setVisible] = useState(false);
 
   return (
     <>
       {/* Botón avatar */}
       <TouchableOpacity
-        onPress={() => setVisible(true)}
+        onPress={() => {
+          router.push("/profile");
+        }}
         style={styles.avatarButton}
       >
         {user?.username ? (
@@ -35,7 +30,7 @@ export const MenuUsuario: React.FC = () => {
       </TouchableOpacity>
 
       {/* Modal tipo popover */}
-      <Modal
+      {/* <Modal
         transparent
         visible={visible}
         animationType="fade"
@@ -71,7 +66,7 @@ export const MenuUsuario: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </Modal> */}
     </>
   );
 };

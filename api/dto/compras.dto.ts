@@ -11,7 +11,7 @@ export interface CompraDTO {
   id: number;
   comprobanteTransferencia: string | null;
   monto: string;
-  estado: "PENDIENTE" | "COMPLETADA" | "CANCELADA" | string; 
+  estado: "PENDIENTE" | "COMPLETADA" | "CANCELADA" | string;
   createdAt: string;
   updatedAt: string;
 

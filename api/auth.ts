@@ -1,4 +1,7 @@
-import api, { addHeaderAuthorization, removeHeaderAuthorization } from "./axiosConfig";
+import api, {
+  addHeaderAuthorization,
+  removeHeaderAuthorization,
+} from "./axiosConfig";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterClienteDto } from "./dto/register-cliente.dto";
 
@@ -21,7 +24,7 @@ export async function registerCliente(dto: RegisterClienteDto) {
 
 export async function currentUser() {
   const response = await api.get("/auth/me");
-  return response;
+  return response.data;
 }
 
 export async function logout() {
