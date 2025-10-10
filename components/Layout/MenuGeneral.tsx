@@ -6,7 +6,9 @@ import {
   Animated,
   Image,
   Modal,
+  Platform,
   Pressable,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -191,7 +193,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: "absolute",
-    top: 0,
+    top: Platform.OS === "ios" ? 44 : StatusBar.currentHeight,
     bottom: 0,
     width: 260,
     backgroundColor: "#05081b",

@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import defaultEvent from "../../assets/images/defaultEvent.jpg";
 
-// 🧩 Tipos
+//Tipos
 type Entrada = {
   id: number;
   tipo: string;
@@ -103,18 +103,26 @@ export default function InfoEvento() {
     );
   }
 
-  const banner =
-    evento.bannerUrl && evento.bannerUrl.trim() !== ""
-      ? { uri: evento.bannerUrl }
-      : defaultEvent;
-
+  const tieneBanner = !!(evento.bannerUrl && evento.bannerUrl.trim() !== "");
+  const banner = tieneBanner ? { uri: evento.bannerUrl } : defaultEvent;
   return (
     <View style={{ flex: 1, backgroundColor: "#05081b" }}>
       <HeaderBack />
 
       <ScrollView style={styles.container}>
         {/* Imagen portada */}
-        <Image source={banner} style={styles.image} />
+        <Image
+          source={banner}
+          style={[
+            styles.image,
+            !tieneBanner && {
+              height: 180,
+              aspectRatio: undefined,
+              resizeMode: "cover",
+              opacity: 0.8,
+            },
+          ]}
+        />
 
         {/* Botón seguir productora y campanita */}
         <View style={styles.followContainer}>
@@ -193,10 +201,13 @@ export default function InfoEvento() {
                 precio={entrada.precio}
                 onPress={() =>
                   router.push({
-                    pathname: "/compra",
+                    pathname: "/cant-entradas",
                     params: {
-                      eventoId: eventoId,
                       entradaId: entrada.id.toString(),
+                      nombre: entrada.tipo,
+                      precio: String(entrada.precio),
+                      portadaUrl: evento.bannerUrl ?? "",
+                      eventoId: String(evento.id),
                     },
                   })
                 }
@@ -216,10 +227,11 @@ export default function InfoEvento() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   image: {
-    width: "100%", // o '100%' si querés que se adapte al ancho del contenedor
-    aspectRatio: 11 / 4, // relación de aspecto (ancho / alto)
-    resizeMode: "cover", // asegura que la imagen llene el espacio
+    width: "100%",
+    aspectRatio: 11 / 4,
+    resizeMode: "cover",
   },
+
   followContainer: {
     flexDirection: "row",
     alignItems: "center",

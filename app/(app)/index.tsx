@@ -1,11 +1,13 @@
+// app/(app)/index.tsx
 import api from "@/api/axiosConfig";
 import { EventList } from "@/components/Eventos/EventList";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
+import { useAuth } from "@/hooks/useAuth";
 import { getUserProvince } from "@/utils/location";
 import { PROVINCIAS_AR } from "@/utils/provincias";
 import { useRouter } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -25,57 +27,78 @@ type Event = {
   finAt: string;
   portadaUrl?: string;
   lugar?: {
-    direccion: string;
-    ciudad: string;
-    provincia: string;
+    direccion?: string;
+    ciudad?: string;
+    provincia?: string;
   };
 };
 
 export default function Index() {
-  const [upcoming, setUpcoming] = useState<Event[]>([]);
+  const { authReady, headerReady, isLoading: authLoading } = useAuth();
+
+  const [upcoming, setUpcoming] = useState<Event[] | undefined>([]);
   const [loading, setLoading] = useState(true);
   const [province, setProvince] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  // 🔹 Cargar eventos desde backend
   useEffect(() => {
+    let cancelled = false;
+
     const loadEvents = async () => {
+      if (authLoading) return;
+
+      // Si no hay token o el header aún no está listo, no muestra eventos
+      if (!authReady || !headerReady) {
+        if (!cancelled) {
+          setUpcoming([]);
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
+        setLoading(true);
+
         const params: any = {
           page: 1,
           limit: 50,
           orderDir: "ASC",
         };
-
-        if (search && search.trim() !== "") {
-          params.search = search.trim();
-        }
+        if (search?.trim()) params.search = search.trim();
 
         const res = await api.get("/eventos", { params });
-        setUpcoming(res.data.data);
+        const list: Event[] = Array.isArray(res?.data?.data)
+          ? res.data.data
+          : [];
+        if (!cancelled) setUpcoming(list);
       } catch (err: any) {
-        console.error(
-          "Error cargando eventos:",
-          err?.response?.data || err.message || err,
-        );
+        if (!cancelled) {
+          console.error(
+            "Error cargando eventos:",
+            err?.response?.data || err?.message || err,
+          );
+          setUpcoming([]);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadEvents();
-  }, [search]); // province se filtra en frontend
+    return () => {
+      cancelled = true;
+    };
+  }, [search, authReady, headerReady, authLoading]);
 
-  // 🔹 Filtrado en frontend (provincia + search)
+  // filtrado en frontend
   const upcomingFiltered = useMemo(() => {
-    return upcoming.filter((e) => {
+    const list = Array.isArray(upcoming) ? upcoming : [];
+    return list.filter((e) => {
       const matchesSearch =
-        !search || e.nombre.toLowerCase().includes(search.toLowerCase());
-
+        !search || e.nombre?.toLowerCase().includes(search.toLowerCase());
       const matchesProvincia = !province || e.lugar?.provincia === province;
-
       return matchesSearch && matchesProvincia;
     });
   }, [upcoming, search, province]);
@@ -109,7 +132,10 @@ export default function Index() {
         <EventList
           events={upcomingFiltered}
           onPressEvent={(id) =>
-            router.push({ pathname: "/info-evento", params: { eventoId: id } })
+            router.push({
+              pathname: "/info-evento",
+              params: { eventoId: String(id) },
+            })
           }
         />
 

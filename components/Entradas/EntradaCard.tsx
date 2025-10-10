@@ -8,74 +8,83 @@ type EntradaCardProps = {
   tipo: string;
   precio: number;
   onPress?: () => void;
+  right?: React.ReactNode;
+  priceValueOverride?: number;
+  priceSuffixText?: string;
 };
 
 export const EntradaCard: React.FC<EntradaCardProps> = ({
   tipo,
   precio,
   onPress,
+  right,
+  priceValueOverride,
+  priceSuffixText,
 }) => {
   const tipoColor = tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
 
-  return (
+  const Content = (
+    <View style={styles.card}>
+      <LinearGradient
+        colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.gradientBar}
+      />
+
+      {/* Izquierda */}
+      <View style={styles.left}>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+          <Texto semiBold style={styles.label}>
+            ENTRADA
+          </Texto>
+          <Texto style={[styles.tipo, { color: tipoColor }]}>
+            {tipo.toUpperCase()}
+          </Texto>
+        </View>
+
+        <View
+          style={{ flexDirection: "row", alignItems: "flex-end", marginTop: 4 }}
+        >
+          <Text style={styles.precio}>
+            $
+            {Number(priceValueOverride ?? precio).toLocaleString("es-AR", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </Text>
+          <Texto style={styles.porPersona}>
+            {" "}
+            {priceSuffixText ?? "por persona"}
+          </Texto>
+        </View>
+      </View>
+
+      {/* Separador */}
+      <View style={styles.separator} />
+
+      {/* Derecha (slot) */}
+      <View style={styles.right}>
+        {right ?? <Ionicons name="add" size={24} color="#fff" />}
+      </View>
+    </View>
+  );
+
+  return onPress ? (
     <TouchableOpacity
       style={styles.wrapper}
       activeOpacity={0.9}
       onPress={onPress}
     >
-      <View style={styles.card}>
-        <LinearGradient
-          colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
-          start={{ x: 0.5, y: 0 }} // comienza arriba
-          end={{ x: 0.5, y: 1 }} // termina abajo (degradado vertical)
-          style={styles.gradientBar}
-        />
-
-        {/* Lado izquierdo: texto */}
-        <View style={styles.left}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            <Texto semiBold style={styles.label}>
-              ENTRADA
-            </Texto>
-            <Texto style={[styles.tipo, { color: tipoColor }]}>
-              {tipo.toUpperCase()}
-            </Texto>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-end",
-              marginTop: 4,
-            }}
-          >
-            <Text style={styles.precio}>
-              $
-              {Number(precio).toLocaleString("es-AR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
-            </Text>
-            <Texto style={styles.porPersona}> por persona</Texto>
-          </View>
-        </View>
-
-        {/* Línea punteada divisoria */}
-        <View style={styles.separator} />
-
-        {/* Lado derecho: ícono de suma */}
-        <View style={styles.right}>
-          <Ionicons name="add" size={24} color="#fff" />
-        </View>
-      </View>
+      {Content}
     </TouchableOpacity>
+  ) : (
+    <View style={styles.wrapper}>{Content}</View>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginVertical: 8,
-    overflow: "hidden",
-  },
+  wrapper: { marginVertical: 8, overflow: "hidden" },
   gradientBar: {
     position: "absolute",
     left: 0,
@@ -100,32 +109,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  left: {
-    flex: 1,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-  },
-  label: {
-    color: "#bbb",
-    fontSize: 14,
-    letterSpacing: 0.5,
-  },
-  tipo: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  precio: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    letterSpacing: 1,
-  },
-  porPersona: {
-    color: "#999",
-    fontSize: 12,
-    marginBottom: 2,
-  },
+  left: { flex: 1, paddingVertical: 14, paddingHorizontal: 20 },
+  label: { color: "#bbb", fontSize: 14, letterSpacing: 0.5 },
+  tipo: { fontSize: 20, fontWeight: "bold", marginBottom: 5 },
+  precio: { color: "#fff", fontSize: 20, fontWeight: "bold", letterSpacing: 1 },
+  porPersona: { color: "#999", fontSize: 12, marginBottom: 2 },
   separator: {
     width: 1,
     height: "70%",
@@ -134,7 +122,7 @@ const styles = StyleSheet.create({
     borderColor: "#666",
   },
   right: {
-    width: 50,
+    width: 60,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#0b1030",
