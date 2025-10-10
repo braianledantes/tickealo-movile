@@ -1,6 +1,7 @@
 import { Logo } from "@/components/Logo";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
+import { ValidadorProvider } from "@/context/ValidadorContext";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Poppins_100Thin,
@@ -46,8 +47,10 @@ export default function Root() {
     <AuthProvider>
       <SeguidoresProvider>
         <ComprasProvider>
-          <SplashScreenController />
-          <RootNavigator />
+          <ValidadorProvider>
+            <SplashScreenController />
+            <RootNavigator />
+          </ValidadorProvider>
         </ComprasProvider>
       </SeguidoresProvider>
     </AuthProvider>

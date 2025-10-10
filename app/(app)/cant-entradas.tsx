@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: undefined,
-    aspectRatio: 16 / 9,
+    aspectRatio: 11 / 4,
     maxHeight: 250,
     resizeMode: "cover",
   },

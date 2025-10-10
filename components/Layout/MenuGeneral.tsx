@@ -20,15 +20,21 @@ type Role = {
   description?: string;
 };
 
-type Usuario = {
-  userId: number;
-  nombre: string;
-  apellido: string;
-  telefono: string;
+type User = {
+  email: string;
+  emailVerifiedAt: string | null;
   roles: Role[];
   username: string;
-  email?: string;
-  imagenUrl?: string;
+};
+
+export type Usuario = {
+  apellido: string;
+  imagenPerfilUrl: string | null;
+  nombre: string;
+  puntosAcumulados: number;
+  telefono: string;
+  user: User;
+  userId: number;
 };
 
 export const MenuGeneral: React.FC = () => {
@@ -107,7 +113,7 @@ export const MenuGeneral: React.FC = () => {
           <View style={styles.userHeader}>
             {usuario?.imagenPerfilUrl ? (
               <Image
-                source={{ uri: usuario.imagenUrl }}
+                source={{ uri: usuario.imagenPerfilUrl }}
                 style={styles.userImage}
               />
             ) : (
@@ -161,7 +167,7 @@ export const MenuGeneral: React.FC = () => {
                   styles.itemRow,
                   activeItem === "validador" && styles.itemActive,
                 ]}
-                onPress={() => handlePress("validador", "/")}
+                onPress={() => handlePress("validador", "/eventos-validador")}
               >
                 <Ionicons name="qr-code-outline" style={styles.icon} />
                 <Text style={styles.item}>Panel Validador</Text>

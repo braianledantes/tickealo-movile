@@ -34,6 +34,7 @@ type Productora = {
   cuit?: string;
   direccion?: string;
   imagenUrl?: string;
+  isSeguido?: boolean;
   telefono?: string;
   calificacion?: number;
   creditosDisponibles?: number;
@@ -81,11 +82,8 @@ export default function InfoEvento() {
   }, [eventoId]);
 
   useEffect(() => {
-    if (productoraId) {
-      const seguido = seguidores.some((s) => s.userId === productoraId);
-      setEstaSiguiendo(seguido);
-    }
-  }, [seguidores, productoraId]);
+    setEstaSiguiendo(!!evento?.productora?.isSeguido);
+  }, [evento]);
 
   if (loading) {
     return (
