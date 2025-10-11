@@ -1,143 +1,129 @@
 import { Button } from "@/components/Button/Button";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { UsuarioPerfil } from "@/components/Layout/MenuUsuario";
+import { Texto } from "@/components/Texto";
 import { useAuth } from "@/hooks/useAuth";
-import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
+import React, { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
+
+type Roles = {
+  name: string;
+  description: string;
+};
+type User = {
+  email: string;
+  emailVerifiedAt: string | null;
+  username: string;
+  roles: Roles[];
+};
+
+export type Usuario = {
+  apellido: string;
+  imagenPerfilUrl: string | null;
+  nombre: string;
+  puntosAcumulados: number;
+  telefono: string;
+  user: User;
+  userId: number;
+};
 
 export default function Profile() {
-  const { user } = useAuth();
-  const [editing, setEditing] = useState(false);
-  const [nombre, setNombre] = useState(user?.username || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [image, setImage] = useState(user?.image || "");
+  const { me } = useAuth();
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      // TODO: enviar imagen al backend
-    }
-  };
-
-  const handleSave = () => {
-    // TODO: enviar datos al backend
-    console.log("Guardando:", { nombre, email, image });
-    setEditing(false);
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userData = await me();
+      setUsuario(userData);
+      console.log(userData);
+    };
+    fetchUser();
+  }, [me]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#05081b" }}>
+    <View className="flex-1">
       <HeaderBack />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ padding: 20 }}
-      >
+      <ScrollView className="bg-[#05081b] p-5">
         {/* Avatar */}
-        <TouchableOpacity onPress={pickImage} style={styles.avatarContainer}>
-          {image ? (
-            <Image source={{ uri: image }} style={styles.avatar} />
-          ) : (
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarInitial}>
-                {user?.username?.charAt(0).toUpperCase() || "?"}
-              </Text>
+        <View className="flex-row justify-center">
+          <UsuarioPerfil
+            username={usuario?.user.username}
+            imagenPerfilUrl={usuario?.imagenPerfilUrl}
+            icono="w-28 h-28"
+            disabled={true}
+          />
+          <View className="ml-5 justify-center">
+            <Texto bold className="text-3xl  text-white/70">
+              Hola{" "}
+              <Texto className="italic text-white font-bold tracking-wide">
+                {usuario?.user.username}
+              </Texto>{" "}
+              !
+            </Texto>
+            <Texto className="text-white/50 mt-1 ">
+              Puntos Acumulados: {usuario?.puntosAcumulados}
+            </Texto>
+            {usuario?.user?.roles?.some((r) => r.name === "validador") && (
+              <View className="flex-row justify-center p-1 mt-2 border border-2 border-[#1ED760] text-center text-white rounded-full">
+                <Texto bold className="text-[#1ED760] mr-2 ">
+                  VALIDADOR
+                </Texto>
+                <Entypo name="check" size={15} color="#1ED760" />
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View className="mt-6">
+          <Texto bold className="text-white text-xl mb-2 ml-4">
+            Datos de Contacto
+          </Texto>
+          <View className="border border-2 border-white/20 p-6 rounded-tl-2xl rounded-tr-2xl">
+            <Texto className="text-white mb-2">Correo Electronico</Texto>
+            <Texto className="text-white text-xl">{usuario?.user.email}</Texto>
+          </View>
+          <View className="border border-2 border-white/20 p-6 rounded-bl-2xl rounded-br-2xl">
+            <Texto className="text-white mb-2">Telofono</Texto>
+            <Texto className="text-white text-xl">{usuario?.telefono}</Texto>
+          </View>
+        </View>
+
+        <View className="mt-10">
+          <Texto bold className="text-white text-xl mb-2 ml-4">
+            Datos Personales
+          </Texto>
+          <View className="border border-2 border-white/20 p-6 rounded-tl-2xl rounded-tr-2xl">
+            <View className="flex-row">
+              <View className="flex-1">
+                <Texto className="text-white mb-2">Nombre</Texto>
+                <Texto className="text-white text-xl">{usuario?.nombre}</Texto>
+              </View>
+              <View className="flex-1">
+                <Texto className="text-white mb-2">Apellido</Texto>
+                <Texto className="text-white text-xl">
+                  {usuario?.apellido}
+                </Texto>
+              </View>
             </View>
-          )}
-          <Text style={styles.changePhoto}>Cambiar foto</Text>
-        </TouchableOpacity>
+          </View>
 
-        {/* Campos */}
-        <View style={styles.section}>
-          <Text style={styles.label}>Nombre de usuario</Text>
-          <TextInput
-            style={[styles.input, !editing && styles.readonly]}
-            value={nombre}
-            onChangeText={setNombre}
-            editable={editing}
-          />
+          <View className="border border-2 border-white/20  p-6 rounded-bl-2xl rounded-br-2xl">
+            <View className="flex-row justify-between">
+              <Texto bold className="text-[#4da6ff] tracking-wide text-md mt-1">
+                Cambiar contraseña
+              </Texto>
+              <View className="">
+                <AntDesign name="right" size={24} color="#4da6ff" />
+              </View>
+            </View>
+          </View>
         </View>
-
-        <View style={styles.section}>
-          <Text style={styles.label}>Correo electrónico</Text>
-          <TextInput
-            style={[styles.input, !editing && styles.readonly]}
-            value={email}
-            onChangeText={setEmail}
-            editable={editing}
-          />
+        <View className="mt-6">
+          <Button title="Editar Perfil" onPress={() => console.log("hola")} />
         </View>
-
-        {/* Botones */}
-        {editing ? (
-          <Button
-            className="mt-2"
-            title="Guardar cambios"
-            onPress={() => handleSave()}
-          />
-        ) : (
-          <Button
-            className="mt-2"
-            title="Editar perfil"
-            onPress={() => setEditing(true)}
-          />
-        )}
       </ScrollView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#010030" },
-  avatarContainer: { alignItems: "center", marginBottom: 30 },
-  avatar: { width: 100, height: 100, borderRadius: 50, marginBottom: 8 },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: "#0077B6",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  avatarInitial: { color: "#fff", fontSize: 40, fontWeight: "bold" },
-  changePhoto: { color: "#4da6ff", fontSize: 14 },
-  section: { marginBottom: 20 },
-  label: { color: "#90e0ef", marginBottom: 6 },
-  input: {
-    backgroundColor: "#111133",
-    padding: 12,
-    borderRadius: 8,
-    color: "#fff",
-  },
-  readonly: { backgroundColor: "#222244" },
-  buttonEdit: {
-    backgroundColor: "#0077B6",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonSave: {
-    backgroundColor: "#4CAF50",
-    padding: 14,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 20,
-  },
-  buttonText: { color: "#fff", fontWeight: "bold" },
-});

@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import React, { createContext, useCallback } from "react";
 import {
   EventoValidadorDto,
   ProductoraValidadorDto,
@@ -22,17 +22,18 @@ export const ValidadorContext = createContext<
 export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const getEventosValidador = async () => {
+  // ✅ useCallback memoriza la función y evita bucles en los efectos
+  const getEventosValidador = useCallback(async () => {
     try {
       const response = await getEventosProductora();
-      return response; // devuelve un solo objeto
+      return response;
     } catch (err) {
       console.error("Error obteniendo eventos de productora:", err);
       return undefined;
     }
-  };
+  }, []);
 
-  const getProductorasValidador = async () => {
+  const getProductorasValidador = useCallback(async () => {
     try {
       const response = await getProductora();
       return response;
@@ -40,15 +41,15 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Error obteniendo productoras del validador:", err);
       return undefined;
     }
-  };
+  }, []);
 
-  const validarTicket = async (idTicket: number) => {
+  const validarTicket = useCallback(async (idTicket: number) => {
     try {
       await validarTicketApi(idTicket);
     } catch (err) {
       console.error("Error validando ticket:", err);
     }
-  };
+  }, []);
 
   return (
     <ValidadorContext.Provider

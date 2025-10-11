@@ -1,14 +1,32 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Image, StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, View } from "react-native";
 import Logo from "../../assets/images/logotipo.png";
 import { MenuGeneral } from "./MenuGeneral";
-import { MenuUsuario } from "./MenuUsuario";
+import { UsuarioPerfil } from "./MenuUsuario";
 
+export type User = {
+  username: string;
+};
+export type Usuario = {
+  imagenPerfilUrl: string;
+  user: User;
+};
 export const Header: React.FC = () => {
-  const { user } = useAuth();
+  const { me } = useAuth();
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userData = await me();
+      setUsuario(userData);
+      console.log(userData);
+    };
+    fetchUser();
+  }, [me]);
 
   return (
-    <View style={styles.container}>
+    <View className="h-30 bg-[#05081b] flex-row items-center justify-between px-4">
       {/* Botón menú general */}
       <MenuGeneral />
 
@@ -19,38 +37,10 @@ export const Header: React.FC = () => {
       />
 
       {/* Avatar / Menú usuario */}
-      <MenuUsuario />
+      <UsuarioPerfil
+        username={usuario?.user.username}
+        imagenPerfilUrl={usuario?.imagenPerfilUrl}
+      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    height: 60,
-    backgroundColor: "#05081b",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
-  userImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-    borderColor: "#4da6ff",
-  },
-  avatarPlaceholder: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#0077B6",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarInitial: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});

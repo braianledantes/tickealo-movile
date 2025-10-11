@@ -69,7 +69,7 @@ export const MenuGeneral: React.FC = () => {
       console.log(userData);
     };
     fetchUser();
-  }, []);
+  }, [me]);
 
   useEffect(() => {
     if (visible) {
