@@ -1,146 +1,85 @@
-import { currentUser, login, registerCliente } from "@/api/auth";
-import * as api from "@/api/axiosConfig";
-import { LoginDto } from "@/api/dto/login.dto";
-import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
 import {
   createContext,
   useEffect,
-  useRef,
   useState,
   type PropsWithChildren,
 } from "react";
+
+import { currentUser, login, registerCliente } from "@/api/auth";
+import { LoginDto } from "@/api/dto/login.dto";
+import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
 import { useStorageState } from "../hooks/useStorageState";
 
-type User = {
-  username: string;
-  email?: string;
-  image?: string;
-  roles?: {
-    name?: string;
-    description?: string;
-  };
-};
+import * as api from "@/api/axiosConfig";
+import { Me } from "@/api/dto/me.dto";
 
-type AuthContextValue = {
-  login: (dto: LoginDto) => Promise<void>;
-  registerCliente: (dto: RegisterClienteDto) => Promise<void>;
+export const AuthContext = createContext<{
+  login: (dto: LoginDto) => void;
+  registerCliente: (dto: RegisterClienteDto) => void;
   logout: () => void;
-  me: () => Promise<any>;
   accessToken?: string | null;
+  user?: Me | null;
   isLoading: boolean;
-  user?: User | null;
-  authReady: boolean;
-  headerReady: boolean;
-};
-
-export const AuthContext = createContext<AuthContextValue>({
-  login: async () => {},
-  registerCliente: async () => {},
-  logout: () => {},
-  me: async () => {},
+}>({
+  login: () => null,
+  registerCliente: () => null,
+  logout: () => null,
   accessToken: null,
-  isLoading: false,
   user: null,
-  authReady: false,
-  headerReady: false,
+  isLoading: false,
 });
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [[isLoading, accessToken], setAccessToken] =
     useStorageState("access_token");
-  const [user, setUser] = useState<User | null>(null);
-  const [headerReady, setHeaderReady] = useState(false);
+
+  const [user, setUser] = useState<Me | null>(null);
+
+  // TODO: Esto se puede mejorar
+  // (ver porque con useEffect no funciona, se ejecutra
+  // despues de reendirizar los otros componentes)
+  // De esta manera se asegura que siempre este actualizado
+  if (accessToken) {
+    api.addHeaderAuthorization(accessToken);
+  } else {
+    api.removeHeaderAuthorization();
+  }
 
   useEffect(() => {
     if (accessToken) {
-      api.addHeaderAuthorization(accessToken);
-      setHeaderReady(true);
-    } else {
-      api.removeHeaderAuthorization();
-      setHeaderReady(false);
+      currentUser()
+        .then((user) => {
+          setUser(user);
+        })
+        .catch(() => {
+          setUser(null);
+          setAccessToken(null);
+        });
     }
-  }, [accessToken]);
+  }, [accessToken, setAccessToken]);
 
-  const rehydrateTried = useRef(false);
-  useEffect(() => {
-    if (rehydrateTried.current) return;
-    if (accessToken && !user) {
-      rehydrateTried.current = true;
-      (async () => {
-        try {
-          const u = await currentUser();
-          setUser(u);
-        } catch {}
-      })();
-    }
-  }, [accessToken, user]);
-
-  const me = async () => {
-    try {
-      const u = await currentUser();
-      setUser(u);
-      return u;
-    } catch (err) {
-      console.error("Error obteniendo usuario logueado:", err);
-    }
-  };
-
-  const authReady = !!accessToken;
   return (
-    <AuthContext.Provider
+    <AuthContext
       value={{
-        // login: aplicar header → guardar token → pedir /auth/me → fallback mínimo
         login: async (dto: LoginDto) => {
-          const res = await login(dto);
-          const token = res.data.access_token;
-
-          await api.addHeaderAuthorization(token);
+          const result = await login(dto);
+          const token = result.data.access_token;
           setAccessToken(token);
-          setHeaderReady(true);
-
-          try {
-            const u = await currentUser();
-            setUser(u);
-          } catch {
-            // fallback mínimo si /auth/me falla (p.ej. 404 "Profile not found")
-            const fakeUsername = dto.email.split("@")[0];
-            setUser({ username: fakeUsername, email: dto.email });
-          }
         },
-
         registerCliente: async (dto: RegisterClienteDto) => {
-          const res = await registerCliente(dto);
-          const token = res.data.access_token;
-
-          await api.addHeaderAuthorization(token);
+          const result = await registerCliente(dto);
+          const token = result.data.access_token;
           setAccessToken(token);
-          setHeaderReady(true);
-
-          try {
-            const u = await currentUser();
-            setUser(u);
-          } catch {
-            setUser({ username: dto.username, email: dto.email });
-          }
         },
-
         logout: () => {
           setAccessToken(null);
-          api.removeHeaderAuthorization();
-          setHeaderReady(false);
-          setUser(null);
-          rehydrateTried.current = false;
         },
-
         accessToken,
-        isLoading,
         user,
-        authReady,
-        headerReady,
-        me,
+        isLoading,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 }

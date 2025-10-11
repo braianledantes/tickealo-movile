@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -13,6 +13,7 @@ import {
   Image,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import defaultEvent from "../../assets/images/defaultEvent.jpg";
@@ -54,6 +55,7 @@ type Evento = {
 };
 
 export default function InfoEvento() {
+  const router = useRouter();
   const { eventoId } = useLocalSearchParams();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
@@ -147,10 +149,15 @@ export default function InfoEvento() {
       </ScrollView>
 
       {/** SCANNER */}
-      <View className="mx-auto mt-6 mb-20 ">
-        <View className="p-4 bg-[#03045E] rounded-full">
-          <MaterialIcons name="qr-code-scanner" size={50} color="white" />
-        </View>
+      <View className="mx-auto mt-6 mb-20">
+        <TouchableOpacity
+          onPress={() => router.push("/validar-entradas")}
+          activeOpacity={0.8}
+        >
+          <View className="p-4 bg-[#03045E] rounded-full">
+            <MaterialIcons name="qr-code-scanner" size={50} color="white" />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

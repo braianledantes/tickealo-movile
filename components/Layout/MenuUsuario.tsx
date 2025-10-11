@@ -1,13 +1,13 @@
 // src/components/MenuUsuario.tsx
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const MenuUsuario: React.FC = () => {
   const { user } = useAuth();
-  // const [visible, setVisible] = useState(false);
 
   return (
     <>
@@ -18,11 +18,18 @@ export const MenuUsuario: React.FC = () => {
         }}
         style={styles.avatarButton}
       >
-        {user?.username ? (
+        {user ? (
           <View style={styles.avatarCircle}>
-            <Text style={styles.avatarInitial}>
-              {user.username.charAt(0).toUpperCase()}
-            </Text>
+            {user.imagenPerfilUrl ? (
+              <Image
+                source={user.imagenPerfilUrl}
+                style={{ width: 36, height: 36, borderRadius: 18 }}
+              />
+            ) : (
+              <Text style={styles.avatarInitial}>
+                {user.user.username.charAt(0).toUpperCase()}
+              </Text>
+            )}
           </View>
         ) : (
           <Ionicons name="person-circle-outline" size={32} color="#90e0ef" />

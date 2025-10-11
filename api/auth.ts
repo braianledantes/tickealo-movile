@@ -3,6 +3,7 @@ import api, {
   removeHeaderAuthorization,
 } from "./axiosConfig";
 import { LoginDto } from "./dto/login.dto";
+import { Me } from "./dto/me.dto";
 import { RegisterClienteDto } from "./dto/register-cliente.dto";
 
 export async function login(loginDto: LoginDto) {
@@ -22,7 +23,7 @@ export async function registerCliente(dto: RegisterClienteDto) {
   return response;
 }
 
-export async function currentUser() {
+export async function currentUser(): Promise<Me> {
   const response = await api.get("/auth/me");
   return response.data;
 }

@@ -1,25 +1,13 @@
 import api from "./axiosConfig";
+import { EventoDto } from "./dto/evento.dto";
 
-type Event = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  portadaUrl?: string;
-  lugar?: {
-    direccion: string;
-    ciudad: string;
-    provincia: string;
-  };
-};
-export const fetchUpcomingEvents = async (): Promise<Event[]> => {
+export const fetchUpcomingEvents = async (): Promise<EventoDto[]> => {
   const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
 
   const res = await api.get("/eventos", {
     params: {
       page: 1,
-      limit: 10,
+      limit: 50,
       search: "", // requerido por backend
       orderDir: "ASC", // requerido por backend
       fechaInicio: today,
@@ -31,7 +19,7 @@ export const fetchUpcomingEvents = async (): Promise<Event[]> => {
 
 export const getEventosById = async (
   idProductora: number,
-): Promise<Event[]> => {
+): Promise<EventoDto[]> => {
   const response = await api.get(`/productora/${idProductora}/eventos`);
   return response.data;
 };

@@ -38,11 +38,9 @@ export type Usuario = {
 };
 
 export const MenuGeneral: React.FC = () => {
-  const { me, logout } = useAuth();
+  const { logout, user } = useAuth();
   const [visible, setVisible] = useState(false);
   const slideX = useRef(new Animated.Value(-260)).current;
-
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [activeItem, setActiveItem] = useState<string>("inicio");
 
   const items = [
@@ -61,15 +59,6 @@ export const MenuGeneral: React.FC = () => {
     },
     { key: "favoritos", label: "Favoritos", icon: "heart-outline", route: "/" },
   ];
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await me();
-      setUsuario(userData);
-      console.log(userData);
-    };
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -92,7 +81,7 @@ export const MenuGeneral: React.FC = () => {
   const handlePress = (itemKey: string, route: Href) => {
     setActiveItem(itemKey);
     close();
-    router.push(route);
+    router.replace(route);
   };
 
   return (
@@ -111,21 +100,21 @@ export const MenuGeneral: React.FC = () => {
         >
           {/* Header Usuario */}
           <View style={styles.userHeader}>
-            {usuario?.imagenPerfilUrl ? (
+            {user?.imagenPerfilUrl ? (
               <Image
-                source={{ uri: usuario.imagenPerfilUrl }}
+                source={{ uri: user.imagenPerfilUrl }}
                 style={styles.userImage}
               />
             ) : (
               <View style={styles.userPlaceholder}>
                 <Text style={styles.userPlaceholderText}>
-                  {usuario?.user?.username?.charAt(0).toUpperCase() || "?"}
+                  {user?.user?.username?.charAt(0).toUpperCase() || "?"}
                 </Text>
               </View>
             )}
             <View style={{ marginLeft: 10 }}>
               <Text style={styles.userName}>
-                {usuario?.user?.username || "Usuario"}
+                {user?.user?.username || "Usuario"}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -161,7 +150,7 @@ export const MenuGeneral: React.FC = () => {
             ))}
 
             {/* Panel Validador */}
-            {usuario?.user?.roles?.some((r) => r.name === "validador") && (
+            {user?.user?.roles?.some((r) => r.name === "validador") && (
               <View>
                 {/* Panel Validador */}
                 <TouchableOpacity
