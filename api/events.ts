@@ -1,20 +1,18 @@
-// src/api/events.ts
 import api from "./axiosConfig";
 
-export interface Event {
+type Event = {
   id: number;
   nombre: string;
   descripcion: string;
-  inicio_at: string;
-  fin_at: string;
-  lugar: {
+  inicioAt: string;
+  finAt: string;
+  portadaUrl?: string;
+  lugar?: {
     direccion: string;
     ciudad: string;
     provincia: string;
   };
-  portada_url: string;
-}
-
+};
 export const fetchUpcomingEvents = async (): Promise<Event[]> => {
   const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
 
@@ -22,11 +20,18 @@ export const fetchUpcomingEvents = async (): Promise<Event[]> => {
     params: {
       page: 1,
       limit: 10,
-      search: "",       // requerido por backend
-      orderDir: "ASC",  // requerido por backend
+      search: "", // requerido por backend
+      orderDir: "ASC", // requerido por backend
       fechaInicio: today,
     },
   });
 
   return res.data.data; // 👈 el backend devuelve { data, pagination }
+};
+
+export const getEventosById = async (
+  idProductora: number,
+): Promise<Event[]> => {
+  const response = await api.get(`/productora/${idProductora}/eventos`);
+  return response.data;
 };

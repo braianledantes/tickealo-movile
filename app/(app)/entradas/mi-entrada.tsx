@@ -145,6 +145,7 @@ export default function MiEntrada() {
         </Text>
 
         {compraSeleccionada.tickets.map((ticket) => {
+          console.log("Ticket ID:", ticket.id);
           const evento = ticket.entrada.evento;
 
           const lugarTexto =
@@ -169,6 +170,7 @@ export default function MiEntrada() {
               })
             : "--:--";
 
+          console.log("Ticket ID:", ticket.id);
           return (
             <View key={ticket.id} style={styles.ticket}>
               {/* Imagen del evento */}
@@ -212,7 +214,8 @@ export default function MiEntrada() {
               {estado.label === "COMPLETADA" && (
                 <View style={styles.qrSection}>
                   <QRCode
-                    value={ticket.codigoAlfanumerico}
+                    key={ticket.id}
+                    value={String(ticket.id)}
                     size={130}
                     backgroundColor="#0b1530"
                     color="#fff"

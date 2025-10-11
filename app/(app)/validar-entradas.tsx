@@ -22,7 +22,7 @@ export default function ValidarEntradas() {
   }, [permission]);
 
   const handleBarCodeScanned = (code: string) => {
-    setScannedCode(code);
+    console.log("Código escaneado:", code); // Esto te permite ver qué llega
     router.push(`/validador/ticket/${encodeURIComponent(code)}`);
   };
 

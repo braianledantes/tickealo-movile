@@ -12,3 +12,20 @@ export type EventoValidadorDto = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ProductoraValidadorDto = {
+  calificacion: number;
+  creditosDisponibles: number;
+  cuit: number;
+  direccion: string;
+  imagenUrl: string;
+  nombre: string;
+  telefono: string;
+  user: User;
+  userId: number;
+};
+
+export type User = {
+  email: string;
+  username: string;
+};

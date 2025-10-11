@@ -162,25 +162,50 @@ export const MenuGeneral: React.FC = () => {
 
             {/* Panel Validador */}
             {usuario?.user?.roles?.some((r) => r.name === "validador") && (
-              <TouchableOpacity
-                style={[
-                  styles.itemRow,
-                  activeItem === "validador" && styles.itemActive,
-                ]}
-                onPress={() => handlePress("validador", "/validar-entradas")}
-              >
-                <Ionicons name="qr-code-outline" style={styles.icon} />
-                <Text style={styles.item}>Panel Validador</Text>
-                {activeItem === "validador" && (
-                  <View style={styles.activeIndicator} />
-                )}
-              </TouchableOpacity>
+              <View>
+                {/* Panel Validador */}
+                <TouchableOpacity
+                  style={[
+                    styles.itemRow,
+                    activeItem === "panelValidador" && styles.itemActive,
+                  ]}
+                  onPress={() =>
+                    handlePress("panelValidador", "/validar-entradas")
+                  }
+                >
+                  <Ionicons name="qr-code-outline" style={styles.icon} />
+                  <Text style={styles.item}>Panel Validador</Text>
+                  {activeItem === "panelValidador" && (
+                    <View style={styles.activeIndicator} />
+                  )}
+                </TouchableOpacity>
+
+                {/* Mi Productora */}
+                <TouchableOpacity
+                  style={[
+                    styles.itemRow,
+                    activeItem === "miProductora" && styles.itemActive,
+                  ]}
+                  onPress={() =>
+                    handlePress("miProductora", "/eventos-validador")
+                  }
+                >
+                  <Ionicons name="briefcase-outline" style={styles.icon} />
+                  <Text style={styles.item}>Mi Productora</Text>
+                  {activeItem === "miProductora" && (
+                    <View style={styles.activeIndicator} />
+                  )}
+                </TouchableOpacity>
+              </View>
             )}
           </View>
 
           {/* Logout */}
           <TouchableOpacity
-            onPress={() => logout()}
+            onPress={async () => {
+              logout();
+              router.replace("/login");
+            }}
             style={styles.logoutButton}
           >
             <Ionicons name="log-out-outline" style={styles.icon} />

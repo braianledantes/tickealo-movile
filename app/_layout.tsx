@@ -1,5 +1,6 @@
 import { Logo } from "@/components/Logo";
 import { ComprasProvider } from "@/context/ComprasContext";
+import { EventosProvider } from "@/context/EventosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -36,14 +37,16 @@ export default function Root() {
 
   return (
     <AuthProvider>
-      <SeguidoresProvider>
-        <ComprasProvider>
-          <ValidadorProvider>
-            <SplashScreenController />
-            <RootNavigator />
-          </ValidadorProvider>
-        </ComprasProvider>
-      </SeguidoresProvider>
+      <EventosProvider>
+        <SeguidoresProvider>
+          <ComprasProvider>
+            <ValidadorProvider>
+              <SplashScreenController />
+              <RootNavigator />
+            </ValidadorProvider>
+          </ComprasProvider>
+        </SeguidoresProvider>
+      </EventosProvider>
     </AuthProvider>
   );
 }

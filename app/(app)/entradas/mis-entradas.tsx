@@ -44,7 +44,6 @@ export default function MisEntradas() {
         const data = await misCompras(1, 5);
         const compras = data?.data ?? [];
         setCompras(compras);
-        console.log(compras);
       } catch (error) {
         console.error("Error al obtener compras:", error);
       } finally {

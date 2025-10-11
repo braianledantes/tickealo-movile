@@ -1,12 +1,11 @@
 import api from "@/api/axiosConfig";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
-import { useSeguidores } from "@/hooks/useSeguidores";
 import { Ionicons } from "@expo/vector-icons";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -58,14 +57,10 @@ export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
-  const { seguidores, seguir, dejarSeguir } = useSeguidores();
-  const [estaSiguiendo, setEstaSiguiendo] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   const { width } = Dimensions.get("window");
   const height = Math.round(width * (4 / 11));
-
-  const productoraId = evento?.productora?.userId;
 
   useEffect(() => {
     const fetchEvento = async () => {
@@ -81,13 +76,6 @@ export default function InfoEvento() {
     };
     if (eventoId) fetchEvento();
   }, [eventoId]);
-
-  useEffect(() => {
-    if (productoraId) {
-      const seguido = seguidores.some((s) => s.userId === productoraId);
-      setEstaSiguiendo(seguido);
-    }
-  }, [seguidores, productoraId]);
 
   if (loading) {
     return (

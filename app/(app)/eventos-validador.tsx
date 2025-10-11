@@ -1,13 +1,30 @@
+import { EventList } from "@/components/Eventos/EventList";
+import { Header } from "@/components/Layout/Header";
+import { ProductoraPerfil } from "@/components/Productora/ProductoraPerfil";
+import { Texto } from "@/components/Texto";
+import { useEventos } from "@/hooks/useEventos";
+import { useValidador } from "@/hooks/useValidador";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { getEventosProductora } from "@/api/validador";
-import { EventList } from "@/components/Eventos/EventList";
-import { Header } from "@/components/Layout/Header";
-import { Texto } from "@/components/Texto";
+type Productora = {
+  calificacion: number;
+  creditosDisponibles: number;
+  cuit: number;
+  direccion: string;
+  imagenUrl: string;
+  nombre: string;
+  telefono: string;
+  user: User;
+  userId: number;
+};
 
+type User = {
+  email: string;
+  username: string;
+};
 type Event = {
   id: number;
   nombre: string;
@@ -23,6 +40,12 @@ type Event = {
 };
 
 export default function Index() {
+  const { getProductorasValidador, getEventosValidador } = useValidador();
+  const { getEventosByProductora } = useEventos();
+  const [productoras, setProductoras] = useState<Productora[]>([]);
+  const [productoraSeleccionada, setProductoraSeleccionada] = useState<
+    number | null
+  >(null);
   const [eventos, setEventos] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -30,10 +53,11 @@ export default function Index() {
   useEffect(() => {
     const cargarEventos = async () => {
       try {
-        const response = await getEventosProductora();
-        // si la API devuelve un solo objeto, lo convertimos en array
-        const data = Array.isArray(response) ? response : [response];
-        setEventos(data);
+        const response = await getProductorasValidador();
+        setProductoras(
+          response ? (Array.isArray(response) ? response : [response]) : [],
+        );
+        console.log(response);
       } catch (error: any) {
         console.error(
           "Error cargando eventos:",
@@ -47,6 +71,28 @@ export default function Index() {
     cargarEventos();
   }, []);
 
+  // Filtrar eventos según productora seleccionada, si no me muestra todos
+  useEffect(() => {
+    const cargarEventos = async () => {
+      try {
+        let response: Event[] | undefined;
+
+        if (productoraSeleccionada) {
+          response = await getEventosByProductora(productoraSeleccionada);
+        } else {
+          const data = await getEventosValidador();
+          response = Array.isArray(data) ? data : data ? [data] : [];
+        }
+
+        setEventos(response || []);
+      } catch (error: any) {
+        console.error("Error cargando eventos:", error?.message || error);
+      }
+    };
+
+    cargarEventos();
+  }, [productoraSeleccionada, getEventosByProductora, getEventosValidador]);
+
   if (loading) {
     return (
       <View className="flex flex-1 justify-center items-center bg-[#05081b]">
@@ -58,9 +104,19 @@ export default function Index() {
   return (
     <SafeAreaView className="flex flex-1 bg-[#05081b]">
       <Header />
+      <View>
+        <Texto bold className="text-[#90e0ef]/80 px-5">
+          PRODUCTORAS A LAS QUE PERTENECES
+        </Texto>
 
-      <Texto bold className="text-[#90e0ef]/80 px-5 mt-2 mb-4">
-        EVENTOS DE TU PRODUCTORA
+        <ProductoraPerfil
+          productoras={productoras}
+          onPressPerfil={(userId) => setProductoraSeleccionada(userId)}
+        />
+      </View>
+
+      <Texto bold className="text-[#90e0ef]/80 px-5 mt-2">
+        TODOS LOS EVENTOS
       </Texto>
 
       <EventList
