@@ -13,7 +13,7 @@ import {
 
 export default function ValidarEntradas() {
   const [permission, requestPermission] = useCameraPermissions();
-  const [scannedCode, setScannedCode] = useState<string | null>(null);
+  const [scanned, setScanned] = useState<string | null>(null);
   const [manualCode, setManualCode] = useState("");
   const router = useRouter();
 
@@ -22,7 +22,10 @@ export default function ValidarEntradas() {
   }, [permission]);
 
   const handleBarCodeScanned = (code: string) => {
-    console.log("Código escaneado:", code); // Esto te permite ver qué llega
+    if (scanned) return;
+    setScanned(true);
+
+    console.log("Código escaneado:", code);
     router.push(`/validador/ticket/${encodeURIComponent(code)}`);
   };
 
@@ -42,7 +45,9 @@ export default function ValidarEntradas() {
       <View style={styles.cameraBox}>
         <CameraView
           style={StyleSheet.absoluteFillObject}
-          onBarcodeScanned={(e) => handleBarCodeScanned(e.data)}
+          onBarcodeScanned={
+            scanned ? undefined : (e) => handleBarCodeScanned(e.data)
+          }
         />
       </View>
 
@@ -62,6 +67,12 @@ export default function ValidarEntradas() {
           <Text style={styles.manualBtnText}>Validar manualmente</Text>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity onPress={() => setScanned(false)}>
+        <Text style={{ color: "white", marginTop: 10, textAlign: "center" }}>
+          Volver a escanear
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
