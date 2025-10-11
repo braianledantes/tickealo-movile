@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -55,9 +55,9 @@ export const MenuGeneral: React.FC = () => {
     },
     {
       key: "entradas",
-      label: "Mis tickets",
+      label: "Mis entradas",
       icon: "ticket-outline",
-      route: "/mis-entradas",
+      route: "/(app)/entradas/mis-entradas" as Href,
     },
     { key: "favoritos", label: "Favoritos", icon: "heart-outline", route: "/" },
   ];
@@ -89,7 +89,7 @@ export const MenuGeneral: React.FC = () => {
 
   const close = () => setVisible(false);
 
-  const handlePress = (itemKey: string, route: string) => {
+  const handlePress = (itemKey: string, route: Href) => {
     setActiveItem(itemKey);
     close();
     router.push(route);
@@ -152,7 +152,7 @@ export const MenuGeneral: React.FC = () => {
                   styles.itemRow,
                   activeItem === key && styles.itemActive,
                 ]}
-                onPress={() => handlePress(key, route)}
+                onPress={() => handlePress(key, route as Href)}
               >
                 <Ionicons name={icon as any} style={styles.icon} />
                 <Text style={styles.item}>{label}</Text>
@@ -167,7 +167,7 @@ export const MenuGeneral: React.FC = () => {
                   styles.itemRow,
                   activeItem === "validador" && styles.itemActive,
                 ]}
-                onPress={() => handlePress("validador", "/eventos-validador")}
+                onPress={() => handlePress("validador", "/validar-entradas")}
               >
                 <Ionicons name="qr-code-outline" style={styles.icon} />
                 <Text style={styles.item}>Panel Validador</Text>

@@ -30,7 +30,7 @@ export interface CompraDTO {
 export interface TicketDTO {
   id: number;
   codigoAlfanumerico: string;
-  estado: "PENDIENTE_VALIDACION" | "VALIDADA" | "ANULADA" | string;
+  estado: "PENDIENTE_VALIDACION" | "COMPLETADA" | "ANULADA" | string;
   createdAt: string;
   updatedAt: string;
 

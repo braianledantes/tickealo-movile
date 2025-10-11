@@ -12,7 +12,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.tickealo.tickealo",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Necesitamos acceder a tu ubicación para mostrar eventos cercanos en tu provincia."
+        "NSLocationWhenInUseUsageDescription": "Necesitamos acceder a tu ubicación para mostrar eventos cercanos en tu provincia.",
+        "NSCameraUsageDescription": "Tickealo necesita acceder a tu cámara para escanear códigos QR de las entradas."
       }
     },
     "android": {
@@ -26,7 +27,8 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "ACCESS_FINE_LOCATION",
+        "CAMERA"
       ]
     },
     "web": {
@@ -56,7 +58,8 @@
           "isAndroidForegroundServiceEnabled": true
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
