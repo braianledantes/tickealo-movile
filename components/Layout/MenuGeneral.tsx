@@ -55,9 +55,9 @@ export const MenuGeneral: React.FC = () => {
     },
     {
       key: "entradas",
-      label: "Mis entradas",
+      label: "Mis tickets",
       icon: "ticket-outline",
-      route: "/",
+      route: "/mis-entradas",
     },
     { key: "favoritos", label: "Favoritos", icon: "heart-outline", route: "/" },
   ];

@@ -4,7 +4,10 @@ import React, { createContext } from "react";
 
 interface ComprasContextProps {
   comprar: (formData: FormData) => Promise<ComprasResponse | undefined>;
-  misCompras: () => Promise<ComprasResponse | void>;
+  misCompras: (
+    page?: number,
+    limit?: number,
+  ) => Promise<ComprasResponse | void>;
 }
 
 export const ComprasContext = createContext<ComprasContextProps | undefined>(
@@ -19,16 +22,16 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await realizarCompra(formData);
       return response;
     } catch (err) {
-      console.error("Error realizando la compra:", err);
+      console.error(" Error realizando la compra:", err);
     }
   };
 
-  const misCompras = async () => {
+  const misCompras = async (page = 1, limit = 10) => {
     try {
-      const response = await getCompras();
+      const response = await getCompras(page, limit);
       return response;
     } catch (err) {
-      console.error("Error dejando de seguir productora:", err);
+      console.error(" Error obteniendo compras del usuario:", err);
     }
   };
 

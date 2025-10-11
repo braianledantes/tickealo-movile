@@ -15,7 +15,12 @@ export const realizarCompra = async (
 };
 
 // Obtener las compras realizadas por el usuario
-export const getCompras = async (): Promise<ComprasResponse> => {
-  const response = await api.get(`/compras/mis-compras`);
+export const getCompras = async (
+  page: number,
+  limit: number,
+): Promise<ComprasResponse> => {
+  const response = await api.get(`/compras/mis-compras`, {
+    params: { page, limit },
+  });
   return response.data;
 };
