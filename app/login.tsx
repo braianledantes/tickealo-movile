@@ -58,7 +58,7 @@ export default function Login() {
       </View>
 
       <View className="flex-row mt-6  justify-center">
-        <Texto medium className="text-gray-200">
+        <Texto className="text-gray-200 text-md">
           {" "}
           ¿No tienes una cuenta?{" "}
         </Texto>

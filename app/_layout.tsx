@@ -6,6 +6,8 @@ import { ValidadorProvider } from "@/context/ValidadorContext";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
   Poppins_700Bold,
   useFonts,
 } from "@expo-google-fonts/poppins";
@@ -19,6 +21,8 @@ export default function Root() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_700Bold,
+    Poppins_600SemiBold,
+    Poppins_500Medium,
   });
 
   if (!fontsLoaded) {
