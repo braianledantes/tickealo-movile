@@ -11,6 +11,7 @@ type EntradaCardProps = {
   right?: React.ReactNode;
   priceValueOverride?: number;
   priceSuffixText?: string;
+  disabled?: boolean; // nueva prop
 };
 
 export const EntradaCard: React.FC<EntradaCardProps> = ({
@@ -20,6 +21,7 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
   right,
   priceValueOverride,
   priceSuffixText,
+  disabled = false,
 }) => {
   const tipoColor = tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
 
@@ -67,10 +69,13 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
       <View style={styles.right}>
         {right ?? <Ionicons name="add" size={24} color="#fff" />}
       </View>
+
+      {/* Overlay si está deshabilitado */}
+      {disabled && <View style={styles.disabledOverlay} />}
     </View>
   );
 
-  return onPress ? (
+  return onPress && !disabled ? (
     <TouchableOpacity
       style={styles.wrapper}
       activeOpacity={0.9}
@@ -126,5 +131,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#0b1030",
+  },
+  disabledOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
 });

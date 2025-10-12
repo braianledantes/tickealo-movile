@@ -26,6 +26,7 @@ type Entrada = {
   precio: number;
   cantidad: number;
   id_evento: number;
+  stock: number;
 };
 
 type Productora = {
@@ -54,6 +55,7 @@ type Evento = {
   };
   entradas?: Entrada[];
   productora?: Productora;
+  stockEntradas: number;
 };
 
 export default function InfoEvento() {
@@ -197,6 +199,7 @@ export default function InfoEvento() {
                 key={entrada.id}
                 tipo={entrada.tipo}
                 precio={entrada.precio}
+                disabled={evento.stockEntradas === 0 || entrada.stock === 0}
                 onPress={() =>
                   router.push({
                     pathname: "/cant-entradas",

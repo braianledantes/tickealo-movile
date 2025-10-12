@@ -13,7 +13,15 @@ export const HeaderBack: React.FC = () => {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Flecha hacia atrás */}
-      <TouchableOpacity onPress={() => router.back()}>
+      <TouchableOpacity
+        onPress={() => {
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.push("/"); // o la ruta principal de tu app
+          }
+        }}
+      >
         <Ionicons name="arrow-back" size={28} color="#90e0ef" />
       </TouchableOpacity>
 

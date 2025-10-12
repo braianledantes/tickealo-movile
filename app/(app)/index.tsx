@@ -93,13 +93,13 @@ export default function Index() {
     });
   }, [upcoming, search, province]);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4da6ff" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.center}>
+  //       <ActivityIndicator size="large" color="#4da6ff" />
+  //     </View>
+  //   );
+  // }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
@@ -118,16 +118,26 @@ export default function Index() {
         {/* Título */}
         <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
 
-        {/* Lista de eventos */}
-        <EventList
-          events={upcomingFiltered}
-          onPressEvent={(id) =>
-            router.push({
-              pathname: "/info-evento",
-              params: { eventoId: String(id) },
-            })
-          }
-        />
+        {/* Contenedor de lista o loader */}
+        <View style={{ flex: 1, paddingHorizontal: 15 }}>
+          {loading ? (
+            <View style={styles.center}>
+              <ActivityIndicator size="large" color="#4da6ff" />
+            </View>
+          ) : upcomingFiltered.length === 0 ? (
+            <Text style={styles.noEventsText}>No se encontraron eventos</Text>
+          ) : (
+            <EventList
+              events={upcomingFiltered}
+              onPressEvent={(id) =>
+                router.push({
+                  pathname: "/info-evento",
+                  params: { eventoId: String(id) },
+                })
+              }
+            />
+          )}
+        </View>
 
         {/* Modal de provincias */}
         <Modal
@@ -230,5 +240,12 @@ const styles = StyleSheet.create({
   optionText: {
     color: "#fff",
     fontSize: 16,
+  },
+  noEventsText: {
+    color: "#A5A6AD",
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 16,
+    fontFamily: "Poppins_400Regular",
   },
 });

@@ -46,39 +46,43 @@ export default function Profile() {
             )}
           </View>
         </View>
-
         <View className="mt-6">
-          <Texto bold className="text-white text-xl mb-2 ml-4">
+          <Texto
+            bold
+            className="text-[#cfe3ff] text-xl mb-2 ml-4 tracking-wider"
+          >
             Datos de Contacto
           </Texto>
-          <View className="border border-2 border-white/20 p-6 rounded-tl-2xl rounded-tr-2xl">
-            <Texto className="text-white mb-2">Correo Electronico</Texto>
+          <View className="border border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
+            <Texto className="text-[#7a86b6] mb-2">Correo Electronico</Texto>
             <Texto className="text-white text-xl">{user?.user.email}</Texto>
           </View>
-          <View className="border border-2 border-white/20 p-6 rounded-bl-2xl rounded-br-2xl">
-            <Texto className="text-white mb-2">Telofono</Texto>
+          <View className="border border-2 border-[#1b1e5e] p-6 rounded-bl-2xl rounded-br-2xl">
+            <Texto className="text-[#7a86b6] mb-2">Telofono</Texto>
             <Texto className="text-white text-xl">{user?.telefono}</Texto>
           </View>
         </View>
-
         <View className="mt-10">
-          <Texto bold className="text-white text-xl mb-2 ml-4">
+          <Texto
+            bold
+            className="text-[#cfe3ff] text-xl mb-2 ml-4 tracking-wider"
+          >
             Datos Personales
           </Texto>
-          <View className="border border-2 border-white/20 p-6 rounded-tl-2xl rounded-tr-2xl">
+          <View className="border border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
             <View className="flex-row">
               <View className="flex-1">
-                <Texto className="text-white mb-2">Nombre</Texto>
+                <Texto className="text-[#7a86b6] mb-2">Nombre</Texto>
                 <Texto className="text-white text-xl">{user?.nombre}</Texto>
               </View>
               <View className="flex-1">
-                <Texto className="text-white mb-2">Apellido</Texto>
+                <Texto className="text-[#7a86b6] mb-2">Apellido</Texto>
                 <Texto className="text-white text-xl">{user?.apellido}</Texto>
               </View>
             </View>
           </View>
 
-          <View className="border border-2 border-white/20  p-6 rounded-bl-2xl rounded-br-2xl">
+          <View className="border border-2 border-[#1b1e5e] bg-[#0b1030] p-6 rounded-bl-2xl rounded-br-2xl">
             <View className="flex-row justify-between">
               <Texto bold className="text-[#4da6ff] tracking-wide text-md mt-1">
                 Cambiar contraseña

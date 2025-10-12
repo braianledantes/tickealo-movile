@@ -1,5 +1,4 @@
 import { Header } from "@/components/Layout/Header";
-import { useAuth } from "@/hooks/useAuth";
 import { useValidador } from "@/hooks/useValidador";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,7 +19,6 @@ const Tick = require("../../../../assets/images/tick.png");
 export default function TicketScreen() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
   const { validarTicket } = useValidador();
-  const { accessToken } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -39,11 +37,14 @@ export default function TicketScreen() {
       alreadyValidated.current = true;
 
       try {
-        const codigo = await validarTicket(Number(ticketId));
-        console.log(codigo);
-        const texto = mensajesTicket[codigo] || "Ocurrió un error inesperado";
+        // ✅ Enviamos el código tal cual, incluyendo letras o espacios
+        console.log("Validando ticket:", `"${ticketId}"`);
+        const respuesta = await validarTicket(ticketId.trim());
 
-        setValid(codigo === 200);
+        const texto =
+          mensajesTicket[respuesta] || "Ocurrió un error inesperado";
+
+        setValid(respuesta === 200);
         setMensaje(texto);
       } catch (err) {
         console.error("Error validando ticket:", err);
@@ -55,7 +56,7 @@ export default function TicketScreen() {
     };
 
     validar();
-  }, []);
+  }, [ticketId]);
 
   useEffect(() => {
     if (valid) {

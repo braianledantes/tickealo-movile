@@ -26,7 +26,10 @@ export default function ValidarEntradas() {
     setScanned(true);
 
     console.log("Código escaneado:", code);
-    router.push(`/validador/ticket/${encodeURIComponent(code)}`);
+    router.push({
+      pathname: "/validador/ticket/[ticketId]",
+      params: { ticketId: code },
+    });
   };
 
   const handleManualValidation = () => {
@@ -34,7 +37,10 @@ export default function ValidarEntradas() {
       Alert.alert("Campo vacío", "Por favor ingresa un código válido.");
       return;
     }
-    router.push(`/validador/ticket/${manualCode.trim()}`);
+    router.push({
+      pathname: "/validador/ticket/[ticketId]",
+      params: { ticketId: manualCode.trim() },
+    });
   };
 
   return (

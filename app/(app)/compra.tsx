@@ -8,6 +8,7 @@ import * as ClipBoard from "expo-clipboard";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
@@ -152,10 +153,21 @@ export default function Compra() {
   if (!entrada) {
     return (
       <View style={styles.center}>
-        <Text style={{ color: "#fff" }}>No se encontró la entrada.</Text>
+        <ActivityIndicator size="large" color="#4da6ff" />
       </View>
     );
   }
+
+  const RightQty = (
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
+      <Text style={{ color: "#fff", fontWeight: "800", fontSize: 18 }}>
+        {cantNum}
+      </Text>
+      <Text style={{ color: "#9aa3c7", fontSize: 12, marginTop: 2 }}>
+        cantidad
+      </Text>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: "#05081b" }}>
@@ -173,6 +185,7 @@ export default function Compra() {
             priceValueOverride={totalCalculado}
             priceSuffixText="TOTAL"
             onPress={undefined}
+            right={RightQty}
           />
 
           {/* Datos bancarios de la productora */}

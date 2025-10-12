@@ -218,8 +218,8 @@ export default function MiEntrada() {
                     {ticket.estado}
                   </Texto>
                   <QRCode
-                    key={ticket.id}
-                    value={String(ticket.id)}
+                    key={ticket.codigoAlfanumerico}
+                    value={ticket.codigoAlfanumerico}
                     size={130}
                     backgroundColor="#0b1530"
                     color="#fff"
