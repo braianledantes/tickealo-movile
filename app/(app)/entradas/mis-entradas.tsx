@@ -64,44 +64,56 @@ export default function MisEntradas() {
     <SafeAreaView className="flex flex-1 bg-[#05081b]">
       <Header />
 
-      <FlatList
-        data={compras}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}
-        ListHeaderComponent={
-          <Texto bold className="text-[#90e0ef]/80 px-5 mt-2 mb-4">
-            TODOS MIS TICKETS
+      {compras.length === 0 && !loading ? (
+        <View className="flex flex-1 justify-center items-center mx-20">
+          <Texto bold className="text-[#CAF0F8] text-center tracking-wider">
+            Aquí estará tu colección de entradas… cuando compres alguna
           </Texto>
-        }
-        renderItem={({ item }) => (
-          <View className="mx-4 mb-4">
-            <EntradaComprada
-              compra={item}
-              onPress={() =>
-                router.push({
-                  pathname: "/(app)/entradas/mi-entrada",
-                  params: { compraId: item.id },
-                })
-              }
-            />
-          </View>
-        )}
-        onEndReached={() => {
-          if (!onEndReachedCalledDuringMomentum.current) {
-            handleLoadMore();
-            onEndReachedCalledDuringMomentum.current = true;
+        </View>
+      ) : (
+        <FlatList
+          data={compras}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}
+          ListHeaderComponent={
+            <Texto bold className="text-[#90e0ef]/80 px-5 mt-2 mb-4">
+              TODOS MIS TICKETS
+            </Texto>
           }
-        }}
-        onEndReachedThreshold={0.5}
-        onMomentumScrollBegin={() => {
-          onEndReachedCalledDuringMomentum.current = false;
-        }}
-        ListFooterComponent={
-          loadingMore ? (
-            <ActivityIndicator size="small" color="#4da6ff" className="my-4" />
-          ) : null
-        }
-      />
+          renderItem={({ item }) => (
+            <View className="mx-4 mb-4">
+              <EntradaComprada
+                compra={item}
+                onPress={() =>
+                  router.push({
+                    pathname: "/(app)/entradas/mi-entrada",
+                    params: { compraId: item.id },
+                  })
+                }
+              />
+            </View>
+          )}
+          onEndReached={() => {
+            if (!onEndReachedCalledDuringMomentum.current) {
+              handleLoadMore();
+              onEndReachedCalledDuringMomentum.current = true;
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          onMomentumScrollBegin={() => {
+            onEndReachedCalledDuringMomentum.current = false;
+          }}
+          ListFooterComponent={
+            loadingMore ? (
+              <ActivityIndicator
+                size="small"
+                color="#4da6ff"
+                className="my-4"
+              />
+            ) : null
+          }
+        />
+      )}
     </SafeAreaView>
   );
 }

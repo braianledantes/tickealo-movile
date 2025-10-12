@@ -83,7 +83,7 @@ export default function Index() {
     <SafeAreaView className="flex flex-1 bg-[#05081b]">
       <Header />
       <View>
-        <Texto bold className="text-[#90e0ef]/80 px-5">
+        <Texto bold className="text-[#CAF0F8] px-5">
           PRODUCTORAS A LAS QUE PERTENECES
         </Texto>
 
