@@ -22,7 +22,7 @@ export default function Login() {
       await login({ email, password });
       router.replace("/");
     } catch {
-      Alert.alert("Error", "Failed to sign in. Please check your credentials.");
+      Alert.alert("Error", "No se pudo iniciar sesión. Verifica tus datos.");
     } finally {
       setIsLoading(false);
     }
@@ -34,14 +34,18 @@ export default function Login() {
 
   return (
     <Screen className="flex-1 justify-center gap-2 p-10">
-      <Title>Hola!</Title>
+      <Title>¡Hola!</Title>
+
       <View className="mt-6 gap-4">
+        {/* Input de correo con ícono */}
         <Input
           type="email"
           value={email}
           onChangeValue={setEmail}
           placeholder="Correo electrónico"
         />
+
+        {/* Input de contraseña con ícono y toggle de visibilidad */}
         <Input
           type="password"
           value={password}
@@ -53,15 +57,12 @@ export default function Login() {
           className="mt-2"
           onPress={handleLogin}
           disabled={isLoading}
-          title="Iniciar Sesión"
+          title={isLoading ? "Ingresando..." : "Iniciar Sesión"}
         />
       </View>
 
-      <View className="flex-row mt-6  justify-center">
-        <Texto className="text-gray-200 text-md">
-          {" "}
-          ¿No tienes una cuenta?{" "}
-        </Texto>
+      <View className="flex-row mt-6 justify-center">
+        <Texto className="text-gray-200 text-md">¿No tienes una cuenta? </Texto>
         <LinkButton
           text="Regístrate aquí."
           onPress={navigateToRegisterCliente}

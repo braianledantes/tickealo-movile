@@ -11,7 +11,7 @@ type EntradaCardProps = {
   right?: React.ReactNode;
   priceValueOverride?: number;
   priceSuffixText?: string;
-  disabled?: boolean; // nueva prop
+  disabled?: boolean;
 };
 
 export const EntradaCard: React.FC<EntradaCardProps> = ({
@@ -26,7 +26,7 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
   const tipoColor = tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
 
   const Content = (
-    <View style={styles.card}>
+    <View style={getCardStyle(disabled)}>
       <LinearGradient
         colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
         start={{ x: 0.5, y: 0 }}
@@ -88,6 +88,22 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
   );
 };
 
+const getCardStyle = (disabled: boolean) => ({
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "#0b1030",
+  borderTopEndRadius: 30,
+  borderBottomRightRadius: 30,
+  overflow: "hidden",
+  borderWidth: 1,
+  borderColor: disabled ? "rgba(27, 3, 82, 0.2)" : "#1b1e5e",
+  shadowColor: "#000",
+  shadowOpacity: 0.3,
+  shadowOffset: { width: 0, height: 2 },
+  shadowRadius: 4,
+  elevation: 5,
+});
+
 const styles = StyleSheet.create({
   wrapper: { marginVertical: 8, overflow: "hidden" },
   gradientBar: {
@@ -98,21 +114,6 @@ const styles = StyleSheet.create({
     width: 8,
     borderTopRightRadius: 100,
     borderBottomRightRadius: 100,
-  },
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#0b1030",
-    borderTopEndRadius: 30,
-    borderBottomRightRadius: 30,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "#1b1e5e",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 5,
   },
   left: { flex: 1, paddingVertical: 14, paddingHorizontal: 20 },
   label: { color: "#bbb", fontSize: 14, letterSpacing: 0.5 },

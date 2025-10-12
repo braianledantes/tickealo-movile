@@ -212,6 +212,18 @@ export default function InfoEvento() {
                     },
                   })
                 }
+                right={
+                  evento.stockEntradas === 0 || entrada.stock === 0 ? (
+                    <View className="items-center">
+                      <Texto bold className="text-white text-sm">
+                        NO HAY
+                      </Texto>
+                      <Texto bold className="text-white text-sm">
+                        STOCK
+                      </Texto>
+                    </View>
+                  ) : undefined
+                }
               />
             ))
           ) : (

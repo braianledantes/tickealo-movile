@@ -1,4 +1,5 @@
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { Ionicons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ export default function ValidarEntradas() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState<string | null>(null);
   const [manualCode, setManualCode] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -59,13 +61,25 @@ export default function ValidarEntradas() {
 
       <View style={styles.manualContainer}>
         <Text style={styles.manualLabel}>¿El QR no funciona?</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Ingresar código alfanumérico"
-          placeholderTextColor="#888"
-          value={manualCode}
-          onChangeText={setManualCode}
-        />
+
+        <View style={[styles.inputContainer, isFocused && styles.inputFocused]}>
+          <Ionicons
+            name="qr-code-outline"
+            size={20}
+            color="#A5A6AD"
+            style={styles.icon}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Ingresar código alfanumérico"
+            placeholderTextColor="#A5A6AD"
+            value={manualCode}
+            onChangeText={setManualCode}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+        </View>
+
         <TouchableOpacity
           onPress={handleManualValidation}
           style={styles.manualBtn}
@@ -103,23 +117,45 @@ const styles = StyleSheet.create({
   manualContainer: {
     marginTop: 20,
     alignItems: "center",
+    width: "100%",
   },
   manualLabel: { color: "#fff", marginBottom: 8 },
-  input: {
-    backgroundColor: "#0b1030",
-    borderColor: "#1b1e5e",
-    borderWidth: 1,
-    borderRadius: 10,
-    color: "#fff",
-    width: "100%",
-    padding: 10,
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#080C22",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 100,
+    borderWidth: 3,
+    borderColor: "#0F1D4C",
+    shadowColor: "#fff",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
     marginBottom: 10,
+    width: "100%",
+  },
+  inputFocused: {
+    borderColor: "#1E40AF",
+    borderWidth: 2,
+  },
+  icon: {
+    marginRight: 8,
+  },
+  input: {
+    flex: 1,
+    color: "#fff",
+    fontSize: 16,
+    paddingVertical: 6,
+    fontFamily: "Poppins_400Regular",
   },
   manualBtn: {
     backgroundColor: "#00b4d8",
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 8,
+    marginTop: 12,
   },
   manualBtnText: { color: "#fff", fontWeight: "700" },
 });

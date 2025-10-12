@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import {
@@ -11,51 +12,90 @@ import {
 
 export type InputProps = {
   value: string;
-  type?: "text" | "password" | "email" | "phone" | "default";
   onChangeValue: (value: string) => void;
   placeholder?: string;
+  type?: "text" | "password" | "email" | "phone" | "default";
+  iconName?: keyof typeof Ionicons.glyphMap;
+  secureTextEntry?: boolean;
+  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+  containerStyle?: object;
+  inputStyle?: object;
 };
 
 export function Input({
-  type = "default",
   value,
   onChangeValue,
   placeholder = "",
+  type = "default",
+  iconName,
+  secureTextEntry,
+  keyboardType,
+  containerStyle,
+  inputStyle,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
+  // Determinar qué ícono mostrar según el tipo
+  const renderIcon = () => {
+    switch (type) {
+      case "email":
+        return <EmailIcon style={styles.iconCustom} />;
+      case "password":
+        return <KeyIcon style={styles.iconCustom} />;
+      case "phone":
+        return <PhoneIcon style={styles.iconCustom} />;
+      case "text":
+        return <UserIcon style={styles.iconCustom} />;
+      default:
+        return iconName ? (
+          <Ionicons
+            name={iconName}
+            size={20}
+            color="#A5A6AD"
+            style={styles.icon}
+          />
+        ) : null;
+    }
   };
 
   return (
-    <View style={[styles.container, isFocused && styles.inputFocused]}>
-      {type === "email" && <EmailIcon style={styles.icon} />}
-      {type === "password" && <KeyIcon style={styles.icon} />}
-      {type === "phone" && <PhoneIcon style={styles.icon} />}
-      {type === "text" && <UserIcon style={styles.icon} />}
+    <View
+      style={[
+        styles.container,
+        isFocused && styles.inputFocused,
+        containerStyle,
+      ]}
+    >
+      {renderIcon()}
 
       <TextInput
-        keyboardType={type === "email" ? "email-address" : "default"}
-        style={styles.input}
         value={value}
         onChangeText={onChangeValue}
         placeholder={placeholder}
         placeholderTextColor="#A5A6AD"
-        autoCapitalize="none"
-        autoCorrect={false}
-        secureTextEntry={type === "password" && !isPasswordVisible} // 👈 se oculta por defecto
+        secureTextEntry={type === "password" && !showPassword}
+        keyboardType={
+          keyboardType ??
+          (type === "email"
+            ? "email-address"
+            : type === "phone"
+              ? "phone-pad"
+              : "default")
+        }
+        style={[styles.input, inputStyle]}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
 
       {type === "password" && (
         <TouchableOpacity
-          style={styles.eyeButton}
           onPress={togglePasswordVisibility}
+          style={styles.eyeButton}
         >
-          {isPasswordVisible ? <EyeIcon /> : <EyeOffIcon />}
+          {showPassword ? <EyeIcon /> : <EyeOffIcon />}
         </TouchableOpacity>
       )}
     </View>
@@ -67,40 +107,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     borderRadius: 100,
     backgroundColor: "#080C22",
-    shadowColor: "#fff",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#0F1D4C",
   },
   input: {
     flex: 1,
     color: "#fff",
     fontSize: 16,
-    paddingVertical: 8,
-    paddingHorizontal: 0,
+    paddingVertical: 6,
     fontFamily: "Poppins_400Regular",
-  },
-  eyeButton: {
-    position: "absolute",
-    right: 16,
-    justifyContent: "center",
-    alignItems: "center",
   },
   inputFocused: {
     borderColor: "#1E40AF",
     borderWidth: 2,
   },
   icon: {
+    marginRight: 8,
+  },
+  iconCustom: {
     color: "#fff",
     backgroundColor: "#393d4e",
     padding: 8,
     borderRadius: 50,
-    marginLeft: -8,
     marginRight: 8,
+  },
+  eyeButton: {
+    marginLeft: 8,
   },
 });
