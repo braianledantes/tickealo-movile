@@ -19,5 +19,5 @@ export const getProductora = async (): Promise<ProductoraValidadorDto> => {
 // Validar una entrada por su id
 export const validarTicketApi = async (idTicket: number) => {
   const response = await api.patch(`/tickets/${idTicket}/validar`);
-  return response.data;
+  return response;
 };

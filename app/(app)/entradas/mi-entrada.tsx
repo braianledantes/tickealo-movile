@@ -1,4 +1,5 @@
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/useCompras";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -213,6 +214,9 @@ export default function MiEntrada() {
               {/* QR (solo si está completada) */}
               {estado.label === "COMPLETADA" && (
                 <View style={styles.qrSection}>
+                  <Texto bold className="text-[#999] text-xl mb-6 ">
+                    {ticket.estado}
+                  </Texto>
                   <QRCode
                     key={ticket.id}
                     value={String(ticket.id)}

@@ -24,12 +24,12 @@ export const MenuGeneral: React.FC = () => {
 
   const items = [
     { key: "inicio", label: "Inicio", icon: "home-outline", route: "/" },
-    // {
-    //   key: "categorias",
-    //   label: "Categorías",
-    //   icon: "albums-outline",
-    //   route: "/",
-    // },
+    {
+      key: "categorias",
+      label: "Categorías",
+      icon: "albums-outline",
+      route: "/(app)/validador/ticket/[ticketId]",
+    },
     {
       key: "entradas",
       label: "Mis entradas",

@@ -12,7 +12,7 @@ import {
 interface ValidadorContextProps {
   getEventosValidador: () => Promise<EventoValidadorDto | undefined>;
   getProductorasValidador: () => Promise<ProductoraValidadorDto | undefined>;
-  validarTicket: (idTicket: number) => Promise<void>;
+  validarTicket: (idTicket: number) => Promise<number>; // 👈 ahora devuelve un número (status code)
 }
 
 export const ValidadorContext = createContext<
@@ -22,7 +22,6 @@ export const ValidadorContext = createContext<
 export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // ✅ useCallback memoriza la función y evita bucles en los efectos
   const getEventosValidador = useCallback(async () => {
     try {
       const response = await getEventosProductora();
@@ -43,13 +42,19 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  const validarTicket = useCallback(async (idTicket: number) => {
-    try {
-      await validarTicketApi(idTicket);
-    } catch (err) {
-      console.error("Error validando ticket:", err);
-    }
-  }, []);
+  const validarTicket = useCallback(
+    async (idTicket: number): Promise<number> => {
+      try {
+        const response = await validarTicketApi(idTicket);
+        return response.status; // 👈 asegurate de devolver el status HTTP
+      } catch (err: any) {
+        // Si el backend devuelve un código de error, lo capturamos igual
+        const statusCode = err?.response?.status ?? 500;
+        return statusCode;
+      }
+    },
+    [],
+  );
 
   return (
     <ValidadorContext.Provider
