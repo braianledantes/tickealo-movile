@@ -80,7 +80,7 @@ export default function TicketScreen() {
       </Text>
 
       <TouchableOpacity
-        onPress={() => router.push("/validar-entradas")}
+        onPress={() => router.push("/(app)/validador/validar-entradas")}
         style={{
           backgroundColor: "#4da6ff",
           paddingVertical: 12,

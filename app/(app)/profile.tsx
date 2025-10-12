@@ -1,46 +1,17 @@
 import { Button } from "@/components/Button/Button";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
-import { UsuarioPerfil } from "@/components/Layout/MenuUsuario";
+import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { useAuth } from "@/hooks/useAuth";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import React from "react";
 import { ScrollView, View } from "react-native";
 
-type Roles = {
-  name: string;
-  description: string;
-};
-type User = {
-  email: string;
-  emailVerifiedAt: string | null;
-  username: string;
-  roles: Roles[];
-};
-
-export type Usuario = {
-  apellido: string;
-  imagenPerfilUrl: string | null;
-  nombre: string;
-  puntosAcumulados: number;
-  telefono: string;
-  user: User;
-  userId: number;
-};
-
 export default function Profile() {
-  const { me } = useAuth();
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await me();
-      setUsuario(userData);
-      console.log(userData);
-    };
-    fetchUser();
-  }, [me]);
+  const { user } = useAuth();
+  const router = useRouter();
 
   return (
     <View className="flex-1">
@@ -49,8 +20,8 @@ export default function Profile() {
         {/* Avatar */}
         <View className="flex-row justify-center">
           <UsuarioPerfil
-            username={usuario?.user.username}
-            imagenPerfilUrl={usuario?.imagenPerfilUrl}
+            username={user?.user.username}
+            imagenPerfilUrl={user?.imagenPerfilUrl}
             icono="w-28 h-28"
             disabled={true}
           />
@@ -58,14 +29,14 @@ export default function Profile() {
             <Texto bold className="text-3xl  text-white/70">
               Hola{" "}
               <Texto className="italic text-white font-bold tracking-wide">
-                {usuario?.user.username}
+                {user?.user.username}
               </Texto>{" "}
               !
             </Texto>
             <Texto className="text-white/50 mt-1 ">
-              Puntos Acumulados: {usuario?.puntosAcumulados}
+              Puntos Acumulados: {user?.puntosAcumulados}
             </Texto>
-            {usuario?.user?.roles?.some((r) => r.name === "validador") && (
+            {user?.user?.roles?.some((r) => r.name === "validador") && (
               <View className="flex-row justify-center p-1 mt-2 border border-2 border-[#1ED760] text-center text-white rounded-full">
                 <Texto bold className="text-[#1ED760] mr-2 ">
                   VALIDADOR
@@ -82,11 +53,11 @@ export default function Profile() {
           </Texto>
           <View className="border border-2 border-white/20 p-6 rounded-tl-2xl rounded-tr-2xl">
             <Texto className="text-white mb-2">Correo Electronico</Texto>
-            <Texto className="text-white text-xl">{usuario?.user.email}</Texto>
+            <Texto className="text-white text-xl">{user?.user.email}</Texto>
           </View>
           <View className="border border-2 border-white/20 p-6 rounded-bl-2xl rounded-br-2xl">
             <Texto className="text-white mb-2">Telofono</Texto>
-            <Texto className="text-white text-xl">{usuario?.telefono}</Texto>
+            <Texto className="text-white text-xl">{user?.telefono}</Texto>
           </View>
         </View>
 
@@ -98,13 +69,11 @@ export default function Profile() {
             <View className="flex-row">
               <View className="flex-1">
                 <Texto className="text-white mb-2">Nombre</Texto>
-                <Texto className="text-white text-xl">{usuario?.nombre}</Texto>
+                <Texto className="text-white text-xl">{user?.nombre}</Texto>
               </View>
               <View className="flex-1">
                 <Texto className="text-white mb-2">Apellido</Texto>
-                <Texto className="text-white text-xl">
-                  {usuario?.apellido}
-                </Texto>
+                <Texto className="text-white text-xl">{user?.apellido}</Texto>
               </View>
             </View>
           </View>
@@ -121,7 +90,10 @@ export default function Profile() {
           </View>
         </View>
         <View className="mt-6">
-          <Button title="Editar Perfil" onPress={() => console.log("hola")} />
+          <Button
+            title="Editar Perfil"
+            onPress={() => router.push("/(app)/edit-profile")}
+          />
         </View>
       </ScrollView>
     </View>

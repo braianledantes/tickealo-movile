@@ -1,5 +1,5 @@
 export interface ComprasResponse {
-  data: CompraDTO[];
+  data: CompraDto[];
   pagination: {
     total: number;
     page: number;
@@ -7,7 +7,7 @@ export interface ComprasResponse {
   };
 }
 
-export interface CompraDTO {
+export interface CompraDto {
   id: number;
   comprobanteTransferencia: string | null;
   monto: string;
@@ -24,10 +24,10 @@ export interface CompraDTO {
     imagenPerfilUrl: string | null;
   };
 
-  tickets: TicketDTO[];
+  tickets: TicketDto[];
 }
 
-export interface TicketDTO {
+export interface TicketDto {
   id: number;
   codigoAlfanumerico: string;
   estado: "PENDIENTE_VALIDACION" | "COMPLETADA" | "ANULADA" | string;
@@ -39,5 +39,17 @@ export interface TicketDTO {
     nombre: string;
     precio: number;
     tipo: string;
+    cantidad: number;
+    evento: EventoDto;
   };
 }
+
+type EventoDto = {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  inicioAt: string;
+  finAt: string;
+  bannerUrl?: string;
+  portadaUrl?: string;
+};

@@ -1,3 +1,4 @@
+import { CompraDto } from "@/api/dto/compras.dto";
 import { EntradaComprada } from "@/components/Entradas/EntradaComprada";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
@@ -6,35 +7,10 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
-// 🧩 Tipos
-type Evento = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  bannerUrl?: string;
-  portadaUrl?: string;
-};
-
-type Ticket = {
-  id: number;
-  entrada: {
-    evento: Evento;
-  };
-};
-
-type Compra = {
-  id: number;
-  estado: string;
-  monto: string;
-  tickets: Ticket[];
-};
-
 export default function MisEntradas() {
   const { misCompras } = useCompras();
   const [loading, setLoading] = useState(true);
-  const [compras, setCompras] = useState<Compra[]>([]);
+  const [compras, setCompras] = useState<CompraDto[]>([]);
   const router = useRouter();
 
   useEffect(() => {

@@ -1,3 +1,8 @@
+import { EventoDto } from "@/api/dto/evento.dto";
+import {
+  EventoValidadorDto,
+  ProductoraValidadorDto,
+} from "@/api/dto/eventos-validador.dto";
 import { EventList } from "@/components/Eventos/EventList";
 import { Header } from "@/components/Layout/Header";
 import { ProductoraPerfil } from "@/components/Productora/ProductoraPerfil";
@@ -9,44 +14,17 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type Productora = {
-  calificacion: number;
-  creditosDisponibles: number;
-  cuit: number;
-  direccion: string;
-  imagenUrl: string;
-  nombre: string;
-  telefono: string;
-  user: User;
-  userId: number;
-};
-
-type User = {
-  email: string;
-  username: string;
-};
-type Event = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  portadaUrl?: string;
-  lugar?: {
-    direccion: string;
-    ciudad: string;
-    provincia: string;
-  };
-};
-
 export default function Index() {
   const { getProductorasValidador, getEventosValidador } = useValidador();
   const { getEventosByProductora } = useEventos();
-  const [productoras, setProductoras] = useState<Productora[]>([]);
+  const [productoras, setProductoras] = useState<ProductoraValidadorDto[]>([]);
   const [productoraSeleccionada, setProductoraSeleccionada] = useState<
     number | null
   >(null);
-  const [eventos, setEventos] = useState<Event[]>([]);
+  const [eventos, setEventos] = useState<(EventoDto | EventoValidadorDto)[]>(
+    [],
+  );
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -69,13 +47,13 @@ export default function Index() {
     };
 
     cargarEventos();
-  }, []);
+  }, [getProductorasValidador]);
 
   // Filtrar eventos según productora seleccionada, si no me muestra todos
   useEffect(() => {
     const cargarEventos = async () => {
       try {
-        let response: Event[] | undefined;
+        let response: (EventoDto | EventoValidadorDto)[] | undefined;
 
         if (productoraSeleccionada) {
           response = await getEventosByProductora(productoraSeleccionada);
@@ -123,7 +101,7 @@ export default function Index() {
         events={eventos}
         onPressEvent={(id) =>
           router.push({
-            pathname: "/info-evento-validador",
+            pathname: "/(app)/validador/info-evento-validador",
             params: { eventoId: id },
           })
         }

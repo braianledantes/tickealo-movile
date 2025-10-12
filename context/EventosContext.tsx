@@ -1,24 +1,11 @@
+import { EventoDto } from "@/api/dto/evento.dto";
 import React, { createContext } from "react";
 import { getEventosById } from "../api/events";
-
-type Event = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  portadaUrl?: string;
-  lugar?: {
-    direccion: string;
-    ciudad: string;
-    provincia: string;
-  };
-};
 
 interface EventosContextProps {
   getEventosByProductora: (
     idProductora: number,
-  ) => Promise<Event[] | undefined>;
+  ) => Promise<EventoDto[] | undefined>;
 }
 
 export const EventosContext = createContext<EventosContextProps | undefined>(

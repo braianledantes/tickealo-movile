@@ -1,10 +1,10 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { Href, router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Image,
   Modal,
   Platform,
   Pressable,
@@ -14,45 +14,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
-type Role = {
-  name: string;
-  description?: string;
-};
-
-type User = {
-  email: string;
-  emailVerifiedAt: string | null;
-  roles: Role[];
-  username: string;
-};
-
-export type Usuario = {
-  apellido: string;
-  imagenPerfilUrl: string | null;
-  nombre: string;
-  puntosAcumulados: number;
-  telefono: string;
-  user: User;
-  userId: number;
-};
+import { UsuarioPerfil } from "./UsuarioPerfil";
 
 export const MenuGeneral: React.FC = () => {
-  const { me, logout } = useAuth();
+  const { logout, user } = useAuth();
   const [visible, setVisible] = useState(false);
   const slideX = useRef(new Animated.Value(-260)).current;
-
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [activeItem, setActiveItem] = useState<string>("inicio");
 
   const items = [
     { key: "inicio", label: "Inicio", icon: "home-outline", route: "/" },
-    {
-      key: "categorias",
-      label: "Categorías",
-      icon: "albums-outline",
-      route: "/",
-    },
+    // {
+    //   key: "categorias",
+    //   label: "Categorías",
+    //   icon: "albums-outline",
+    //   route: "/",
+    // },
     {
       key: "entradas",
       label: "Mis entradas",
@@ -61,15 +38,6 @@ export const MenuGeneral: React.FC = () => {
     },
     { key: "favoritos", label: "Favoritos", icon: "heart-outline", route: "/" },
   ];
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await me();
-      setUsuario(userData);
-      console.log(userData);
-    };
-    fetchUser();
-  }, [me]);
 
   useEffect(() => {
     if (visible) {
@@ -92,7 +60,7 @@ export const MenuGeneral: React.FC = () => {
   const handlePress = (itemKey: string, route: Href) => {
     setActiveItem(itemKey);
     close();
-    router.push(route);
+    router.replace(route);
   };
 
   return (
@@ -111,21 +79,15 @@ export const MenuGeneral: React.FC = () => {
         >
           {/* Header Usuario */}
           <View style={styles.userHeader}>
-            {usuario?.imagenPerfilUrl ? (
-              <Image
-                source={{ uri: usuario.imagenPerfilUrl }}
-                style={styles.userImage}
-              />
-            ) : (
-              <View style={styles.userPlaceholder}>
-                <Text style={styles.userPlaceholderText}>
-                  {usuario?.user?.username?.charAt(0).toUpperCase() || "?"}
-                </Text>
-              </View>
-            )}
+            <UsuarioPerfil
+              username={user?.user.username}
+              imagenPerfilUrl={user?.imagenPerfilUrl}
+              icono="w-20 h-20"
+              disabled={true}
+            />
             <View style={{ marginLeft: 10 }}>
               <Text style={styles.userName}>
-                {usuario?.user?.username || "Usuario"}
+                {user?.user?.username || "Usuario"}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -161,7 +123,7 @@ export const MenuGeneral: React.FC = () => {
             ))}
 
             {/* Panel Validador */}
-            {usuario?.user?.roles?.some((r) => r.name === "validador") && (
+            {user?.user?.roles?.some((r) => r.name === "validador") && (
               <View>
                 {/* Panel Validador */}
                 <TouchableOpacity
@@ -170,7 +132,10 @@ export const MenuGeneral: React.FC = () => {
                     activeItem === "panelValidador" && styles.itemActive,
                   ]}
                   onPress={() =>
-                    handlePress("panelValidador", "/validar-entradas")
+                    handlePress(
+                      "panelValidador",
+                      "/(app)/validador/validar-entradas",
+                    )
                   }
                 >
                   <Ionicons name="qr-code-outline" style={styles.icon} />
@@ -187,10 +152,13 @@ export const MenuGeneral: React.FC = () => {
                     activeItem === "miProductora" && styles.itemActive,
                   ]}
                   onPress={() =>
-                    handlePress("miProductora", "/eventos-validador")
+                    handlePress(
+                      "miProductora",
+                      "/(app)/validador/eventos-validador",
+                    )
                   }
                 >
-                  <Ionicons name="briefcase-outline" style={styles.icon} />
+                  <AntDesign name="team" size={24} style={styles.icon} />
                   <Text style={styles.item}>Mi Productora</Text>
                   {activeItem === "miProductora" && (
                     <View style={styles.activeIndicator} />

@@ -1,4 +1,3 @@
-// app/(app)/index.tsx
 import api from "@/api/axiosConfig";
 import { EventList } from "@/components/Eventos/EventList";
 import { Busqueda } from "@/components/Input/Busqueda";
@@ -34,7 +33,7 @@ type Event = {
 };
 
 export default function Index() {
-  const { authReady, headerReady, isLoading: authLoading } = useAuth();
+  const { isLoading: authLoading } = useAuth();
 
   const [upcoming, setUpcoming] = useState<Event[] | undefined>([]);
   const [loading, setLoading] = useState(true);
@@ -48,15 +47,6 @@ export default function Index() {
 
     const loadEvents = async () => {
       if (authLoading) return;
-
-      // Si no hay token o el header aún no está listo, no muestra eventos
-      if (!authReady || !headerReady) {
-        if (!cancelled) {
-          setUpcoming([]);
-          setLoading(false);
-        }
-        return;
-      }
 
       try {
         setLoading(true);
@@ -90,7 +80,7 @@ export default function Index() {
     return () => {
       cancelled = true;
     };
-  }, [search, authReady, headerReady, authLoading]);
+  }, [search, authLoading]);
 
   // filtrado en frontend
   const upcomingFiltered = useMemo(() => {

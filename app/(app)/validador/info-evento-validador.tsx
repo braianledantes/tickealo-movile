@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
+import { EventoDto } from "@/api/dto/evento.dto";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -16,52 +17,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import defaultEvent from "../../assets/images/defaultEvent.jpg";
-
-type Entrada = {
-  id: number;
-  tipo: string;
-  precio: number;
-  cantidad: number;
-  id_evento: number;
-};
-
-type Productora = {
-  userId: number;
-  nombre: string;
-  cuit?: string;
-  direccion?: string;
-  imagenUrl?: string;
-  telefono?: string;
-  calificacion?: number;
-  creditosDisponibles?: number;
-};
-
-type Evento = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  bannerUrl?: string;
-  lugar?: {
-    direccion?: string;
-    ciudad?: string;
-    provincia?: string;
-  };
-  entradas?: Entrada[];
-  productora?: Productora;
-};
+import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 export default function InfoEvento() {
+  const router = useRouter();
   const { eventoId } = useLocalSearchParams();
-  const [evento, setEvento] = useState<Evento | null>(null);
+  const [evento, setEvento] = useState<EventoDto | null>(null);
   const [loading, setLoading] = useState(true);
   // const router = useRouter();
 
   const { width } = Dimensions.get("window");
   const height = Math.round(width * (4 / 11));
-  const router = useRouter();
 
   useEffect(() => {
     const fetchEvento = async () => {
@@ -150,7 +116,7 @@ export default function InfoEvento() {
       {/** SCANNER */}
       <View className="mx-auto mt-6 mb-20">
         <TouchableOpacity
-          onPress={() => router.push("/validar-entradas")}
+          onPress={() => router.push("/(app)/validador/validar-entradas")}
           activeOpacity={0.8}
         >
           <View className="p-4 bg-[#03045E] rounded-full">

@@ -1,4 +1,4 @@
-import { Logo } from "@/components/Logo";
+import { Logo } from "@/components/Layout/Logo";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { EventosProvider } from "@/context/EventosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
@@ -56,36 +56,34 @@ function RootNavigator() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      {accessToken ? (
-        // ✅ Usuario logueado
+      <Stack.Protected guard={!!accessToken}>
         <Stack.Screen name="(app)" />
-      ) : (
-        // 🚪 Usuario no logueado
-        <>
-          <Stack.Screen
-            name="login"
-            options={{
-              headerShown: true,
-              title: "",
-              headerTintColor: "#1E90FF",
-              headerStyle: { backgroundColor: "#05081b" },
-              headerShadowVisible: false,
-              headerTitle: () => <Logo />,
-            }}
-          />
-          <Stack.Screen
-            name="register-cliente"
-            options={{
-              headerShown: true,
-              title: "",
-              headerTintColor: "#1E90FF",
-              headerStyle: { backgroundColor: "#05081b" },
-              headerShadowVisible: false,
-              headerTitle: () => <Logo />,
-            }}
-          />
-        </>
-      )}
+      </Stack.Protected>
+
+      <Stack.Protected guard={!accessToken}>
+        <Stack.Screen
+          name="login"
+          options={{
+            headerShown: true,
+            title: "",
+            headerTintColor: "#1E90FF",
+            headerStyle: { backgroundColor: "#05081b" },
+            headerShadowVisible: false,
+            headerTitle: () => <Logo />,
+          }}
+        />
+        <Stack.Screen
+          name="register-cliente"
+          options={{
+            headerShown: true,
+            title: "",
+            headerTintColor: "#1E90FF",
+            headerStyle: { backgroundColor: "#05081b" },
+            headerShadowVisible: false,
+            headerTitle: () => <Logo />,
+          }}
+        />
+      </Stack.Protected>
     </Stack>
   );
 }
