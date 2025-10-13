@@ -4,7 +4,6 @@ import api, {
 } from "./axiosConfig";
 import { LoginDto } from "./dto/login.dto";
 import { Me } from "./dto/me.dto";
-import { RegisterClienteDto } from "./dto/register-cliente.dto";
 
 export async function login(loginDto: LoginDto) {
   const response = await api.post("/auth/login", loginDto);
@@ -18,8 +17,10 @@ export async function login(loginDto: LoginDto) {
   return response;
 }
 
-export async function registerCliente(dto: RegisterClienteDto) {
-  const response = await api.post("/auth/register-cliente", dto);
+export async function registerCliente(data: FormData) {
+  const response = await api.post("/auth/register-cliente", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return response;
 }
 

@@ -1,125 +1,98 @@
-import { Button } from "@/components/Button/Button";
-import { LinkButton } from "@/components/Button/LinkButton";
-import { Input } from "@/components/Input/Input";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/useAuth";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, Platform } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { ClavePersonal } from "@/components/Form/ClavePersonal";
+import { DatosPersonales } from "@/components/Form/DatosPersonales";
 
 export default function RegisterCliente() {
   const { registerCliente } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+  const [formData, setFormData] = useState<any>({});
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [telefono, setTelefono] = useState("");
+  // Paso 1 → guardar datos personales
+  const handleNext = (data: any) => {
+    setFormData(data);
+    setStep(2);
+  };
 
-  const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+  // Paso 2 → crear contraseña y enviar al backend
+  const handleRegister = async (passwordData: any) => {
+    const finalData = { ...formData, ...passwordData };
 
     try {
       setIsLoading(true);
-      await registerCliente({
-        username,
-        email,
-        password,
-        nombre,
-        apellido,
-        telefono,
+
+      // Crear formData para enviar archivo + campos
+      const formDataToSend = new FormData();
+
+      Object.entries(finalData).forEach(([key, value]) => {
+        if (key !== "imagenPerfilUrl")
+          formDataToSend.append(key, value as string);
       });
+
+      // Si hay imagen, la convertimos correctamente según la plataforma
+      const image = finalData.imagenPerfilUrl;
+      if (image) {
+        let file: any;
+        const ext = image.split(".").pop();
+
+        if (Platform.OS === "web") {
+          const response = await fetch(image);
+          const blob = await response.blob();
+          file = new File([blob], `perfil.${ext}`, { type: blob.type });
+        } else {
+          file = {
+            uri: image,
+            name: `perfil.${ext}`,
+            type: `image/${ext === "jpg" ? "jpeg" : ext}`,
+          } as any;
+        }
+
+        formDataToSend.append("imagenPerfil", file);
+      }
+
+      await registerCliente(formDataToSend);
       router.replace("/");
     } catch (err: any) {
       console.error("Error en registro:", err.response?.data || err);
-
       const backendMsg =
         err.response?.data?.message ||
         "No se pudo registrar. Intente nuevamente.";
-
       Alert.alert("Error", backendMsg.toString());
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const navigateToLogin = () => {
-    router.back();
   };
 
   return (
     <KeyboardAwareScrollView
-      style={{ flex: 1, backgroundColor: "#010030" }} // 👈 ocupa toda la pantalla, color de fondo
+      style={{ flex: 1, backgroundColor: "#010030" }}
       contentContainerStyle={{ flexGrow: 1 }}
       enableOnAndroid
       extraScrollHeight={40}
       keyboardShouldPersistTaps="handled"
     >
-      <Screen className="flex-1 px-8">
-        <Title className="mb-4">Regístrate como cliente</Title>
-        <View className="gap-4">
-          <Input
-            type="text"
-            value={username}
-            onChangeValue={setUsername}
-            placeholder="Nombre de usuario"
-          />
-          <Input
-            type="text"
-            value={nombre}
-            onChangeValue={setNombre}
-            placeholder="Nombre"
-          />
-          <Input
-            type="text"
-            value={apellido}
-            onChangeValue={setApellido}
-            placeholder="Apellido"
-          />
-          <Input
-            type="phone"
-            value={telefono}
-            onChangeValue={setTelefono}
-            placeholder="Teléfono"
-          />
-          <Input
-            type="email"
-            value={email}
-            onChangeValue={setEmail}
-            placeholder="Correo electrónico"
-          />
-          <Input
-            type="password"
-            value={password}
-            onChangeValue={setPassword}
-            placeholder="Contraseña"
-          />
-          <Input
-            type="password"
-            value={confirmPassword}
-            onChangeValue={setConfirmPassword}
-            placeholder="Confirmar contraseña"
-          />
-        </View>
+      <Screen className="flex-1 px-8 justify-center">
+        <Title className="mb-4 text-center">
+          {step === 1 ? "Datos personales" : "Crea tu contraseña"}
+        </Title>
 
-        <Button
-          className="mt-2"
-          onPress={handleRegister}
-          disabled={isLoading}
-          title="Crear Cuenta"
-        />
-
-        <LinkButton
-          className="self-center mt-2"
-          text="¿Ya tienes cuenta? Inicia Sesión"
-          onPress={navigateToLogin}
-        />
+        {step === 1 ? (
+          <DatosPersonales onNext={handleNext} initialValues={formData} />
+        ) : (
+          <ClavePersonal
+            onRegister={handleRegister}
+            isLoading={isLoading}
+            email={formData.email}
+            onBack={() => setStep(1)}
+          />
+        )}
       </Screen>
     </KeyboardAwareScrollView>
   );

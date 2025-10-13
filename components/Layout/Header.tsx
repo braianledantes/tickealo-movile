@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Image, View } from "react-native";
 import Logo from "../../assets/images/logotipo.png";
-import { MenuGeneral } from "./MenuGeneral";
+import { Menu } from "./Menu";
 import { UsuarioPerfil } from "./UsuarioPerfil";
 
 export const Header: React.FC = () => {
@@ -10,7 +10,7 @@ export const Header: React.FC = () => {
   return (
     <View className="h-30 bg-[#05081b] flex-row items-center justify-between px-4">
       {/* Botón menú general */}
-      <MenuGeneral />
+      <Menu />
 
       {/* Logo en el medio */}
       <Image

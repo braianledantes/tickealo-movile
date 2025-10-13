@@ -119,7 +119,7 @@ export default function Index() {
         <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
 
         {/* Contenedor de lista o loader */}
-        <View style={{ flex: 1, paddingHorizontal: 15 }}>
+        <View style={{ flex: 1 }}>
           {loading ? (
             <View style={styles.center}>
               <ActivityIndicator size="large" color="#4da6ff" />

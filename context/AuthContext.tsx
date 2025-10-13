@@ -12,7 +12,6 @@ import {
   registerCliente,
 } from "@/api/auth";
 import { LoginDto } from "@/api/dto/login.dto";
-import { RegisterClienteDto } from "@/api/dto/register-cliente.dto";
 import { useStorageState } from "../hooks/useStorageState";
 
 import * as api from "@/api/axiosConfig";
@@ -20,7 +19,7 @@ import { Me } from "../api/dto/me.dto";
 
 export const AuthContext = createContext<{
   login: (dto: LoginDto) => void;
-  registerCliente: (dto: RegisterClienteDto) => void;
+  registerCliente: (data: FormData) => void;
   logout: () => void;
   accessToken?: string | null;
   user?: Me | null;
@@ -73,8 +72,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
           const token = result.data.access_token;
           setAccessToken(token);
         },
-        registerCliente: async (dto: RegisterClienteDto) => {
-          const result = await registerCliente(dto);
+        registerCliente: async (data: FormData) => {
+          const result = await registerCliente(data);
           const token = result.data.access_token;
           setAccessToken(token);
         },

@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { LinearGradient } from "expo-linear-gradient";
 import { Href, router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   Modal,
   Platform,
   Pressable,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { UsuarioPerfil } from "./UsuarioPerfil";
 
-export const MenuGeneral: React.FC = () => {
+export const Menu: React.FC = () => {
   const { logout, user } = useAuth();
   const [visible, setVisible] = useState(false);
   const slideX = useRef(new Animated.Value(-260)).current;
@@ -78,7 +78,7 @@ export const MenuGeneral: React.FC = () => {
           style={[styles.menu, { transform: [{ translateX: slideX }] }]}
         >
           {/* Header Usuario */}
-          <View style={styles.userHeader}>
+          <View className="flex-row items-center mb-4 relative border-b border-white/20">
             <UsuarioPerfil
               username={user?.user.username}
               imagenPerfilUrl={user?.imagenPerfilUrl}
@@ -92,7 +92,7 @@ export const MenuGeneral: React.FC = () => {
               <TouchableOpacity
                 onPress={() => {
                   close();
-                  router.push("/profile");
+                  router.push("/(app)/Perfil/profile");
                 }}
               >
                 <Text style={styles.userProfile}>Tu perfil</Text>
@@ -104,7 +104,6 @@ export const MenuGeneral: React.FC = () => {
               <Ionicons name="close" size={22} color="white" />
             </TouchableOpacity>
           </View>
-
           {/* Items del menú */}
           <View style={styles.itemsContainer}>
             {items.map(({ key, label, icon, route }) => (
@@ -118,7 +117,15 @@ export const MenuGeneral: React.FC = () => {
               >
                 <Ionicons name={icon as any} style={styles.icon} />
                 <Text style={styles.item}>{label}</Text>
-                {activeItem === key && <View style={styles.activeIndicator} />}
+                {activeItem === key && <View style={styles.gradientBar} />}
+                {activeItem === key && (
+                  <LinearGradient
+                    colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
+                    start={{ x: 0.5, y: 0 }}
+                    end={{ x: 0.5, y: 1 }}
+                    style={styles.gradientBar}
+                  />
+                )}
               </TouchableOpacity>
             ))}
 
@@ -141,7 +148,7 @@ export const MenuGeneral: React.FC = () => {
                   <Ionicons name="qr-code-outline" style={styles.icon} />
                   <Text style={styles.item}>Panel Validador</Text>
                   {activeItem === "panelValidador" && (
-                    <View style={styles.activeIndicator} />
+                    <View style={styles.gradientBar} />
                   )}
                 </TouchableOpacity>
 
@@ -161,20 +168,19 @@ export const MenuGeneral: React.FC = () => {
                   <AntDesign name="team" size={24} style={styles.icon} />
                   <Text style={styles.item}>Mi Productora</Text>
                   {activeItem === "miProductora" && (
-                    <View style={styles.activeIndicator} />
+                    <View style={styles.gradientBar} />
                   )}
                 </TouchableOpacity>
               </View>
             )}
           </View>
-
           {/* Logout */}
           <TouchableOpacity
             onPress={async () => {
               logout();
               router.replace("/login");
             }}
-            style={styles.logoutButton}
+            className="flex-row items-center ml-7 mt-4 py-5"
           >
             <Ionicons name="log-out-outline" style={styles.icon} />
             <Text style={styles.item}>Cerrar sesión</Text>
@@ -192,18 +198,12 @@ const styles = StyleSheet.create({
   },
   menu: {
     position: "absolute",
-    top: Platform.OS === "ios" ? 44 : StatusBar.currentHeight,
+    top: Platform.OS === "ios" ? 44 : 0,
     bottom: 0,
     width: 260,
     backgroundColor: "#05081b",
     padding: 20,
     justifyContent: "space-between",
-  },
-  userHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-    position: "relative",
   },
   userImage: { width: 50, height: 50, borderRadius: 25 },
   userPlaceholder: {
@@ -217,36 +217,44 @@ const styles = StyleSheet.create({
   userPlaceholderText: { color: "white", fontWeight: "bold" },
   userName: { color: "white", fontSize: 16, fontWeight: "600" },
   userProfile: { color: "#ccc", fontSize: 14, marginTop: 2 },
-  closeButton: { position: "absolute", right: 0 },
+  closeButton: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 44 : 26, // margen superior
+    right: -40, // sobresale 20px fuera del menú
+    backgroundColor: "#191D31",
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5,
+  },
   itemsContainer: { flex: 1 },
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 10,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 8,
+    marginVertical: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderTopEndRadius: 50,
+    borderBottomEndRadius: 50,
   },
   itemActive: {
     backgroundColor: "rgba(255,255,255,0.1)",
   },
-  activeIndicator: {
+  item: { color: "white", fontSize: 16, marginLeft: 10 },
+  icon: { fontSize: 20, color: "white" },
+  gradientBar: {
     position: "absolute",
     left: 0,
     top: 0,
     bottom: 0,
-    width: 4,
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-    backgroundColor:
-      "linear-gradient(to bottom, #03055F, #00B4D8, #90E0EF, #CAF0F8)",
-  },
-  item: { color: "white", fontSize: 16, marginLeft: 10 },
-  icon: { fontSize: 20, color: "white" },
-  logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 20,
-    paddingVertical: 10,
+    width: 6,
+    borderTopRightRadius: 100,
+    borderBottomRightRadius: 100,
   },
 });

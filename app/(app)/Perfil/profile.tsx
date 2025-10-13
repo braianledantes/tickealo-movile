@@ -7,7 +7,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -83,20 +83,26 @@ export default function Profile() {
           </View>
 
           <View className="border border-2 border-[#1b1e5e] bg-[#0b1030] p-6 rounded-bl-2xl rounded-br-2xl">
-            <View className="flex-row justify-between">
-              <Texto bold className="text-[#4da6ff] tracking-wide text-md mt-1">
-                Cambiar contraseña
-              </Texto>
-              <View className="">
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => router.push("/(app)/Perfil/edit-password")}
+            >
+              <View className="flex-row justify-between items-center">
+                <Texto
+                  bold
+                  className="text-[#4da6ff] tracking-wide text-md mt-1"
+                >
+                  Cambiar contraseña
+                </Texto>
                 <AntDesign name="right" size={24} color="#4da6ff" />
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View className="mt-6">
           <Button
             title="Editar Perfil"
-            onPress={() => router.push("/(app)/edit-profile")}
+            onPress={() => router.push("/(app)/Perfil/edit-profile")}
           />
         </View>
       </ScrollView>
