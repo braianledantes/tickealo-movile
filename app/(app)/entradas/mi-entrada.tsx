@@ -44,7 +44,7 @@ type Ticket = {
 
 type Compra = {
   id: number;
-  estado: "PENDIENTE" | "COMPLETADA" | "CANCELADA";
+  estado: "PENDIENTE" | "ACEPTADA" | "RECHAZADA";
   monto: string;
   tickets: Ticket[];
   updatedAt: string; // viene como string ISO desde el backend
@@ -105,12 +105,12 @@ export default function MiEntrada() {
   const estadoRaw = compraSeleccionada.estado?.toUpperCase() || "";
   let estado = { label: "SIN ESTADO", color: "#999", background: "#222" };
 
-  if (estadoRaw.includes("COMPLETADA")) {
-    estado = { label: "COMPLETADA", color: "#00ff9d", background: "#003d1f" }; // 🟢
+  if (estadoRaw.includes("ACEPTADA")) {
+    estado = { label: "ACEPTADA", color: "#00ff9d", background: "#003d1f" }; // 🟢
   } else if (estadoRaw.includes("PENDIENTE")) {
     estado = { label: "PENDIENTE", color: "#cccccc", background: "#333333" }; // ⚪
-  } else if (estadoRaw.includes("CANCELADA")) {
-    estado = { label: "CANCELADA", color: "#ff4d4d", background: "#3d0000" }; // 🔴
+  } else if (estadoRaw.includes("RECHAZADA")) {
+    estado = { label: "RECHAZADA", color: "#ff4d4d", background: "#3d0000" }; // 🔴
   }
 
   const fechaActualizacion = new Date(
@@ -209,8 +209,8 @@ export default function MiEntrada() {
                 </View>
               </View>
 
-              {/* QR (solo si está completada) */}
-              {estado.label === "COMPLETADA" && (
+              {/* QR (solo si está aceptada) */}
+              {estado.label === "ACEPTADA" && (
                 <View style={styles.qrSection}>
                   <Texto bold className="text-[#999] text-xl mb-6 ">
                     {ticket.estado}

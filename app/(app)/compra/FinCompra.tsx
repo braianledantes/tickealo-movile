@@ -5,7 +5,7 @@ import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useCompras } from "@/hooks/useCompras";
 import * as ClipBoard from "expo-clipboard";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
@@ -37,6 +37,7 @@ type DatosBancarios = {
 };
 
 function BankRow({ label, value }: { label: string; value?: string }) {
+  const router = useRouter();
   if (!value) return null;
   const copy = async () => {
     await ClipBoard.setStringAsync(value);
@@ -152,7 +153,7 @@ export default function Compra() {
       const response = await terminarCompra(compraId as string, formData);
       console.log(response);
 
-      Alert.alert("Éxito", "Compra realizada correctamente ✅");
+      router.replace("/(app)/entradas/mis-entradas");
     } catch (err: any) {
       Alert.alert("Error", err.response?.data?.message || "Error en la compra");
     }
