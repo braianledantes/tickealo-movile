@@ -4,13 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   LayoutAnimation,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { Texto } from "../Texto";
 
@@ -60,13 +59,13 @@ export default function EventosProximos({ dropdown }: { dropdown?: boolean }) {
     if (!dropdown) setExpanded(false);
   }, [dropdown]);
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4da6ff" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.center}>
+  //       <ActivityIndicator size="large" color="#4da6ff" />
+  //     </View>
+  //   );
+  // }
 
   if (!eventos.length) {
     return (

@@ -25,14 +25,8 @@ export const Menu: React.FC = () => {
   const items = [
     { key: "inicio", label: "Inicio", icon: "home-outline", route: "/" },
     {
-      key: "categorias",
-      label: "Categorías",
-      icon: "albums-outline",
-      route: "/(app)/validador/ticket/[ticketId]",
-    },
-    {
       key: "entradas",
-      label: "Mis entradas",
+      label: "Mis compras",
       icon: "ticket-outline",
       route: "/(app)/entradas/mis-entradas" as Href,
     },

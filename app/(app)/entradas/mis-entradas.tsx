@@ -77,7 +77,7 @@ export default function MisEntradas() {
           contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}
           ListHeaderComponent={
             <Texto bold className="text-[#90e0ef]/80 px-5 mt-2 mb-4">
-              TODOS MIS TICKETS
+              TODOS MIS COMPRAS
             </Texto>
           }
           renderItem={({ item }) => (
