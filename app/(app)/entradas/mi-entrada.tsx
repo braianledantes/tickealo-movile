@@ -146,7 +146,6 @@ export default function MiEntrada() {
         </Text>
 
         {compraSeleccionada.tickets.map((ticket) => {
-          console.log("Ticket ID:", ticket.id);
           const evento = ticket.entrada.evento;
 
           const lugarTexto =
@@ -171,7 +170,6 @@ export default function MiEntrada() {
               })
             : "--:--";
 
-          console.log("Ticket ID:", ticket.id);
           return (
             <View key={ticket.id} style={styles.ticket}>
               {/* Imagen del evento */}

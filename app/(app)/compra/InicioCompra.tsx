@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { useCompras } from "@/hooks/useCompras";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
@@ -12,7 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
-import defaultEvent from "../../assets/images/defaultEvent.jpg";
+import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 function formatARS(value: number) {
   try {
@@ -29,12 +30,14 @@ function formatARS(value: number) {
 export default function InfoEntrada() {
   const router = useRouter();
   const params = useLocalSearchParams<{
+    compraId: string;
     entradaId?: string;
     nombre?: string;
     precio?: string;
     portadaUrl?: string;
     eventoId?: string;
   }>();
+  const { comprar } = useCompras();
 
   const precioUnit = Number(params?.precio ?? 0);
   const [qty, setQty] = useState(1);
@@ -59,18 +62,27 @@ export default function InfoEntrada() {
     </View>
   );
 
-  const onCheckout = () => {
-    router.push({
-      pathname: "/compra",
-      params: {
-        eventoId: String(params.eventoId ?? ""),
-        entradaId: String(params.entradaId ?? ""),
-        nombre: String(params.nombre ?? ""),
-        precio: String(precioUnit),
-        cantidad: String(qty),
-        total: String(total),
-      },
-    });
+  const onCheckout = async () => {
+    const payload = {
+      idEntrada: Number(params.entradaId ?? 0),
+      cant: qty,
+    };
+    const response = await comprar(payload);
+
+    if (response) {
+      router.push({
+        pathname: "/(app)/compra/FinCompra",
+        params: {
+          compraId: String(response.id),
+          eventoId: String(params.eventoId ?? ""),
+          entradaId: String(params.entradaId ?? ""),
+          nombre: String(params.nombre ?? ""),
+          precio: String(precioUnit),
+          cantidad: String(qty),
+          total: String(total),
+        },
+      });
+    }
   };
 
   return (

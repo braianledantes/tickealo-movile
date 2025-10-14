@@ -11,7 +11,7 @@ export interface CompraDto {
   id: number;
   comprobanteTransferencia: string | null;
   monto: string;
-  estado: "PENDIENTE" | "COMPLETADA" | "CANCELADA" | string;
+  estado: "INICIADA" | "PENDIENTE" | "COMPLETADA" | "CANCELADA" | string;
   createdAt: string;
   updatedAt: string;
 
@@ -30,7 +30,12 @@ export interface CompraDto {
 export interface TicketDto {
   id: number;
   codigoAlfanumerico: string;
-  estado: "PENDIENTE_VALIDACION" | "COMPLETADA" | "ANULADA" | string;
+  estado:
+    | "INICIADA"
+    | "PENDIENTE_VALIDACION"
+    | "COMPLETADA"
+    | "ANULADA"
+    | string;
   createdAt: string;
   updatedAt: string;
 

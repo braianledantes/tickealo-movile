@@ -6,16 +6,18 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useCompras } from "@/hooks/useCompras";
 import * as ClipBoard from "expo-clipboard";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+
+import { useEffect, useMemo, useState } from "react";
 
 type Entrada = {
   id: number;
@@ -51,21 +53,22 @@ function BankRow({ label, value }: { label: string; value?: string }) {
 }
 
 export default function Compra() {
-  const { entradaId, eventoId, cantidad, total } = useLocalSearchParams<{
-    entradaId?: string;
-    eventoId?: string;
-    cantidad?: string;
-    total?: string;
-  }>();
+  const { compraId, entradaId, eventoId, cantidad, total } =
+    useLocalSearchParams<{
+      compraId: string;
+      entradaId?: string;
+      eventoId?: string;
+      cantidad?: string;
+      total?: string;
+    }>();
 
-  const { comprar } = useCompras();
+  const { terminarCompra } = useCompras();
   const [comprobanteUri, setComprobanteUri] = useState<string | null>(null);
   const [entrada, setEntrada] = useState<Entrada | null>(null);
   const [loading, setLoading] = useState(true);
   const [datosBancarios, setDatosBancarios] = useState<DatosBancarios | null>(
     null,
   );
-
   const entradaIdNum = Number(entradaId);
   const cantNum = Number(cantidad ?? 1);
   const totalNum = Number(total ?? 0);
@@ -128,21 +131,26 @@ export default function Compra() {
       return;
     }
 
-    console.log("Entrada seleccionada:", entrada);
-
     try {
-      const formData = new FormData();
-      formData.append("idEntrada", String(entrada.id));
-      formData.append("cant", String(cantNum));
-      formData.append("comprobanteTransferencia", {
-        uri: comprobanteUri,
-        name: "comprobante.jpg",
-        type: "image/jpeg",
-      } as any);
+      const formData: FormData = new FormData();
+      let file: any;
+      const ext = comprobanteUri.split(".").pop();
 
-      const response = await api.post("/compras/comprar-entrada", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      if (Platform.OS === "web") {
+        const response = await fetch(comprobanteUri);
+        const blob = await response.blob();
+        file = new File([blob], `comprobante.${ext}`, { type: blob.type });
+      } else {
+        file = {
+          uri: comprobanteUri,
+          name: `comprobante.${ext}`,
+          type: `image/${ext === "jpg" ? "jpeg" : ext}`,
+        } as any;
+      }
+
+      formData.append("comprobanteTransferencia", file);
+      const response = await terminarCompra(compraId as string, formData);
+      console.log(response);
 
       Alert.alert("Éxito", "Compra realizada correctamente ✅");
     } catch (err: any) {
@@ -150,7 +158,7 @@ export default function Compra() {
     }
   };
 
-  if (!entrada) {
+  if (!entrada || loading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#4da6ff" />

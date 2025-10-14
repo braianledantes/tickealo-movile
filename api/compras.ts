@@ -1,12 +1,31 @@
 import api from "./axiosConfig";
-import { ComprasResponse } from "./dto/compras.dto";
+import { CompraDto, ComprasResponse } from "./dto/compras.dto";
 
-//Realizar una compra
-export const realizarCompra = async (
+//iniciar una compra
+export const iniciarCompra = async (body: {
+  idEntrada: number;
+  cant: number;
+}): Promise<CompraDto> => {
+  const response = await api.post<CompraDto>(
+    "/compras/iniciar-compra-entrada",
+    body, // se envía como JSON
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  return response.data;
+};
+
+//finalizar una compra
+export const finalizarCompra = async (
+  compraId: string | number,
   formData: FormData,
-): Promise<ComprasResponse> => {
-  const response = await api.post<ComprasResponse>(
-    "/compras/comprar-entrada",
+): Promise<CompraDto> => {
+  const response = await api.put<CompraDto>(
+    `/compras/${compraId}/finalizar-compra-entrada`,
     formData,
     { headers: { "Content-Type": "multipart/form-data" } },
   );

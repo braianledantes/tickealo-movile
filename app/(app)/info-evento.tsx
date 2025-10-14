@@ -62,7 +62,7 @@ export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams();
   const [evento, setEvento] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
-  const { seguidores, seguir, dejarSeguir } = useSeguidores();
+  const { seguir, dejarSeguir } = useSeguidores();
   const [estaSiguiendo, setEstaSiguiendo] = useState(false);
   const router = useRouter();
 
@@ -73,7 +73,6 @@ export default function InfoEvento() {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
-        console.log(res.data);
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {
@@ -202,7 +201,7 @@ export default function InfoEvento() {
                 disabled={evento.stockEntradas === 0 || entrada.stock === 0}
                 onPress={() =>
                   router.push({
-                    pathname: "/cant-entradas",
+                    pathname: "/(app)/compra/InicioCompra",
                     params: {
                       entradaId: entrada.id.toString(),
                       nombre: entrada.tipo,
