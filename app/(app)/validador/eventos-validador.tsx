@@ -92,11 +92,6 @@ export default function Index() {
           onPressPerfil={(userId) => setProductoraSeleccionada(userId)}
         />
       </View>
-
-      <Texto bold className="text-[#90e0ef]/80 px-5 mt-2">
-        TODOS LOS EVENTOS
-      </Texto>
-
       <EventList
         events={eventos}
         onPressEvent={(id) =>

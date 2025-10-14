@@ -1,16 +1,14 @@
-import api from "@/api/axiosConfig";
 import { EventList } from "@/components/Eventos/EventList";
+import EventosProximos from "@/components/Eventos/EventosProximos";
+import { ProvincePicker } from "@/components/Eventos/ProvinciaPicker";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
 import { useAuth } from "@/hooks/useAuth";
-import { getUserProvince } from "@/utils/location";
-import { PROVINCIAS_AR } from "@/utils/provincias";
+import { useEventos } from "@/hooks/useEventos";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,6 +16,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+// Tipado para tus eventos
 type Event = {
   id: number;
   nombre: string;
@@ -34,14 +33,17 @@ type Event = {
 
 export default function Index() {
   const { isLoading: authLoading } = useAuth();
+  const router = useRouter();
+  const { fetchUpcoming } = useEventos();
 
-  const [upcoming, setUpcoming] = useState<Event[] | undefined>([]);
+  const [upcoming, setUpcoming] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [province, setProvince] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const router = useRouter();
+  const [openDropdown, setOpenDropdown] = useState(false);
 
+  // Cargar eventos usando la nueva función
   useEffect(() => {
     let cancelled = false;
 
@@ -50,25 +52,12 @@ export default function Index() {
 
       try {
         setLoading(true);
-
-        const params: any = {
-          page: 1,
-          limit: 50,
-          orderDir: "ASC",
-        };
-        if (search?.trim()) params.search = search.trim();
-
-        const res = await api.get("/eventos", { params });
-        const list: Event[] = Array.isArray(res?.data?.data)
-          ? res.data.data
-          : [];
-        if (!cancelled) setUpcoming(list);
-      } catch (err: any) {
+        const list = await fetchUpcoming();
+        console.log(list);
+        if (!cancelled) setUpcoming(list ?? []);
+      } catch (err) {
         if (!cancelled) {
-          console.error(
-            "Error cargando eventos:",
-            err?.response?.data || err?.message || err,
-          );
+          console.error("Error obteniendo eventos futuros:", err);
           setUpcoming([]);
         }
       } finally {
@@ -80,45 +69,53 @@ export default function Index() {
     return () => {
       cancelled = true;
     };
-  }, [search, authLoading]);
+  }, [authLoading]);
 
-  // filtrado en frontend
+  // Filtrado combinado en frontend
   const upcomingFiltered = useMemo(() => {
-    const list = Array.isArray(upcoming) ? upcoming : [];
-    return list.filter((e) => {
+    return upcoming.filter((e) => {
       const matchesSearch =
-        !search || e.nombre?.toLowerCase().includes(search.toLowerCase());
+        !search ||
+        e.nombre?.toLowerCase().includes(search.toLowerCase()) ||
+        e.lugar?.ciudad?.toLowerCase().includes(search.toLowerCase());
+
       const matchesProvincia = !province || e.lugar?.provincia === province;
       return matchesSearch && matchesProvincia;
     });
   }, [upcoming, search, province]);
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <ActivityIndicator size="large" color="#4da6ff" />
-  //     </View>
-  //   );
-  // }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#05081b" }}>
-      <View style={{ flex: 1, backgroundColor: "#05081b" }}>
-        {/* Header */}
-        <Header />
-
-        {/* Buscador con ubicación */}
-        <Busqueda
-          location={province ?? "Selecciona provincia"}
-          onPress={() => setPickerOpen(true)}
-          search={search}
-          setSearch={setSearch}
+      <Header />
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "#05081b" }}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProvincePicker
+          visible={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          onSelectProvince={(provincia: string) => {
+            setProvince(provincia);
+            setOpenDropdown(false);
+          }}
         />
 
-        {/* Título */}
-        <Text style={styles.sectionTitle}>PRÓXIMOS EVENTOS</Text>
+        <Busqueda
+          location={province ?? "Selecciona provincia"}
+          onPress={() => {
+            setPickerOpen(true);
+            setOpenDropdown(false);
+          }}
+          search={search}
+          setSearch={(val) => {
+            setSearch(val);
+            setOpenDropdown(false); // cerrar dropdown al escribir en la búsqueda
+          }}
+        />
 
-        {/* Contenedor de lista o loader */}
+        <EventosProximos dropdown={openDropdown} />
+
         <View style={{ flex: 1 }}>
           {loading ? (
             <View style={styles.center}>
@@ -138,63 +135,12 @@ export default function Index() {
             />
           )}
         </View>
-
-        {/* Modal de provincias */}
-        <Modal
-          visible={pickerOpen}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setPickerOpen(false)}
-        >
-          <Pressable
-            style={styles.modalOverlay}
-            onPress={() => setPickerOpen(false)}
-          />
-          <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Selecciona tu provincia</Text>
-            <ScrollView style={{ maxHeight: 360 }}>
-              {PROVINCIAS_AR.map((p) => (
-                <Pressable
-                  key={p}
-                  style={styles.option}
-                  onPress={() => {
-                    setProvince(p);
-                    setPickerOpen(false);
-                  }}
-                >
-                  <Text style={styles.optionText}>{p}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-            <Pressable
-              style={[
-                styles.option,
-                { borderTopWidth: 1, borderTopColor: "#223" },
-              ]}
-              onPress={async () => {
-                const p = await getUserProvince();
-                if (p) setProvince(p);
-                setPickerOpen(false);
-              }}
-            >
-              <Text style={[styles.optionText, { color: "#4da6ff" }]}>
-                Detectar automáticamente
-              </Text>
-            </Pressable>
-          </View>
-        </Modal>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
-    color: "white",
-    fontSize: 16,
-    marginLeft: 6,
-    fontFamily: "Poppins_600Regular",
-  },
   sectionTitle: {
     color: "#90e0ef",
     fontWeight: "bold",
@@ -204,47 +150,14 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins_600SemiBold",
   },
   center: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#05081b",
-  },
-  modalOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalCard: {
-    position: "absolute",
-    left: 20,
-    right: 20,
-    top: 140,
-    backgroundColor: "#0b1030",
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "#223",
-  },
-  modalTitle: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  option: {
-    paddingVertical: 12,
-  },
-  optionText: {
-    color: "#fff",
-    fontSize: 16,
+    paddingVertical: 20,
   },
   noEventsText: {
     color: "#A5A6AD",
     textAlign: "center",
-    marginTop: 40,
+    marginTop: 20,
     fontSize: 16,
     fontFamily: "Poppins_400Regular",
   },

@@ -1,3 +1,4 @@
+import { Texto } from "@/components/Texto";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
@@ -10,6 +11,7 @@ import {
   View,
   useColorScheme,
 } from "react-native";
+
 import { EventCard } from "./EventCard";
 
 type Event = {
@@ -76,6 +78,9 @@ export function EventList({
 
   return (
     <ScrollView style={styles.content}>
+      <Texto bold className="text-[#90e0ef] tracking-wider mb-2">
+        TODOS LOS EVENTOS
+      </Texto>
       {events.map((event) => (
         <EventCard
           key={event.id}

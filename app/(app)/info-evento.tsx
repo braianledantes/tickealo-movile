@@ -218,7 +218,7 @@ export default function InfoEvento() {
                         NO HAY
                       </Texto>
                       <Texto bold className="text-white text-sm">
-                        STOCK
+                        CUPOS
                       </Texto>
                     </View>
                   ) : undefined
