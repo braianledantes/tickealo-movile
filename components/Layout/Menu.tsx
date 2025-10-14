@@ -28,7 +28,7 @@ export const Menu: React.FC = () => {
       key: "categorias",
       label: "Categorías",
       icon: "albums-outline",
-      route: "/(app)/validador/ticket/[ticketId]",
+      route: "/",
     },
     {
       key: "entradas",
