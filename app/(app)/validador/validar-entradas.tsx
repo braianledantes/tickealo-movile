@@ -4,12 +4,12 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 export default function ValidarEntradas() {
@@ -27,7 +27,7 @@ export default function ValidarEntradas() {
     if (scanned) return;
     setScanned(true);
 
-    console.log("Código escaneado:", code);
+    // console.log("Código escaneado:", code);
     router.push({
       pathname: "/validador/ticket/[ticketId]",
       params: { ticketId: code },

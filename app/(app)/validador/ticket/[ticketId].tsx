@@ -4,12 +4,12 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
-  Animated,
-  Easing,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Animated,
+    Easing,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { mensajesTicket } from "../../../../utils/ticketResponse";
@@ -38,7 +38,7 @@ export default function TicketScreen() {
 
       try {
         // ✅ Enviamos el código tal cual, incluyendo letras o espacios
-        console.log("Validando ticket:", `"${ticketId}"`);
+        // console.log("Validando ticket:", `"${ticketId}"`);
         const respuesta = await validarTicket(ticketId.trim());
 
         const texto =

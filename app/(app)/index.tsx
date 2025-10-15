@@ -53,7 +53,7 @@ export default function Index() {
       try {
         setLoading(true);
         const list = await fetchUpcoming();
-        console.log(list);
+        // console.log(list);
         if (!cancelled) setUpcoming(list ?? []);
       } catch (err) {
         if (!cancelled) {

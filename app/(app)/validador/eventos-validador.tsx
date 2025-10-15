@@ -1,7 +1,7 @@
 import { EventoDto } from "@/api/dto/evento.dto";
 import {
-  EventoValidadorDto,
-  ProductoraValidadorDto,
+    EventoValidadorDto,
+    ProductoraValidadorDto,
 } from "@/api/dto/eventos-validador.dto";
 import { EventList } from "@/components/Eventos/EventList";
 import { Header } from "@/components/Layout/Header";
@@ -35,7 +35,7 @@ export default function Index() {
         setProductoras(
           response ? (Array.isArray(response) ? response : [response]) : [],
         );
-        console.log(response);
+        // console.log(response);
       } catch (error: any) {
         console.error(
           "Error cargando eventos:",

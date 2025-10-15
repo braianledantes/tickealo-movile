@@ -9,13 +9,13 @@ import { EventoDto } from "@/api/dto/evento.dto";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
@@ -34,7 +34,7 @@ export default function InfoEvento() {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         setEvento(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       } catch (err) {
         console.error("Error cargando evento:", err);
       } finally {

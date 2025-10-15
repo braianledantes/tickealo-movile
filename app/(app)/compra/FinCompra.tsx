@@ -7,14 +7,14 @@ import { useCompras } from "@/hooks/useCompras";
 import * as ClipBoard from "expo-clipboard";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
-  ActivityIndicator,
-  Alert,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+    ActivityIndicator,
+    Alert,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 
 import { useEffect, useMemo, useState } from "react";
@@ -87,7 +87,7 @@ export default function Compra() {
         const res = await api.get(`/eventos/${eventoId}`);
         const eventoData = res.data;
         if (__DEV__) {
-          //console.log("DEBUG eventoData:", JSON.stringify(eventoData, null, 2));
+          //// console.log("DEBUG eventoData:", JSON.stringify(eventoData, null, 2));
         }
         // Buscar la entrada específica
         const entradaSeleccionada = eventoData?.entradas?.find(
@@ -151,7 +151,7 @@ export default function Compra() {
 
       formData.append("comprobanteTransferencia", file);
       const response = await terminarCompra(compraId as string, formData);
-      console.log(response);
+      // console.log(response);
 
       router.replace("/(app)/entradas/mis-entradas");
     } catch (err: any) {
