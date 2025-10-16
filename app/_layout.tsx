@@ -1,7 +1,9 @@
 import { Logo } from "@/components/Layout/Logo";
+import { Toast } from "@/components/Toast";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { EventosProvider } from "@/context/EventosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
+import { ToastProvider } from "@/context/ToastContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -40,18 +42,21 @@ export default function Root() {
   };
 
   return (
-    <AuthProvider>
-      <EventosProvider>
-        <SeguidoresProvider>
-          <ComprasProvider>
-            <ValidadorProvider>
-              <SplashScreenController />
-              <RootNavigator />
-            </ValidadorProvider>
-          </ComprasProvider>
-        </SeguidoresProvider>
-      </EventosProvider>
-    </AuthProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <EventosProvider>
+          <SeguidoresProvider>
+            <ComprasProvider>
+              <ValidadorProvider>
+                <Toast />
+                <SplashScreenController />
+                <RootNavigator />
+              </ValidadorProvider>
+            </ComprasProvider>
+          </SeguidoresProvider>
+        </EventosProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }
 

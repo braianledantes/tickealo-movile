@@ -4,20 +4,22 @@ import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useCompras } from "@/hooks/useCompras";
+import { useToast } from "@/hooks/useToast";
 import * as ClipBoard from "expo-clipboard";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useMemo, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
-import { useEffect, useMemo, useState } from "react";
+// dentro de tu componente Compra()
 
 type Entrada = {
   id: number;
@@ -37,7 +39,6 @@ type DatosBancarios = {
 };
 
 function BankRow({ label, value }: { label: string; value?: string }) {
-  const router = useRouter();
   if (!value) return null;
   const copy = async () => {
     await ClipBoard.setStringAsync(value);
@@ -54,6 +55,8 @@ function BankRow({ label, value }: { label: string; value?: string }) {
 }
 
 export default function Compra() {
+  const router = useRouter();
+  const { showToast } = useToast();
   const { compraId, entradaId, eventoId, cantidad, total } =
     useLocalSearchParams<{
       compraId: string;
@@ -70,11 +73,12 @@ export default function Compra() {
   const [datosBancarios, setDatosBancarios] = useState<DatosBancarios | null>(
     null,
   );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const entradaIdNum = Number(entradaId);
   const cantNum = Number(cantidad ?? 1);
   const totalNum = Number(total ?? 0);
 
-  // fallback por si no pasaron total: precio * cant
   const totalCalculado = useMemo(() => {
     if (totalNum > 0) return totalNum;
     if (entrada) return Number(entrada.precio) * cantNum;
@@ -86,16 +90,11 @@ export default function Compra() {
       try {
         const res = await api.get(`/eventos/${eventoId}`);
         const eventoData = res.data;
-        if (__DEV__) {
-          //// console.log("DEBUG eventoData:", JSON.stringify(eventoData, null, 2));
-        }
-        // Buscar la entrada específica
         const entradaSeleccionada = eventoData?.entradas?.find(
           (e: any) => Number(e.id) === entradaIdNum,
         );
         setEntrada(entradaSeleccionada ?? null);
 
-        // Datos de evento.cuentaBancaria
         const cuenta = eventoData?.cuentaBancaria ?? {};
         const prod = eventoData?.productora ?? {};
 
@@ -119,14 +118,17 @@ export default function Compra() {
   }, [eventoId, entradaIdNum]);
 
   const handleComprar = async () => {
+    setErrorMsg(null);
+
     if (!entrada) {
-      Alert.alert("Error", "No se encontró la entrada seleccionada");
+      setErrorMsg("No se encontró la entrada seleccionada.");
       return;
     }
 
     if (!comprobanteUri) {
-      Alert.alert(
-        "Falta comprobante",
+      showToast(
+        "error",
+        "Error",
         "Debes subir el comprobante de pago antes de continuar.",
       );
       return;
@@ -150,12 +152,10 @@ export default function Compra() {
       }
 
       formData.append("comprobanteTransferencia", file);
-      const response = await terminarCompra(compraId as string, formData);
-      // console.log(response);
-
+      await terminarCompra(compraId as string, formData);
       router.replace("/(app)/entradas/mis-entradas");
     } catch (err: any) {
-      Alert.alert("Error", err.response?.data?.message || "Error en la compra");
+      setErrorMsg(err.response?.data?.message || "Error en la compra.");
     }
   };
 
@@ -197,10 +197,9 @@ export default function Compra() {
             right={RightQty}
           />
 
-          {/* Datos bancarios de la productora */}
+          {/* Datos bancarios */}
           <View style={styles.bankBox}>
             <Text style={styles.bankTitle}>Datos para la transferencia</Text>
-
             <BankRow label="Titular" value={datosBancarios?.titular} />
             <BankRow label="CUIT" value={datosBancarios?.cuit} />
             <BankRow label="CBU" value={datosBancarios?.cbu} />
@@ -230,12 +229,10 @@ export default function Compra() {
               )}
           </View>
 
-          {/* subir comprobante */}
           <InputImageUpLoader
             label="Subí el comprobante de transferencia"
             onFileSelect={(result) => {
               if (!result || result.canceled) return;
-
               const uri = result.assets?.[0]?.uri;
               if (uri) setComprobanteUri(uri);
             }}
@@ -244,6 +241,7 @@ export default function Compra() {
       </ScrollView>
 
       <View style={styles.entradasConfirm}>
+        {errorMsg && <Text style={styles.errorText}>{errorMsg}</Text>}
         <Button title="Confirmar compra" onPress={handleComprar} />
       </View>
     </View>
@@ -298,5 +296,11 @@ const styles = StyleSheet.create({
     color: "#cbd5e1",
     fontSize: 14,
     lineHeight: 20,
+  },
+  errorText: {
+    color: "#ff6b6b",
+    fontSize: 14,
+    marginBottom: 8,
+    textAlign: "center",
   },
 });
