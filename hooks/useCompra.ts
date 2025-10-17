@@ -1,10 +1,10 @@
 import { EventoDto } from "@/api/dto/evento.dto";
 import { useCompras } from "@/hooks/useCompras";
-import { useEventos } from "@/hooks/useEventos";
 import { useToast } from "@/hooks/useToast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Platform } from "react-native";
+import { useEvento } from "./useEvento";
 
 export type Entrada = EventoDto["entradas"][number];
 export type DatosBancarios = {
@@ -20,7 +20,6 @@ export function useCompra() {
   const router = useRouter();
   const { showToast } = useToast();
   const { terminarCompra } = useCompras();
-  const { getEvento } = useEventos();
 
   const { compraId, entradaId, eventoId, cantidad, total } =
     useLocalSearchParams<{
@@ -38,6 +37,7 @@ export function useCompra() {
     null,
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { evento } = useEvento(eventoId);
 
   const entradaIdNum = Number(entradaId);
   const cantNum = Number(cantidad ?? 1);
@@ -52,17 +52,17 @@ export function useCompra() {
   useEffect(() => {
     const fetchEvento = async () => {
       try {
-        const eventoData = await getEvento(Number(eventoId));
-        const entradaSeleccionada = eventoData?.entradas?.find(
+        setLoading(true);
+        const entradaSeleccionada = evento?.entradas?.find(
           (e: any) => Number(e.id) === entradaIdNum,
         );
         setEntrada(entradaSeleccionada ?? null);
 
         const cuenta =
-          eventoData?.cuentaBancaria ??
+          evento?.cuentaBancaria ??
           ({} as Partial<EventoDto["cuentaBancaria"]>);
         const prod =
-          eventoData?.productora ?? ({} as Partial<EventoDto["productora"]>);
+          evento?.productora ?? ({} as Partial<EventoDto["productora"]>);
 
         setDatosBancarios({
           titular: cuenta.nombreTitular ?? "",
