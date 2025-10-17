@@ -4,13 +4,39 @@ export type EventoValidadorDto = {
   descripcion: string;
   inicioAt: string;
   finAt: string;
-  cancelado: boolean;
-  portadaUrl: string;
-  bannerUrl: string;
+  bannerUrl?: string;
+  portadaUrl?: string;
+  lugar: {
+    direccion: string;
+    ciudad: string;
+    provincia: string;
+    latitud: number;
+    longitud: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  productora: ProductoraValidadorDto;
+  entradas: {
+    id: number;
+    tipo: string;
+    precio: number;
+    cantidad: number;
+    stock: number;
+  }[];
+  cuentaBancaria: {
+    id: number;
+    nombreTitular: string;
+    nombreBanco: string;
+    alias: string;
+    cbu: string;
+    instrucciones: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   capacidad: number;
   stockEntradas: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ProductoraValidadorDto = {
@@ -23,6 +49,7 @@ export type ProductoraValidadorDto = {
   telefono: string;
   user: User;
   userId: number;
+  isSeguido: boolean;
 };
 
 export type User = {

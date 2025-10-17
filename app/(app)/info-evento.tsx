@@ -1,94 +1,39 @@
-import api from "@/api/axiosConfig";
 import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
+import { useEvento } from "@/hooks/useEvento";
 import { useSeguidores } from "@/hooks/useSeguidores";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+
 import {
   ActivityIndicator,
   Image,
   ScrollView,
-  StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import defaultEvent from "../../assets/images/defaultEvent.jpg";
 
-//Tipos
-type Entrada = {
-  id: number;
-  tipo: string;
-  precio: number;
-  cantidad: number;
-  id_evento: number;
-  stock: number;
-};
-
-type Productora = {
-  userId: number;
-  nombre: string;
-  cuit?: string;
-  direccion?: string;
-  imagenUrl?: string;
-  isSeguido?: boolean;
-  telefono?: string;
-  calificacion?: number;
-  creditosDisponibles?: number;
-};
-
-type Evento = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  bannerUrl?: string;
-  lugar?: {
-    direccion?: string;
-    ciudad?: string;
-    provincia?: string;
-  };
-  entradas?: Entrada[];
-  productora?: Productora;
-  stockEntradas: number;
-};
-
 export default function InfoEvento() {
-  const { eventoId } = useLocalSearchParams();
-  const [evento, setEvento] = useState<Evento | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { seguir, dejarSeguir } = useSeguidores();
-  const [estaSiguiendo, setEstaSiguiendo] = useState(false);
+  const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
   const router = useRouter();
-
-  const productoraId = evento?.productora?.userId;
-
-  useEffect(() => {
-    const fetchEvento = async () => {
-      try {
-        const res = await api.get(`/eventos/${eventoId}`);
-        setEvento(res.data);
-      } catch (err) {
-        console.error("Error cargando evento:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (eventoId) fetchEvento();
-  }, [eventoId]);
+  const { evento, productoraId, loading } = useEvento(eventoId);
+  const { seguir, dejarSeguir } = useSeguidores();
+  const [estaSiguiendo, setEstaSiguiendo] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setEstaSiguiendo(!!evento?.productora?.isSeguido);
+    if (evento && estaSiguiendo === null) {
+      setEstaSiguiendo(!!evento.productora?.isSeguido);
+    }
   }, [evento]);
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View className="flex-1 justify-center items-center bg-[#05081b]">
         <ActivityIndicator size="large" color="#4da6ff" />
       </View>
     );
@@ -96,89 +41,86 @@ export default function InfoEvento() {
 
   if (!evento) {
     return (
-      <View style={styles.center}>
-        <Text style={{ color: "#fff" }}>No se encontró el evento.</Text>
+      <View className="flex-1 justify-center items-center bg-[#05081b]">
+        <Texto className="text-white">No se encontró el evento.</Texto>
       </View>
     );
   }
 
-  const tieneBanner = !!(evento.bannerUrl && evento.bannerUrl.trim() !== "");
-  const banner = tieneBanner ? { uri: evento.bannerUrl } : defaultEvent;
-  return (
-    <View style={{ flex: 1, backgroundColor: "#05081b" }}>
-      <HeaderBack />
+  const banner = evento.bannerUrl?.trim()
+    ? { uri: evento.bannerUrl }
+    : defaultEvent;
 
-      <ScrollView style={styles.container}>
-        {/* Imagen portada */}
+  return (
+    <View className="flex-1 bg-[#05081b]">
+      <HeaderBack />
+      <ScrollView className="flex-1">
         <Image
           source={banner}
-          style={[
-            styles.image,
-            !tieneBanner && {
-              height: 180,
-              aspectRatio: undefined,
-              resizeMode: "cover",
-              opacity: 0.8,
-            },
-          ]}
+          className={`w-full ${evento.bannerUrl ? "aspect-[11/4]" : "h-44"} ${!evento.bannerUrl ? "opacity-80" : ""}`}
+          resizeMode="cover"
         />
 
-        {/* Botón seguir productora y campanita */}
-        <View style={styles.followContainer}>
-          {!estaSiguiendo ? (
+        {/* Seguir / Dejar de seguir productora */}
+        <View
+          className="flex-row items-center justify-between mt-3 mx-4 gap-2"
+          style={{ minHeight: 56 }}
+        >
+          {estaSiguiendo === false && (
             <Button
               title="Seguir Productora"
               onPress={async () => {
-                if (productoraId) {
-                  await seguir(productoraId);
-                  setEstaSiguiendo(true);
-                }
+                if (!productoraId) return;
+                await seguir(productoraId);
+                setEstaSiguiendo(true);
               }}
-              style={styles.followButton}
-            />
-          ) : (
-            <SecondaryButton
-              title="Dejar de seguir"
-              onPress={async () => {
-                if (productoraId) {
-                  await dejarSeguir(productoraId);
-                  setEstaSiguiendo(false);
-                }
-              }}
-              style={styles.followButton}
+              className="flex-1"
             />
           )}
 
-          <TouchableOpacity style={styles.bellButton}>
+          {estaSiguiendo === true && (
+            <SecondaryButton
+              title="Dejar de seguir"
+              onPress={async () => {
+                if (!productoraId) return;
+                await dejarSeguir(productoraId);
+                setEstaSiguiendo(false);
+              }}
+              className="flex-1"
+            />
+          )}
+
+          <TouchableOpacity className="bg-[#1a1a4d] p-2.5 rounded-full">
             <Ionicons name="notifications-outline" size={22} color="#fff" />
           </TouchableOpacity>
         </View>
 
-        {/* Descripción del evento */}
-        <View style={styles.infoBox}>
-          <Texto style={styles.title}>{evento.nombre}</Texto>
-
-          {/* Lugar */}
-          <View style={styles.locationRow}>
+        {/* Descripción */}
+        <View className="px-4 mt-4">
+          <Texto className="text-[#96B5C5] text-2xl font-bold mb-1 tracking-wide">
+            {evento.nombre}
+          </Texto>
+          <View className="flex-row items-center mb-2">
             <Ionicons
               name="location-outline"
               size={18}
               color="#4da6ff"
-              style={{ marginRight: 6 }}
+              className="mr-1.5"
             />
-            <Texto style={styles.locationText}>
+            <Texto className="text-[#4da6ff] text-sm flex-shrink">
               {evento.lugar?.direccion
                 ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
                 : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
             </Texto>
           </View>
-
-          <Texto style={styles.description}>{evento.descripcion}</Texto>
+          <Texto className="text-[#ddd] text-sm leading-5">
+            {evento.descripcion}
+          </Texto>
         </View>
 
         {/* Fecha */}
-        <View style={styles.dateBox}>
-          <Texto style={styles.dateTitle}>
+        <View className="mt-6 px-4 pt-3 border-t border-t-[#1b1b40]">
+          <Texto className="text-[#A5A6AD] font-bold text-lg uppercase tracking-wide">
             {new Date(evento.inicioAt)
               .toLocaleDateString("es-AR", {
                 weekday: "long",
@@ -191,9 +133,9 @@ export default function InfoEvento() {
         </View>
 
         {/* Entradas */}
-        <View style={styles.entradasContainer}>
-          {evento.entradas && evento.entradas.length > 0 ? (
-            evento.entradas.map((entrada: Entrada) => (
+        <View className="mt-4 px-4 mb-5">
+          {evento.entradas?.length ? (
+            evento.entradas.map((entrada) => (
               <EntradaCard
                 key={entrada.id}
                 tipo={entrada.tipo}
@@ -226,7 +168,7 @@ export default function InfoEvento() {
               />
             ))
           ) : (
-            <Texto style={styles.sinEntradas}>
+            <Texto className="text-gray-400 text-center italic mt-2">
               No hay entradas disponibles por ahora.
             </Texto>
           )}
@@ -235,86 +177,3 @@ export default function InfoEvento() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  image: {
-    width: "100%",
-    aspectRatio: 11 / 4,
-    resizeMode: "cover",
-  },
-
-  followContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 12,
-    marginHorizontal: 16,
-    gap: 10,
-  },
-  followButton: {
-    flex: 1,
-  },
-  bellButton: {
-    backgroundColor: "#1a1a4d",
-    padding: 10,
-    borderRadius: 25,
-  },
-  infoBox: {
-    paddingHorizontal: 16,
-    marginTop: 16,
-  },
-  title: {
-    color: "#96B5C5",
-    fontSize: 25,
-    fontWeight: "bold",
-    marginBottom: 6,
-    letterSpacing: 1,
-  },
-  locationRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  locationText: {
-    color: "#4da6ff",
-    fontSize: 14,
-    flexShrink: 1,
-  },
-  description: {
-    color: "#ddd",
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  dateBox: {
-    marginTop: 24,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#1b1b40",
-    paddingTop: 12,
-  },
-  dateTitle: {
-    color: "#A5A6AD",
-    fontWeight: "bold",
-    fontSize: 18,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  entradasContainer: {
-    marginTop: 16,
-    paddingHorizontal: 16,
-    marginBottom: 20,
-  },
-  sinEntradas: {
-    color: "#aaa",
-    textAlign: "center",
-    fontStyle: "italic",
-    marginTop: 8,
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#05081b",
-  },
-});

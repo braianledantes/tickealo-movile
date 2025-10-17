@@ -1,3 +1,4 @@
+import { EventoDto } from "@/api/dto/evento.dto";
 import { Texto } from "@/components/Texto";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -14,22 +15,11 @@ import {
 
 import { EventCard } from "./EventCard";
 
-type Event = {
-  id: number;
-  nombre: string;
-  inicioAt: string;
-  portadaUrl?: string;
-  lugar?: {
-    ciudad?: string;
-    provincia?: string;
-  };
-};
-
 export function EventList({
   events = [],
   onPressEvent,
 }: {
-  events?: Event[];
+  events?: EventoDto[];
   onPressEvent?: (id: number) => void;
 }) {
   const colorScheme = useColorScheme();
@@ -87,7 +77,7 @@ export function EventList({
           image={event.portadaUrl ?? "https://placehold.co/600x400"}
           title={event.nombre}
           date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
-          location={`${event.lugar?.ciudad ?? ""} ${event.lugar?.provincia ?? ""}`}
+          location={`${event.lugar?.direccion ?? ""} ${event.lugar?.provincia ?? ""}`}
           // 👇 Aquí usamos la prop si existe, o el router si no
           onPress={() =>
             onPressEvent
@@ -104,7 +94,7 @@ export function EventList({
 }
 
 const styles = StyleSheet.create({
-  content: { padding: 15 },
+  content: { paddingHorizontal: 15 },
   emptyContainer: {
     flex: 1,
     justifyContent: "center",

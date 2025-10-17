@@ -2,86 +2,43 @@ import { EventCard } from "@/components/Eventos/EventCard";
 import { useEventos } from "@/hooks/useEventos";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   LayoutAnimation,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { Texto } from "../Texto";
 
-type Event = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  portadaUrl?: string;
-  lugar?: {
-    direccion?: string;
-    ciudad?: string;
-    provincia?: string;
-  };
-};
-
-export default function EventosProximos({ dropdown }: { dropdown?: boolean }) {
-  const { proximosEventos } = useEventos();
+export default function EventosProximos() {
+  const { proximos } = useEventos();
   const router = useRouter();
-  const [eventos, setEventos] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState(true); // control del dropdown
-
-  useEffect(() => {
-    const fetchEventos = async () => {
-      try {
-        const listaEventos = await proximosEventos();
-        setEventos(listaEventos || []);
-      } catch (error) {
-        console.error("Error cargando eventos:", error);
-        setEventos([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEventos();
-  }, []);
+  const [expanded, setExpanded] = useState(true);
 
   const toggleExpanded = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setExpanded(!expanded);
   };
 
-  useEffect(() => {
-    if (!dropdown) setExpanded(false);
-  }, [dropdown]);
-
-  // if (loading) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <ActivityIndicator size="large" color="#4da6ff" />
-  //     </View>
-  //   );
-  // }
-
-  if (!eventos.length) {
+  if (!proximos.length) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.noEventsText}>No se encontraron eventos</Text>
+      <View className="flex-1 justify-center items-center bg-[#05081b]">
+        <Text className="text-[#A5A6AD] text-lg text-center mt-10 font-poppins-400">
+          No se encontraron eventos
+        </Text>
       </View>
     );
   }
 
   return (
-    <View style={{ paddingHorizontal: 15 }}>
+    <View className="px-4">
       {/* Header del dropdown */}
       <TouchableOpacity
         onPress={toggleExpanded}
-        style={styles.dropdownHeader}
         activeOpacity={0.7}
+        className="flex-row justify-between items-center py-2"
       >
         <Texto bold className="text-[#CAF0F8] tracking-wider">
           PRÓXIMOS EVENTOS
@@ -95,17 +52,16 @@ export default function EventosProximos({ dropdown }: { dropdown?: boolean }) {
 
       {expanded && (
         <ScrollView
-          style={{ maxHeight: 520 }} // limitar altura del dropdown
-          contentContainerStyle={{ paddingTop: 5, paddingBottom: 5 }}
+          className="max-h-[520px] pt-1 pb-1"
           showsVerticalScrollIndicator={true}
         >
-          {eventos.map((evento) => (
+          {proximos.map((evento) => (
             <EventCard
               key={evento.id}
               image={evento.portadaUrl || "https://via.placeholder.com/140x160"}
               title={evento.nombre}
-              date={evento.inicioAt}
-              location={`${evento.lugar?.ciudad || ""}, ${evento.lugar?.provincia || ""}`}
+              date={new Date(evento.inicioAt).toLocaleDateString("es-AR")}
+              location={`${evento.lugar?.direccion || ""}, ${evento.lugar?.provincia || ""}`}
               onPress={() =>
                 router.push({
                   pathname: "/info-evento",
@@ -119,25 +75,3 @@ export default function EventosProximos({ dropdown }: { dropdown?: boolean }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#05081b",
-  },
-  noEventsText: {
-    color: "#A5A6AD",
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 40,
-    fontFamily: "Poppins_400Regular",
-  },
-  dropdownHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-});

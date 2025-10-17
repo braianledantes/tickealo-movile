@@ -36,7 +36,7 @@ export function ProductoraPerfil({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      className="p-4"
+      className="py-4"
     >
       {productoras.map((productora) => {
         const isSelected = seleccionada === productora.userId;

@@ -38,13 +38,21 @@ export interface EventoDto {
   createdAt: Date;
   updatedAt: Date;
 }
+
 export interface ProductoraDto {
   userId: number;
   cuit: number;
   nombre: string;
   direccion: string;
   telefono: string;
-  imagenUrl?: string | null;
+  imagenUrl: string;
   creditosDisponibles: number;
   calificacion: number;
+  isSeguido: boolean;
+  user: User;
+}
+
+export interface User {
+  email: string;
+  username: string;
 }

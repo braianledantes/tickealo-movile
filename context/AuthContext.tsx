@@ -79,6 +79,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         },
         logout: () => {
           setAccessToken(null);
+          setUser(null);
         },
         accessToken,
         user,

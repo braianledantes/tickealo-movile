@@ -22,32 +22,24 @@ export function SecondaryButton({
       {...rest}
       className={cn(rest.className)}
     >
-      {!disabled ? (
-        <LinearGradient
-          colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientBorder}
-        >
-          <View style={styles.innerButton}>
-            <Texto
-              semiBold
-              className="text-white tracking-wider text-base text-center"
-            >
-              {title}
-            </Texto>
-          </View>
-        </LinearGradient>
-      ) : (
-        <View style={[styles.innerButton, { backgroundColor: "gray" }]}>
+      <LinearGradient
+        colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.gradientBorder}
+      >
+        <View style={styles.innerButton}>
           <Texto
             semiBold
             className="text-white tracking-wider text-base text-center"
           >
             {title}
           </Texto>
+          {disabled && (
+            <View style={styles.disabledOverlay} pointerEvents="none" />
+          )}
         </View>
-      )}
+      </LinearGradient>
     </Pressable>
   );
 }
@@ -55,14 +47,19 @@ export function SecondaryButton({
 const styles = StyleSheet.create({
   gradientBorder: {
     borderRadius: 100,
-    padding: 3, 
+    padding: 3,
   },
   innerButton: {
-    backgroundColor: "rgba(5, 8, 27, 0.93)", 
+    backgroundColor: "rgba(5, 8, 27, 0.93)",
     borderRadius: 100,
     paddingVertical: 16,
     paddingHorizontal: 24,
     justifyContent: "center",
     alignItems: "center",
+  },
+  disabledOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    borderRadius: 100,
   },
 });

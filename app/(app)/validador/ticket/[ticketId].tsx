@@ -1,62 +1,20 @@
 import { Header } from "@/components/Layout/Header";
-import { useValidador } from "@/hooks/useValidador";
+import { useTicket } from "@/hooks/useTicket";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import {
-    ActivityIndicator,
-    Animated,
-    Easing,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { mensajesTicket } from "../../../../utils/ticketResponse";
 
 const Tick = require("../../../../assets/images/tick.png");
 
 export default function TicketScreen() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
-  const { validarTicket } = useValidador();
   const router = useRouter();
+  const { loading, valid, mensaje } = useTicket(ticketId);
 
-  const [loading, setLoading] = useState(true);
-  const [valid, setValid] = useState<boolean | null>(null);
-  const [mensaje, setMensaje] = useState<string>("");
-
-  const alreadyValidated = useRef(false);
-
-  // Animaciones
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const validar = async () => {
-      if (alreadyValidated.current || !ticketId) return;
-      alreadyValidated.current = true;
-
-      try {
-        // ✅ Enviamos el código tal cual, incluyendo letras o espacios
-        // console.log("Validando ticket:", `"${ticketId}"`);
-        const respuesta = await validarTicket(ticketId.trim());
-
-        const texto =
-          mensajesTicket[respuesta] || "Ocurrió un error inesperado";
-
-        setValid(respuesta === 200);
-        setMensaje(texto);
-      } catch (err) {
-        console.error("Error validando ticket:", err);
-        setValid(false);
-        setMensaje("No pudimos validar tu ticket. Intenta nuevamente.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    validar();
-  }, [ticketId]);
 
   useEffect(() => {
     if (valid) {
@@ -70,25 +28,22 @@ export default function TicketScreen() {
           Animated.timing(scaleAnim, {
             toValue: 1.3,
             duration: 600,
-            easing: Easing.out(Easing.ease),
             useNativeDriver: true,
           }),
           Animated.timing(scaleAnim, {
             toValue: 1,
             duration: 300,
-            easing: Easing.out(Easing.ease),
             useNativeDriver: true,
           }),
         ]),
       ]).start();
     }
-  }, [valid]);
+  }, [valid, opacityAnim, scaleAnim]);
 
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
-        <ActivityIndicator size="large" color="#4da6ff" />
-        <Text className="mt-3 text-[#4da6ff] text-base">
+        <Text className="text-[#4da6ff] text-base mt-3">
           Escaneando tu ticket...
         </Text>
       </View>
@@ -98,7 +53,6 @@ export default function TicketScreen() {
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
       <Header />
-
       <View className="flex-1 justify-center items-center px-5">
         <Text
           style={{
@@ -126,7 +80,6 @@ export default function TicketScreen() {
           {mensaje}
         </Text>
 
-        {/* ✅ Tick animado o icono de error */}
         {valid ? (
           <Animated.Image
             source={Tick}
@@ -136,14 +89,7 @@ export default function TicketScreen() {
               resizeMode: "contain",
               marginBottom: 80,
               opacity: opacityAnim,
-              transform: [
-                {
-                  scale: scaleAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0.3, 1],
-                  }),
-                },
-              ],
+              transform: [{ scale: scaleAnim }],
             }}
           />
         ) : (
@@ -157,21 +103,10 @@ export default function TicketScreen() {
 
         <TouchableOpacity
           onPress={() => router.push("/(app)/validador/validar-entradas")}
-          style={{
-            backgroundColor: valid ? "#03045E" : "#ff6b6b",
-            paddingVertical: 14,
-            paddingHorizontal: 30,
-            borderRadius: 100,
-          }}
+          className="px-8 py-3 rounded-full"
+          style={{ backgroundColor: valid ? "#03045E" : "#ff6b6b" }}
         >
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 16,
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            }}
-          >
+          <Text className="text-white font-bold text-base uppercase">
             {valid ? "Escanear otro QR" : "Reintentar"}
           </Text>
         </TouchableOpacity>

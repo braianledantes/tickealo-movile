@@ -1,48 +1,27 @@
-import api from "@/api/axiosConfig";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
+import { useEvento } from "@/hooks/useEvento";
 import { Ionicons } from "@expo/vector-icons";
-
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-
-import { EventoDto } from "@/api/dto/evento.dto";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Dimensions,
-    Image,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
-export default function InfoEvento() {
+export default function InfoEventoValidador() {
+  const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
   const router = useRouter();
-  const { eventoId } = useLocalSearchParams();
-  const [evento, setEvento] = useState<EventoDto | null>(null);
-  const [loading, setLoading] = useState(true);
-  // const router = useRouter();
+  const { evento, loading } = useEvento(eventoId);
 
   const { width } = Dimensions.get("window");
   const height = Math.round(width * (4 / 11));
-
-  useEffect(() => {
-    const fetchEvento = async () => {
-      try {
-        const res = await api.get(`/eventos/${eventoId}`);
-        setEvento(res.data);
-        // console.log(res.data);
-      } catch (err) {
-        console.error("Error cargando evento:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (eventoId) fetchEvento();
-  }, [eventoId]);
 
   if (loading) {
     return (
