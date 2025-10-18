@@ -1,4 +1,5 @@
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import Entypo from "@expo/vector-icons/Entypo";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -24,6 +25,14 @@ export const UserIcon = (props: any) => (
 
 export const PhoneIcon = (props: any) => (
   <Feather name="phone" size={24} color="black" {...props} />
+);
+
+export const HeartOutlinedIcon = (props: any) => (
+  <Entypo name="heart-outlined" size={30} color="white" {...props} />
+);
+
+export const HeartIcon = (props: any) => (
+  <Entypo name="heart" size={24} color="red" />
 );
 
 // Estilos reutilizables para íconos

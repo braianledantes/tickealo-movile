@@ -21,3 +21,15 @@ export const validarTicketApi = async (idTicket: string) => {
   const response = await api.patch(`/tickets/${idTicket}/validar`);
   return response;
 };
+
+// Obtener los tickets validados de un evento por un unico validador
+export const ticketsValidados = async (idEvento: number) => {
+  const response = await api.get(`/validador/eventos/${idEvento}/tickets`);
+  return response.data;
+};
+
+//Obtener los tickets validados en total de un evento
+export const ticketsValidadosTotales = async (idEvento: number) => {
+  const response = await api.get(`/eventos/${idEvento}/tickets`);
+  return response.data;
+};

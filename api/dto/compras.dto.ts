@@ -36,6 +36,10 @@ export interface TicketDto {
     | "COMPLETADA"
     | "ANULADA"
     | string;
+  validatedBy?: {
+    userId: string;
+    nombre?: string;
+  };
   createdAt: string;
   updatedAt: string;
 

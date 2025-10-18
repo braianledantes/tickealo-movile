@@ -16,13 +16,7 @@ export interface EventoDto {
     updatedAt: Date;
   };
   productora: ProductoraDto;
-  entradas: {
-    id: number;
-    tipo: string;
-    precio: number;
-    cantidad: number;
-    stock: number;
-  }[];
+  entradas: EntradaDto[];
   cuentaBancaria: {
     id: number;
     nombreTitular: string;
@@ -37,6 +31,14 @@ export interface EventoDto {
   stockEntradas: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface EntradaDto {
+  id: number;
+  tipo: string;
+  precio: number;
+  cantidad: number;
+  stock: number;
 }
 
 export interface ProductoraDto {

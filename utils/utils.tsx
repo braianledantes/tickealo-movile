@@ -1,6 +1,6 @@
 import * as ClipBoard from "expo-clipboard";
-import { Alert, Pressable, Text } from "react-native";
 import React from "react";
+import { Alert, Pressable, Text } from "react-native";
 
 // Fila individual que se puede copiar
 export function BankRow({ label, value }: { label: string; value?: string }) {
@@ -34,4 +34,22 @@ export function formatARS(value: number) {
   } catch {
     return `$${value.toLocaleString("es-AR")}`;
   }
+}
+
+export function formatDate(timestamp: string | number) {
+  const date =
+    typeof timestamp === "number" ? new Date(timestamp) : new Date(timestamp);
+  return (
+    date.toLocaleDateString("es-AR", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }) +
+    " " +
+    date.toLocaleTimeString("es-AR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  );
 }

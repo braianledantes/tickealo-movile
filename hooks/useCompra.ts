@@ -37,8 +37,8 @@ export function useCompra() {
     null,
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const { evento } = useEvento(eventoId);
 
+  const { evento } = useEvento(eventoId);
   const entradaIdNum = Number(entradaId);
   const cantNum = Number(cantidad ?? 1);
   const totalNum = Number(total ?? 0);
@@ -49,38 +49,30 @@ export function useCompra() {
     return 0;
   }, [totalNum, entrada, cantNum]);
 
+  // Efecto corregido: se ejecuta cuando cambia el evento
   useEffect(() => {
-    const fetchEvento = async () => {
-      try {
-        setLoading(true);
-        const entradaSeleccionada = evento?.entradas?.find(
-          (e: any) => Number(e.id) === entradaIdNum,
-        );
-        setEntrada(entradaSeleccionada ?? null);
+    if (!evento) return;
 
-        const cuenta =
-          evento?.cuentaBancaria ??
-          ({} as Partial<EventoDto["cuentaBancaria"]>);
-        const prod =
-          evento?.productora ?? ({} as Partial<EventoDto["productora"]>);
+    const entradaSeleccionada = evento.entradas?.find(
+      (e: any) => Number(e.id) === entradaIdNum,
+    );
+    setEntrada(entradaSeleccionada ?? null);
 
-        setDatosBancarios({
-          titular: cuenta.nombreTitular ?? "",
-          cuit: prod.cuit?.toString() ?? "",
-          cbu: cuenta.cbu ?? "",
-          alias: cuenta.alias ?? "",
-          banco: cuenta.nombreBanco ?? "",
-          instrucciones: cuenta.instrucciones ?? "",
-        });
-      } catch (err) {
-        console.error("Error cargando evento:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    const cuenta =
+      evento?.cuentaBancaria ?? ({} as Partial<EventoDto["cuentaBancaria"]>);
+    const prod = evento?.productora ?? ({} as Partial<EventoDto["productora"]>);
 
-    if (eventoId) fetchEvento();
-  }, [eventoId, entradaIdNum]);
+    setDatosBancarios({
+      titular: cuenta.nombreTitular ?? "",
+      cuit: prod.cuit?.toString() ?? "",
+      cbu: cuenta.cbu ?? "",
+      alias: cuenta.alias ?? "",
+      banco: cuenta.nombreBanco ?? "",
+      instrucciones: cuenta.instrucciones ?? "",
+    });
+
+    setLoading(false);
+  }, [evento, entradaIdNum]);
 
   const handleComprar = async () => {
     setErrorMsg(null);

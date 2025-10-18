@@ -16,6 +16,8 @@ export function useCantEntradas() {
 
   const precioUnit = Number(params?.precio ?? 0);
   const [qty, setQty] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const total = useMemo(() => precioUnit * qty, [precioUnit, qty]);
 
@@ -23,13 +25,19 @@ export function useCantEntradas() {
   const onPlus = () => setQty((q) => q + 1);
 
   const onCheckout = async () => {
-    const payload = {
-      idEntrada: Number(params.entradaId ?? 0),
-      cant: qty,
-    };
-    const response = await comprar(payload);
+    setLoading(true);
+    setError(null);
 
-    if (response) {
+    try {
+      const payload = {
+        idEntrada: Number(params.entradaId ?? 0),
+        cant: qty,
+      };
+
+      const response = await comprar(payload);
+
+      if (!response) throw new Error("No se pudo crear la compra");
+
       router.push({
         pathname: "/(app)/compra/FinCompra",
         params: {
@@ -42,6 +50,11 @@ export function useCantEntradas() {
           total: String(total),
         },
       });
+    } catch (err: any) {
+      console.error("Error en checkout:", err);
+      setError(err.message ?? "Error desconocido al procesar la compra");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,5 +66,7 @@ export function useCantEntradas() {
     onPlus,
     onCheckout,
     params,
+    loading,
+    error,
   };
 }

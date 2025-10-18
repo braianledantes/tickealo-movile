@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
+import { HeartOutlinedIcon } from "@/components/Input/Icons";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
@@ -46,7 +47,6 @@ export default function InfoEvento() {
       </View>
     );
   }
-
   const banner = evento.bannerUrl?.trim()
     ? { uri: evento.bannerUrl }
     : defaultEvent;
@@ -90,14 +90,14 @@ export default function InfoEvento() {
             />
           )}
 
-          <TouchableOpacity className="bg-[#1a1a4d] p-2.5 rounded-full">
-            <Ionicons name="notifications-outline" size={22} color="#fff" />
+          <TouchableOpacity className="p-2 bg-[#1b1b40] rounded-full item-center justify-center">
+            <HeartOutlinedIcon />
           </TouchableOpacity>
         </View>
 
         {/* Descripción */}
         <View className="px-4 mt-4">
-          <Texto className="text-[#96B5C5] text-2xl font-bold mb-1 tracking-wide">
+          <Texto className="text-[#CAF0F8] text-2xl font-bold mb-1 tracking-wide">
             {evento.nombre}
           </Texto>
           <View className="flex-row items-center mb-2">
@@ -107,28 +107,39 @@ export default function InfoEvento() {
               color="#4da6ff"
               className="mr-1.5"
             />
-            <Texto className="text-[#4da6ff] text-sm flex-shrink">
+            <Texto semiBold className="text-[#4da6ff] text-md flex-shrink">
               {evento.lugar?.direccion
                 ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
                 : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
             </Texto>
           </View>
-          <Texto className="text-[#ddd] text-sm leading-5">
+          <Texto className="text-[#ddd] text-md leading-5">
             {evento.descripcion}
+          </Texto>
+          <Texto semiBold className="text-[#20347F] text-lg mt-6">
+            Organizado por {evento.productora.nombre}
           </Texto>
         </View>
 
         {/* Fecha */}
         <View className="mt-6 px-4 pt-3 border-t border-t-[#1b1b40]">
           <Texto className="text-[#A5A6AD] font-bold text-lg uppercase tracking-wide">
-            {new Date(evento.inicioAt)
-              .toLocaleDateString("es-AR", {
-                weekday: "long",
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })
-              .toUpperCase()}
+            {(() => {
+              const date = new Date(evento.inicioAt);
+              const fecha = date
+                .toLocaleDateString("es-AR", {
+                  weekday: "long",
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
+                .toUpperCase();
+
+              const hora = date.getHours().toString().padStart(2, "0");
+              const minutos = date.getMinutes().toString().padStart(2, "0");
+
+              return `${fecha} • ${hora}:${minutos} HS`;
+            })()}
           </Texto>
         </View>
 

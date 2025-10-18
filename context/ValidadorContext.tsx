@@ -13,6 +13,8 @@ import React, {
 import {
   getEventosProductora,
   getProductora,
+  ticketsValidados,
+  ticketsValidadosTotales,
   validarTicketApi,
 } from "../api/validador";
 import { EventosContext } from "./EventosContext";
@@ -25,6 +27,8 @@ interface ValidadorContextProps {
   productoraSeleccionada: number | null;
   setProductoraSeleccionada: (id: number | null) => void;
   validarTicket: (idTicket: string) => Promise<number>;
+  ticketsValidadosEvento: (idEvento: number) => Promise<any[]>;
+  ticketsValidadosEventoTotales: (idEvento: number) => Promise<any[]>;
 }
 
 export const ValidadorContext = createContext<
@@ -131,6 +135,29 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
     [],
   );
 
+  const ticketsValidadosEvento = useCallback(async (idEvento: number) => {
+    try {
+      const response = await ticketsValidados(idEvento);
+      return response.tickets ?? [];
+    } catch (err: any) {
+      console.error("Error obteniendo tickets validados:", err);
+      return [];
+    }
+  }, []);
+
+  const ticketsValidadosEventoTotales = useCallback(
+    async (idEvento: number) => {
+      try {
+        const response = await ticketsValidadosTotales(idEvento);
+        return response.tickets ?? [];
+      } catch (err: any) {
+        console.error("Error obteniendo tickets validados:", err);
+        return [];
+      }
+    },
+    [],
+  );
+
   // Efectos
   useEffect(() => {
     if (!authLoading) {
@@ -160,6 +187,8 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
         productoraSeleccionada,
         setProductoraSeleccionada,
         validarTicket,
+        ticketsValidadosEvento,
+        ticketsValidadosEventoTotales,
       }}
     >
       {children}
