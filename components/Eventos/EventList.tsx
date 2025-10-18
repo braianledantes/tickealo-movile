@@ -76,7 +76,11 @@ export function EventList({
           key={event.id}
           image={event.portadaUrl ?? "https://placehold.co/600x400"}
           title={event.nombre}
-          date={new Date(event.inicioAt).toLocaleDateString("es-AR")}
+          date={new Date(event.inicioAt).toLocaleDateString("es-AR", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })}
           location={`${event.lugar?.direccion ?? ""} ${event.lugar?.provincia ?? ""}`}
           // 👇 Aquí usamos la prop si existe, o el router si no
           onPress={() =>

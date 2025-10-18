@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Texto } from "../Texto";
 
 type Props = {
   image: string;
@@ -28,19 +29,29 @@ export function EventCard({ image, title, date, location, onPress }: Props) {
         end={{ x: 1, y: 0 }}
         style={styles.info}
       >
-        <Text style={styles.title} numberOfLines={1}>
+        <Texto
+          bold
+          className="text-[#cfe3ff] text-lg uppercase tracking-wide mb-2 mr-6 "
+          numberOfLines={1}
+        >
           {title}
-        </Text>
-        <Text style={styles.date}>{date}</Text>
+        </Texto>
 
-        <View style={styles.locationRow}>
-          <Ionicons name="location-outline" size={14} color="#4da6ff" />
-          <Text style={styles.location} numberOfLines={1}>
+        <Texto className="text-[#ffffff] mb-2">{date}</Texto>
+
+        <View className="flex-row items-center mb-2">
+          <Ionicons name="location-outline" size={12} color="#20347F" />
+          <Texto
+            semiBold
+            className="color-[#20347F] ml-1 mr-2"
+            numberOfLines={1}
+          >
             {location}
-          </Text>
+          </Texto>
         </View>
-
-        <Text style={styles.link}>Ver mas info</Text>
+        <Texto bold className="text-[#ffffff]">
+          Ver mas info
+        </Texto>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -51,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 16,
     backgroundColor: "#0b1030",
-    borderTopRightRadius: 80,
+    borderTopRightRadius: 50,
     borderBottomRightRadius: 0,
     overflow: "hidden",
   },
@@ -63,36 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
-    borderTopRightRadius: 80,
+    borderTopRightRadius: 90,
     borderBottomRightRadius: 0,
-  },
-  title: {
-    color: "#cfe3ff",
-    fontSize: 18,
-    fontWeight: "800",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  date: {
-    color: "#ccc",
-    fontSize: 14,
-    marginBottom: 6,
-  },
-  locationRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  location: {
-    color: "#4da6ff",
-    marginLeft: 6,
-    fontSize: 14,
-    maxWidth: "90%",
-  },
-  link: {
-    color: "#ffffff",
-    fontWeight: "600",
-    fontSize: 14,
   },
 });

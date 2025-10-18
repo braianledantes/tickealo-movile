@@ -6,15 +6,7 @@ export interface EventoDto {
   finAt: string;
   bannerUrl?: string;
   portadaUrl?: string;
-  lugar: {
-    direccion: string;
-    ciudad: string;
-    provincia: string;
-    latitud: number;
-    longitud: number;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  lugar: LugarDto;
   productora: ProductoraDto;
   entradas: EntradaDto[];
   cuentaBancaria: {
@@ -29,6 +21,16 @@ export interface EventoDto {
   };
   capacidad: number;
   stockEntradas: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface LugarDto {
+  direccion: string;
+  ciudad: string;
+  provincia: string;
+  latitud: number;
+  longitud: number;
   createdAt: Date;
   updatedAt: Date;
 }

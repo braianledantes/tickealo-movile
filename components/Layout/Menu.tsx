@@ -30,7 +30,12 @@ export const Menu: React.FC = () => {
       icon: "ticket-outline",
       route: "/(app)/entradas/mis-entradas" as Href,
     },
-    { key: "favoritos", label: "Favoritos", icon: "heart-outline", route: "/" },
+    {
+      key: "favoritos",
+      label: "Favoritos",
+      icon: "heart-outline",
+      route: "/(app)/mis-favoritos",
+    },
   ];
 
   useEffect(() => {

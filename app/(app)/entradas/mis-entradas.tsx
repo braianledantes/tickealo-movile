@@ -59,7 +59,7 @@ export default function MisEntradas() {
       </View>
     );
   }
-
+  console.log(compras);
   return (
     <SafeAreaView className="flex flex-1 bg-[#05081b]">
       <Header />

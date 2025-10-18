@@ -22,7 +22,7 @@ export const HeaderBack: React.FC = () => {
           }
         }}
       >
-        <Ionicons name="arrow-back" size={28} color="#90e0ef" />
+        <Ionicons name="arrow-back" size={28} color="#1E90FF" />
       </TouchableOpacity>
 
       {/* Logo en el medio */}

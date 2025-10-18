@@ -6,6 +6,7 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
 import { useSeguidores } from "@/hooks/useSeguidores";
+import { abrirEnMaps } from "@/utils/abrirMaps";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -97,22 +98,27 @@ export default function InfoEvento() {
 
         {/* Descripción */}
         <View className="px-4 mt-4">
-          <Texto className="text-[#CAF0F8] text-2xl font-bold mb-1 tracking-wide">
+          <Texto className="text-[#cfe3ff] text-2xl font-bold mb-1 tracking-wide">
             {evento.nombre}
           </Texto>
-          <View className="flex-row items-center mb-2">
+          <TouchableOpacity
+            className="flex-row items-center mb-2"
+            onPress={() =>
+              abrirEnMaps(evento?.lugar?.latitud, evento?.lugar?.longitud)
+            }
+          >
             <Ionicons
               name="location-outline"
               size={18}
               color="#4da6ff"
               className="mr-1.5"
             />
-            <Texto semiBold className="text-[#4da6ff] text-md flex-shrink">
+            <Texto semiBold className="text-[#4da6ff] text-center text-md">
               {evento.lugar?.direccion
                 ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
                 : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
             </Texto>
-          </View>
+          </TouchableOpacity>
           <Texto className="text-[#ddd] text-md leading-5">
             {evento.descripcion}
           </Texto>

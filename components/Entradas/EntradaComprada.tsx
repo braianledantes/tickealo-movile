@@ -1,9 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Texto } from "../Texto";
 
-// Tipos
 type Evento = {
   id: number;
   nombre: string;
@@ -44,6 +43,9 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
     0,
   );
 
+  const tipoColor =
+    ticketRef.entrada.tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
+
   return (
     <TouchableOpacity
       style={styles.card}
@@ -65,18 +67,41 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
         end={{ x: 1, y: 0 }}
         style={styles.info}
       >
-        <Text style={styles.title} numberOfLines={1}>
-          {evento.nombre}
-        </Text>
-        <Text style={styles.date}>
-          {new Date(evento.inicioAt).toLocaleDateString("es-AR")}
-        </Text>
+        <View style={styles.left}>
+          <Texto
+            bold
+            className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6 "
+            numberOfLines={1}
+          >
+            {evento.nombre}
+          </Texto>
+          <Texto className="text-[#ffffff]">
+            {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })}
+          </Texto>
+          <Texto
+            bold
+            className="text-[#bbb] text-xs text-[14px] tracking-[0.5px]"
+          >
+            ENTRADA
+          </Texto>
+          <Texto bold className="text-md text-[#4da6ff] tracking-wider">
+            {ticketRef.entrada.tipo}
+          </Texto>
+        </View>
 
-        <View style={styles.locationRow}>
-          <Ionicons name="ticket-outline" size={14} color="#4da6ff" />
-          <Text style={styles.location}>
-            {ticketRef.entrada.tipo} - Cantidad: {totalEntradas}
-          </Text>
+        {/* Separador de puntos */}
+        <View style={styles.separator} />
+
+        {/* Derecha */}
+        <View style={styles.right}>
+          <Texto className="text-white font-extrabold text-lg">
+            {totalEntradas}
+          </Texto>
+          <Texto className="text-xs mt-0.5 text-indigo-300">cantidad</Texto>
         </View>
       </LinearGradient>
     </TouchableOpacity>
@@ -86,50 +111,41 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
 const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
-    marginBottom: 16,
+    marginVertical: 8,
     backgroundColor: "#0b1030",
-    borderTopRightRadius: 80,
-    borderBottomRightRadius: 0,
+    borderTopEndRadius: 30,
+    borderBottomRightRadius: 30,
     overflow: "hidden",
   },
   image: {
-    width: 140,
-    height: 160,
+    width: 100,
+    height: 120,
   },
   info: {
     flex: 1,
-    padding: 16,
-    justifyContent: "center",
-    borderTopRightRadius: 80,
-    borderBottomRightRadius: 0,
-  },
-  title: {
-    color: "#cfe3ff",
-    fontSize: 18,
-    fontWeight: "800",
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: 6,
-  },
-  date: {
-    color: "#ccc",
-    fontSize: 14,
-    marginBottom: 6,
-  },
-  locationRow: {
     flexDirection: "row",
+    padding: 16,
     alignItems: "center",
-    marginBottom: 10,
+    borderTopEndRadius: 30,
+    borderBottomRightRadius: 30,
+    position: "relative",
   },
-  location: {
-    color: "#4da6ff",
-    marginLeft: 6,
-    fontSize: 14,
-    maxWidth: "90%",
+  left: {
+    flex: 1,
+    justifyContent: "center",
   },
-  link: {
-    color: "#ffffff",
-    fontWeight: "600",
-    fontSize: 14,
+  separator: {
+    width: 1,
+    borderLeftWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#666",
+    marginVertical: 10,
+    alignSelf: "stretch",
+    marginHorizontal: 12,
+  },
+  right: {
+    width: 60,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
