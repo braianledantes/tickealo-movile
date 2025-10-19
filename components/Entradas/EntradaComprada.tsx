@@ -1,39 +1,62 @@
+import { CompraDto } from "@/api/dto/compras.dto";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Texto } from "../Texto";
 
-type Evento = {
-  id: number;
-  nombre: string;
-  inicioAt: string;
-  portadaUrl?: string;
-};
-
-type Ticket = {
-  id: number;
-  entrada: {
-    evento: Evento;
-    tipo: string;
-    cantidad: number;
-  };
-};
-
-type Compra = {
-  id: number;
-  tickets: Ticket[];
-};
-
 interface EntradaCompradaProps {
-  compra: Compra;
+  compra: CompraDto;
   onPress: () => void;
+  used?: boolean;
 }
 
 export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
   compra,
   onPress,
+  used = false,
 }) => {
-  if (!compra.tickets || compra.tickets.length === 0) return null;
+  const ahora = new Date().getTime();
+  const fechaCompra = new Date(compra.createdAt).getTime();
+
+  const diferencia = ahora - fechaCompra;
+
+  const nuevaCompra = diferencia <= 15 * 60 * 1000;
+
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (nuevaCompra) {
+      scaleAnim.setValue(0.9);
+      opacityAnim.setValue(0);
+
+      Animated.parallel([
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.sequence([
+          Animated.timing(scaleAnim, {
+            toValue: 1.05,
+            duration: 400,
+            useNativeDriver: true,
+          }),
+          Animated.spring(scaleAnim, {
+            toValue: 1,
+            friction: 5,
+            useNativeDriver: true,
+          }),
+        ]),
+      ]).start();
+    }
+  }, [nuevaCompra]);
 
   const ticketRef = compra.tickets[0];
   const evento = ticketRef.entrada.evento;
@@ -43,109 +66,91 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
     0,
   );
 
-  const tipoColor =
-    ticketRef.entrada.tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
+  if (!compra.tickets || compra.tickets.length === 0) return null;
 
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={onPress}
-      activeOpacity={0.85}
+    <Animated.View
+      style={[
+        nuevaCompra && {
+          opacity: opacityAnim,
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}
     >
-      {/* Imagen del evento */}
-      <Image
-        source={{
-          uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
-        }}
-        style={styles.image}
-      />
-
-      {/* Panel derecho con info */}
-      <LinearGradient
-        colors={["#0b1030", "#0f1a4a"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.info}
+      <TouchableOpacity
+        className="flex-row my-2 bg-[#0b1030] rounded-tr-[30px] rounded-br-[30px] overflow-hidden"
+        onPress={onPress}
+        activeOpacity={0.85}
       >
-        <View style={styles.left}>
-          <Texto
-            bold
-            className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6 "
-            numberOfLines={1}
-          >
-            {evento.nombre}
-          </Texto>
-          <Texto className="text-[#ffffff]">
-            {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
-          </Texto>
-          <Texto
-            bold
-            className="text-[#bbb] text-xs text-[14px] tracking-[0.5px]"
-          >
-            ENTRADA
-          </Texto>
-          <Texto bold className="text-md text-[#4da6ff] tracking-wider">
-            {ticketRef.entrada.tipo}
-          </Texto>
-        </View>
+        <Image
+          source={{
+            uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
+          }}
+          className="w-[100px] h-[120px]"
+        />
 
-        {/* Separador de puntos */}
-        <View style={styles.separator} />
+        <LinearGradient
+          colors={["#0b1030", "#0f1a4a"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className="flex-1 flex-row items-center p-4 rounded-tr-[30px] rounded-br-[30px] relative"
+        >
+          <View className="flex-1 justify-center">
+            <Texto
+              bold
+              className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6"
+              numberOfLines={1}
+            >
+              {evento.nombre}
+            </Texto>
+            <Texto className="text-[#ffffff]">
+              {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </Texto>
+            <Texto
+              bold
+              className="text-[#bbb] text-xs text-[14px] tracking-[0.5px]"
+            >
+              ENTRADA
+            </Texto>
+            <Texto bold className="text-md text-[#77c3ff] tracking-wider">
+              {ticketRef.entrada.tipo}
+            </Texto>
+          </View>
 
-        {/* Derecha */}
-        <View style={styles.right}>
-          <Texto className="text-white font-extrabold text-lg">
-            {totalEntradas}
-          </Texto>
-          <Texto className="text-xs mt-0.5 text-indigo-300">cantidad</Texto>
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
+          <View className="w-[1px] border-l border-dashed border-gray-400 my-2.5 mx-3 self-stretch" />
+
+          <View className="w-15 justify-center items-center">
+            <Texto className="text-white font-extrabold text-lg">
+              {totalEntradas}
+            </Texto>
+            <Texto className="text-xs mt-0.5 text-indigo-300">cantidad</Texto>
+          </View>
+        </LinearGradient>
+
+        {used && <View style={styles.disabledOverlay} />}
+        {nuevaCompra && <View style={styles.nuevaCompra} />}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    marginVertical: 8,
-    backgroundColor: "#0b1030",
+  disabledOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.37)",
+  },
+  nuevaCompra: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(26, 43, 111, 0.37)",
     borderTopEndRadius: 30,
     borderBottomRightRadius: 30,
-    overflow: "hidden",
-  },
-  image: {
-    width: 100,
-    height: 120,
-  },
-  info: {
-    flex: 1,
-    flexDirection: "row",
-    padding: 16,
-    alignItems: "center",
-    borderTopEndRadius: 30,
-    borderBottomRightRadius: 30,
-    position: "relative",
-  },
-  left: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  separator: {
-    width: 1,
-    borderLeftWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#666",
-    marginVertical: 10,
-    alignSelf: "stretch",
-    marginHorizontal: 12,
-  },
-  right: {
-    width: 60,
-    justifyContent: "center",
-    alignItems: "center",
+    shadowColor: "#1a2b6f",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
   },
 });

@@ -1,11 +1,11 @@
 import { CompraDto } from "@/api/dto/compras.dto";
-import { EntradaComprada } from "@/components/Entradas/EntradaComprada";
+import { EntradasFiltro } from "@/components/Entradas/EntradasFiltro";
 import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/useCompras";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MisEntradas() {
@@ -25,7 +25,7 @@ export default function MisEntradas() {
       if (pagina === 1) setLoading(true);
       else setLoadingMore(true);
 
-      const data = await misCompras(pagina, 5);
+      const data = await misCompras(pagina, 50);
       const nuevasCompras = data?.data ?? [];
 
       if (nuevasCompras.length < 5) setHasMore(false);
@@ -59,7 +59,7 @@ export default function MisEntradas() {
       </View>
     );
   }
-  console.log(compras);
+
   return (
     <SafeAreaView className="flex flex-1 bg-[#05081b]">
       <Header />
@@ -71,47 +71,17 @@ export default function MisEntradas() {
           </Texto>
         </View>
       ) : (
-        <FlatList
-          data={compras}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingBottom: 50, flexGrow: 1 }}
-          ListHeaderComponent={
-            <Texto bold className="text-[#90e0ef]/80 px-5 mt-2 mb-4">
-              TODOS MIS COMPRAS
-            </Texto>
+        <EntradasFiltro
+          compras={compras}
+          onPressCompra={(compra) =>
+            router.push({
+              pathname: "/(app)/entradas/mi-entrada",
+              params: { compraId: compra.id },
+            })
           }
-          renderItem={({ item }) => (
-            <View className="mx-4 mb-4">
-              <EntradaComprada
-                compra={item}
-                onPress={() =>
-                  router.push({
-                    pathname: "/(app)/entradas/mi-entrada",
-                    params: { compraId: item.id },
-                  })
-                }
-              />
-            </View>
-          )}
-          onEndReached={() => {
-            if (!onEndReachedCalledDuringMomentum.current) {
-              handleLoadMore();
-              onEndReachedCalledDuringMomentum.current = true;
-            }
-          }}
-          onEndReachedThreshold={0.5}
-          onMomentumScrollBegin={() => {
-            onEndReachedCalledDuringMomentum.current = false;
-          }}
-          ListFooterComponent={
-            loadingMore ? (
-              <ActivityIndicator
-                size="small"
-                color="#4da6ff"
-                className="my-4"
-              />
-            ) : null
-          }
+          onEndReached={handleLoadMore}
+          loadingMore={loadingMore}
+          hasMore={hasMore}
         />
       )}
     </SafeAreaView>

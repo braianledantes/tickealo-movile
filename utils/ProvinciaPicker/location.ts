@@ -1,24 +1,22 @@
-import * as Location from 'expo-location';
-import { PROVINCIAS_AR, Provincia } from './provincias';
+import * as Location from "expo-location";
+import { PROVINCIAS_AR, Provincia } from "./provincias";
 
 // Normaliza tildes y capitalización
 export function normalizeProvince(input: string): string {
   return input
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
     .toLowerCase()
-    .replace(/\s+/g, ' ')
+    .replace(/\s+/g, " ")
     .trim();
 }
 
-const NORMALIZED = new Map(
-  PROVINCIAS_AR.map((p) => [normalizeProvince(p), p])
-);
+const NORMALIZED = new Map(PROVINCIAS_AR.map((p) => [normalizeProvince(p), p]));
 
 export async function getUserProvince(): Promise<Provincia | null> {
   // Pedir permisos
   const { status } = await Location.requestForegroundPermissionsAsync();
-  if (status !== 'granted') return null;
+  if (status !== "granted") return null;
 
   // Coordenadas rápidas (sin alta precisión para ahorrar batería)
   const coords = await Location.getCurrentPositionAsync({
@@ -31,7 +29,7 @@ export async function getUserProvince(): Promise<Provincia | null> {
     longitude: coords.coords.longitude,
   });
 
-  const province = places[0]?.region || places[0]?.subregion || '';
+  const province = places[0]?.region || places[0]?.subregion || "";
   if (!province) return null;
 
   const normalized = normalizeProvince(province);

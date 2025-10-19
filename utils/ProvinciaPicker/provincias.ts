@@ -25,4 +25,4 @@ export const PROVINCIAS_AR = [
   "Tucumán",
 ] as const;
 
-export type Provincia = typeof PROVINCIAS_AR[number];
+export type Provincia = (typeof PROVINCIAS_AR)[number];
