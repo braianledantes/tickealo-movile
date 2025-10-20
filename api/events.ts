@@ -9,23 +9,27 @@ export const fetchUpcomingEvents = async (): Promise<EventoDto[]> => {
       page: 1,
       limit: 50,
       search: "",
-      orderDir: "ASC",
-      fechaInicio: today,
+      orderDir: "DESC",
+      fechaFin: today,
     },
   });
 
   return res.data.data;
 };
+
+//obtiene detalle de un evento
 export const getEventoById = async (id: number): Promise<EventoDto> => {
   const response = await api.get(`/eventos/${id}`);
   return response.data;
 };
 
+//obtiene eventos proximos a la fecha actual
 export const getProximosEventos = async (): Promise<EventoDto[]> => {
   const response = await api.get("/eventos/proximos");
   return response.data;
 };
 
+//obtiene los eventos de una productora
 export const getEventosById = async (
   idProductora: number,
 ): Promise<EventoDto[]> => {

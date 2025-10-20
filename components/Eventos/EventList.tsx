@@ -69,7 +69,7 @@ export function EventList({
   return (
     <ScrollView style={styles.content}>
       <Texto bold className="text-[#90e0ef] tracking-wider mb-2">
-        TODOS LOS EVENTOS
+        EVENTOS FINALIZADOS
       </Texto>
       {events.map((event) => (
         <EventCard

@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   innerButton: {
-    backgroundColor: "rgba(5, 8, 27, 0.93)",
+    backgroundColor: "#05081b",
     borderRadius: 100,
     paddingVertical: 16,
     paddingHorizontal: 24,

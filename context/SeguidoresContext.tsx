@@ -1,10 +1,10 @@
-import { SeguidorDTO } from "@/api/dto/seguidor.dto";
+import { Me } from "@/api/dto/me.dto";
 import React, { createContext } from "react";
 import { dejarSeguirProductora, seguirProductora } from "../api/seguidores";
 
 interface SeguidoresContextProps {
-  seguir: (idProductora: number) => Promise<SeguidorDTO | undefined>;
-  dejarSeguir: (idProductora: number) => Promise<SeguidorDTO | undefined>;
+  seguir: (idProductora: number) => Promise<Me | undefined>;
+  dejarSeguir: (idProductora: number) => Promise<Me | undefined>;
 }
 
 export const SeguidoresContext = createContext<

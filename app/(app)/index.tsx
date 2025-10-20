@@ -5,8 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EventList } from "@/components/Eventos/EventList";
 import EventosProximos from "@/components/Eventos/EventosProximos";
-import { ProvincePicker } from "@/components/Eventos/ProvinciaPicker";
 import { Busqueda } from "@/components/Input/Busqueda";
+import { ProvincePicker } from "@/components/Input/ProvinciaPicker";
 import { Header } from "@/components/Layout/Header";
 import { useEventos } from "@/hooks/useEventos";
 

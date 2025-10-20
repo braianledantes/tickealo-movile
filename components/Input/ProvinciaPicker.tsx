@@ -1,14 +1,14 @@
 import { getUserProvince } from "@/utils/ProvinciaPicker/location";
-import { PROVINCIAS_AR } from "@/utils/ProvinciaPicker/provincias";
 import React from "react";
 import {
-    Modal,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
+import { PROVINCIAS_AR } from "../../utils/ProvinciaPicker/provincias";
 
 type ProvincePickerProps = {
   visible: boolean;

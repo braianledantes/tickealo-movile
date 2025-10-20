@@ -6,6 +6,7 @@ import { Image, TouchableOpacity, View } from "react-native";
 type UsuarioPerfilProps = {
   username?: string;
   imagenPerfilUrl?: string | null;
+  extra?: string | number | null;
   className?: string;
   icono?: string;
   onPress?: () => void;

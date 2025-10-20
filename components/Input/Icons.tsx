@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 import { StyleSheet } from "react-native";
 
@@ -33,6 +34,18 @@ export const HeartOutlinedIcon = (props: any) => (
 
 export const HeartIcon = (props: any) => (
   <Entypo name="heart" size={24} color="red" />
+);
+
+export const Rating = (props: any) => (
+  <FontAwesome name="star" size={14} color="#F3CA61" />
+);
+
+export const RatingOut = (props: any) => (
+  <FontAwesome name="star-o" size={14} color="#F3CA61" />
+);
+
+export const Fijar = (props: any) => (
+  <Entypo name="pin" size={14} color="#999" />
 );
 
 // Estilos reutilizables para íconos

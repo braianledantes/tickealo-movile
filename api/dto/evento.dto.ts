@@ -1,3 +1,4 @@
+import { ComentarioDto } from "./comentario.dto";
 export interface EventoDto {
   id: number;
   nombre: string;
@@ -23,6 +24,7 @@ export interface EventoDto {
   stockEntradas: number;
   createdAt: Date;
   updatedAt: Date;
+  comentarios?: ComentarioDto[];
 }
 
 export interface LugarDto {
