@@ -36,13 +36,17 @@ export const HeartIcon = (props: any) => (
   <Entypo name="heart" size={24} color="red" />
 );
 
-export const Rating = (props: any) => (
-  <FontAwesome name="star" size={14} color="#F3CA61" />
-);
+//Estrella llena
+export const Rating: React.FC<{ size?: number; style?: any }> = ({
+  size = 14,
+  style,
+}) => <FontAwesome name="star" size={size} color="#F3CA61" style={style} />;
 
-export const RatingOut = (props: any) => (
-  <FontAwesome name="star-o" size={14} color="#F3CA61" />
-);
+// Estrella vacía
+export const RatingOut: React.FC<{ size?: number; style?: any }> = ({
+  size = 14,
+  style,
+}) => <FontAwesome name="star-o" size={size} color="#F3CA61" style={style} />;
 
 export const Fijar = (props: any) => (
   <Entypo name="pin" size={14} color="#999" />

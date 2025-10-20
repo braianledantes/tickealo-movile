@@ -1,4 +1,5 @@
-import { ListaComentarios } from "@/components/Comentarios/Comentarios";
+import { AgregarComentario } from "@/components/Comentarios/AgregarComentario";
+import { ListaComentarios } from "@/components/Comentarios/ListaComentarios";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { EventTimer } from "@/components/Eventos/EventTimer";
 import { EventInfo } from "@/components/Eventos/InfoEvento";
@@ -94,6 +95,7 @@ export default function InfoEvento() {
         />
 
         {/** Aqui el usuario podria agregar un comentario */}
+        <AgregarComentario />
       </ScrollView>
     </View>
   );
