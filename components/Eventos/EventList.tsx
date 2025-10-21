@@ -16,9 +16,11 @@ import {
 import { EventCard } from "./EventCard";
 
 export function EventList({
+  title = "EVENTOS FINALIZADOS",
   events = [],
   onPressEvent,
 }: {
+  title?: string | null;
   events?: EventoDto[];
   onPressEvent?: (id: number) => void;
 }) {
@@ -69,7 +71,7 @@ export function EventList({
   return (
     <ScrollView style={styles.content}>
       <Texto bold className="text-[#90e0ef] tracking-wider mb-2">
-        EVENTOS FINALIZADOS
+        {title}
       </Texto>
       {events.map((event) => (
         <EventCard

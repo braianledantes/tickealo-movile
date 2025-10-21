@@ -3,6 +3,7 @@ import { Toast } from "@/components/Toast";
 import { ComentariosProvider } from "@/context/ComentariosContext";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { EventosProvider } from "@/context/EventosContext";
+import { FavoritoProvider } from "@/context/FavoritosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
@@ -15,7 +16,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/poppins";
 import { Stack } from "expo-router";
-import { Text, View } from "react-native"; // ✅ agregado
+import { Text, View } from "react-native";
 import { AuthProvider } from "../context/AuthContext";
 import "../global.css";
 import { SplashScreenController } from "../screens/splash";
@@ -50,9 +51,11 @@ export default function Root() {
             <ComprasProvider>
               <ValidadorProvider>
                 <ComentariosProvider>
-                  <Toast />
-                  <SplashScreenController />
-                  <RootNavigator />
+                  <FavoritoProvider>
+                    <Toast />
+                    <SplashScreenController />
+                    <RootNavigator />
+                  </FavoritoProvider>
                 </ComentariosProvider>
               </ValidadorProvider>
             </ComprasProvider>

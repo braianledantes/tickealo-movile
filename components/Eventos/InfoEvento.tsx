@@ -1,32 +1,18 @@
-import { Button } from "@/components/Button/Button";
-import { SecondaryButton } from "@/components/Button/SecondaryButton";
-import { HeartOutlinedIcon } from "@/components/Input/Icons";
 import { Texto } from "@/components/Texto";
-import { useSeguidores } from "@/hooks/useSeguidores";
 import { abrirEnMaps } from "@/utils/abrirMaps";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
 
 import { EventoDto } from "@/api/dto/evento.dto";
 import { Image, TouchableOpacity, View } from "react-native";
 import defaultEvent from "../../assets/images/defaultEvent.jpg";
+import { SeguiryFavorito } from "./SeguirYFavorito";
 
 type Props = {
   evento: EventoDto;
   productoraId?: number | null;
-  view?: boolean;
 };
 
-export function EventInfo({ evento, productoraId, view = true }: Props) {
-  const { seguir, dejarSeguir } = useSeguidores();
-  const [estaSiguiendo, setEstaSiguiendo] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (evento && estaSiguiendo === null) {
-      setEstaSiguiendo(!!evento.productora?.isSeguido);
-    }
-  }, [evento, estaSiguiendo]);
-
+export function EventInfo({ evento, productoraId }: Props) {
   const banner = evento.bannerUrl?.trim()
     ? { uri: evento.bannerUrl }
     : defaultEvent;
@@ -39,41 +25,7 @@ export function EventInfo({ evento, productoraId, view = true }: Props) {
         resizeMode="cover"
       />
 
-      {/* Seguir / Dejar de seguir productora */}
-      {view && (
-        <View
-          className="flex-row items-center justify-between mt-3 mx-4 gap-2"
-          style={{ minHeight: 56 }}
-        >
-          {estaSiguiendo === false && (
-            <Button
-              title="Seguir Productora"
-              onPress={async () => {
-                if (!productoraId) return;
-                await seguir(productoraId);
-                setEstaSiguiendo(true);
-              }}
-              className="flex-1"
-            />
-          )}
-
-          {estaSiguiendo === true && (
-            <SecondaryButton
-              title="Dejar de seguir"
-              onPress={async () => {
-                if (!productoraId) return;
-                await dejarSeguir(productoraId);
-                setEstaSiguiendo(false);
-              }}
-              className="flex-1"
-            />
-          )}
-
-          <TouchableOpacity className="p-2 bg-[#1b1b40] rounded-full item-center justify-center">
-            <HeartOutlinedIcon />
-          </TouchableOpacity>
-        </View>
-      )}
+      <SeguiryFavorito evento={evento} productoraId={productoraId} />
 
       {/* Descripción */}
       <View className="px-4 mt-4">

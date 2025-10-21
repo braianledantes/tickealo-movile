@@ -1,19 +1,33 @@
+import { EventoDto } from "@/api/dto/evento.dto";
+import { EventList } from "@/components/Eventos/EventList";
 import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
+import { useFavorito } from "@/hooks/useFavoritos";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function MisEntradas() {
-  const [loading, setLoading] = useState(true);
-  const favoritos = [];
+type ResponseDto = {
+  cantidad: number;
+  eventos: EventoDto[];
+};
+export default function MisEventosFavoritos() {
+  const { eventosFavoritos, loading, error } = useFavorito();
+  const [response, setResponse] = useState<ResponseDto | null>(null);
+  const router = useRouter();
 
+  // 👇 useEffect no puede ser async directamente, por eso lo manejamos así
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    const fetchFavoritos = async () => {
+      try {
+        const response = await eventosFavoritos();
+        if (response) setResponse(response);
+      } catch (err) {
+        console.error("Error obteniendo favoritos:", err);
+      }
+    };
+    fetchFavoritos();
   }, []);
 
   if (loading) {
@@ -24,21 +38,34 @@ export default function MisEntradas() {
     );
   }
 
+  const favoritos = response?.eventos ?? [];
+  const cantidad = response?.cantidad ?? 0;
+
   return (
-    <SafeAreaView className="flex flex-1 bg-[#05081b]">
+    <SafeAreaView className="flex-1 bg-[#05081b]">
       <Header />
 
-      {favoritos.length === 0 ? (
-        <View className="flex flex-1 justify-center items-center mx-20">
-          <Texto bold className="text-[#CAF0F8] text-center tracking-wider">
-            Aquí estará tus eventos favoritos... cuando agregues una!
-          </Texto>
-        </View>
-      ) : (
-        <Texto bold className="text-[#CAF0F8] text-center tracking-wider">
-          Aquí aparecerán tus eventos favoritos
-        </Texto>
-      )}
+      <View className="flex-1">
+        {favoritos.length === 0 ? (
+          <View className="flex flex-1 justify-center items-center mx-20">
+            <Texto bold className="text-[#CAF0F8] text-center tracking-wider">
+              Aquí estará tu colección de eventos favoritos… cuando agregues
+              alguno
+            </Texto>
+          </View>
+        ) : (
+          <EventList
+            title={`MIS EVENTOS FAVORITOS (${cantidad})`}
+            events={favoritos}
+            onPressEvent={(id) =>
+              router.push({
+                pathname: "/(app)/info-evento",
+                params: { eventoId: id },
+              })
+            }
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
