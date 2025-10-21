@@ -1,27 +1,77 @@
+import { ComentarioDto } from "@/api/dto/comentario.dto";
 import { useAuth } from "@/hooks/useAuth";
-import React, { useState } from "react";
+import { useComentarios } from "@/hooks/useComentarios";
+import { useToast } from "@/hooks/useToast";
+import { validarComentario } from "@/utils/validations/comentarioValidation";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
+import { IconButton } from "../Button/IconButton";
 import { Input } from "../Input/Input";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
-
-import { LinkButton } from "../Button/LinkButton";
 import { Estrellas } from "./Rating";
 
-export function AgregarComentario() {
+interface ComentarioProps {
+  evento: number;
+  onComentarioEnviado?: (comentario: ComentarioDto) => void;
+}
+
+export function AgregarComentario({
+  evento,
+  onComentarioEnviado,
+}: ComentarioProps) {
   const { user } = useAuth();
+  const { comentar } = useComentarios();
+  const { showToast } = useToast();
 
   const [comentario, setComentario] = useState("");
   const [calificacion, setCalificacion] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [canSend, setCanSend] = useState(false);
 
-  // Función para "enviar" el comentario (simulada)
-  const handleEnviar = () => {
-    if (!comentario.trim()) return;
-    console.log("Comentario enviado:", comentario);
-    setComentario(""); // limpia input
+  // Validación en tiempo real
+  useEffect(() => {
+    const error = validarComentario({ comentario, calificacion });
+    if (error) {
+      setCanSend(false);
+      if (comentario || calificacion) {
+        showToast("error", "Error", error);
+      }
+    } else {
+      setCanSend(true);
+    }
+  }, [comentario, calificacion]);
+
+  const handleEnviar = async () => {
+    const error = validarComentario({ comentario, calificacion });
+    if (error) {
+      showToast("error", "Error", error);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const nuevoComentario = await comentar(evento, {
+        comentario,
+        calificacion,
+      });
+
+      setComentario("");
+      setCalificacion(0);
+      setCanSend(false);
+
+      if (onComentarioEnviado && nuevoComentario) {
+        onComentarioEnviado(nuevoComentario); // solo recarga lista
+      }
+    } catch (err) {
+      console.error("Error al enviar el comentario:", err);
+      showToast("error", "Error", "No se pudo enviar el comentario.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <View className="bg-[#0c0f2b] border-t border-[#1b1e5e] px-6 pt-4 pb-20">
+    <View className="border-t border-[#0F1D4C] px-6 py-3">
       <View className="mb-4">
         <Estrellas
           calificacion={calificacion}
@@ -45,9 +95,16 @@ export function AgregarComentario() {
           onChangeValue={setComentario}
           placeholder="Cuentanos tu experiencia!"
           containerStyle={{ marginHorizontal: 12, flex: 1 }}
+          autofocus={true}
         />
 
-        <LinkButton text="Enviar" onPress={handleEnviar} />
+        <IconButton
+          iconName="send-sharp"
+          size={28}
+          onPress={handleEnviar}
+          disabled={!canSend || loading}
+          loading={loading}
+        />
       </View>
     </View>
   );

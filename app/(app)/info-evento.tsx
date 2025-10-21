@@ -1,5 +1,4 @@
-import { AgregarComentario } from "@/components/Comentarios/AgregarComentario";
-import { ListaComentarios } from "@/components/Comentarios/ListaComentarios";
+import { PreviewComentarios } from "@/components/Comentarios/PreviewComentarios";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { EventTimer } from "@/components/Eventos/EventTimer";
 import { EventInfo } from "@/components/Eventos/InfoEvento";
@@ -12,7 +11,15 @@ import { ActivityIndicator, ScrollView, View } from "react-native";
 export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
   const router = useRouter();
-  const { evento, productoraId, loading } = useEvento(eventoId);
+
+  const {
+    evento,
+    comentarios,
+    mostrarComentarios,
+    productoraId,
+    loading,
+    error,
+  } = useEvento(eventoId);
 
   if (loading) {
     return (
@@ -22,16 +29,20 @@ export default function InfoEvento() {
     );
   }
 
-  if (!evento) {
+  if (error || !evento) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
-        <Texto className="text-white">No se encontró el evento.</Texto>
+        <Texto className="text-white">
+          {error ?? "No se encontró el evento."}
+        </Texto>
       </View>
     );
   }
+
   return (
     <View className="flex-1 bg-[#05081b]">
       <HeaderBack />
+
       <ScrollView className="flex-1">
         <EventInfo evento={evento} productoraId={productoraId} />
 
@@ -77,26 +88,15 @@ export default function InfoEvento() {
           )}
         </View>
 
-        {/* Contador */}
         <EventTimer fechaFin={evento.inicioAt} />
-
-        {/* Sección de comentarios */}
-        <Texto
-          bold
-          className="tracking-wider text-lg text-white px-4 mt-6 mb-2"
-        >
-          COMENTARIOS ({evento?.comentarios?.length})
-        </Texto>
-
-        {/* Lista de comentarios */}
-        <ListaComentarios
-          comentarios={evento.comentarios}
-          productora={evento.productora}
-        />
-
-        {/** Aqui el usuario podria agregar un comentario */}
-        <AgregarComentario />
       </ScrollView>
+
+      {/* Mostrar comentarios según la lógica del hook */}
+      <PreviewComentarios
+        comentarios={comentarios}
+        evento={evento}
+        finalizo={mostrarComentarios}
+      />
     </View>
   );
 }

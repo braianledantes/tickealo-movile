@@ -40,13 +40,14 @@ export const HeartIcon = (props: any) => (
 export const Rating: React.FC<{ size?: number; style?: any }> = ({
   size = 14,
   style,
-}) => <FontAwesome name="star" size={size} color="#F3CA61" style={style} />;
+}) => <FontAwesome name="star" size={size} color="#999" style={style} />;
 
 // Estrella vacía
 export const RatingOut: React.FC<{ size?: number; style?: any }> = ({
   size = 14,
   style,
-}) => <FontAwesome name="star-o" size={size} color="#F3CA61" style={style} />;
+}) => <FontAwesome name="star-o" size={size} color="#999" style={style} />;
+//color #F3CA61
 
 export const Fijar = (props: any) => (
   <Entypo name="pin" size={14} color="#999" />

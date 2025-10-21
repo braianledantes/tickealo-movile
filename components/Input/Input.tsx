@@ -13,6 +13,7 @@ export type InputProps = {
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   containerStyle?: object;
   inputStyle?: object;
+  autofocus?: boolean;
 };
 
 export function Input({
@@ -25,6 +26,7 @@ export function Input({
   keyboardType,
   containerStyle,
   inputStyle,
+  autofocus,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -59,6 +61,7 @@ export function Input({
         style={[{ fontFamily: "Poppins_400Regular" }, inputStyle]}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        autoFocus={autofocus}
       />
 
       {/* Ícono de visibilidad de contraseña */}

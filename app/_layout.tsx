@@ -1,5 +1,6 @@
 import { Logo } from "@/components/Layout/Logo";
 import { Toast } from "@/components/Toast";
+import { ComentariosProvider } from "@/context/ComentariosContext";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { EventosProvider } from "@/context/EventosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
@@ -48,9 +49,11 @@ export default function Root() {
           <SeguidoresProvider>
             <ComprasProvider>
               <ValidadorProvider>
-                <Toast />
-                <SplashScreenController />
-                <RootNavigator />
+                <ComentariosProvider>
+                  <Toast />
+                  <SplashScreenController />
+                  <RootNavigator />
+                </ComentariosProvider>
               </ValidadorProvider>
             </ComprasProvider>
           </SeguidoresProvider>
