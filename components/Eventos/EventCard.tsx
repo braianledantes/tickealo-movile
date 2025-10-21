@@ -19,10 +19,8 @@ export function EventCard({ image, title, date, location, onPress }: Props) {
       onPress={onPress}
       activeOpacity={0.85}
     >
-      {/* Imagen del evento (lado izquierdo) */}
       <Image source={{ uri: image }} style={styles.image} />
 
-      {/* Panel derecho con contenido y degradé */}
       <LinearGradient
         colors={["#0b1030", "#0f1a4a"]}
         start={{ x: 0, y: 0 }}

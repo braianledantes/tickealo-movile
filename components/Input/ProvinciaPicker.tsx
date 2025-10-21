@@ -1,14 +1,8 @@
 import { getUserProvince } from "@/utils/ProvinciaPicker/location";
 import React from "react";
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { PROVINCIAS_AR } from "../../utils/ProvinciaPicker/provincias";
+import { Texto } from "../Texto";
 
 type ProvincePickerProps = {
   visible: boolean;
@@ -37,7 +31,7 @@ export function ProvincePicker({
       <Pressable style={styles.modalOverlay} onPress={onClose} />
 
       <View style={styles.modalCard}>
-        <Text style={styles.modalTitle}>Selecciona tu provincia</Text>
+        <Texto style={styles.modalTitle}>Selecciona tu provincia</Texto>
 
         <ScrollView style={{ maxHeight: 360 }}>
           {PROVINCIAS_AR.map((provincia) => (
@@ -49,7 +43,7 @@ export function ProvincePicker({
                 onClose();
               }}
             >
-              <Text style={styles.optionText}>{provincia}</Text>
+              <Texto style={styles.optionText}>{provincia}</Texto>
             </Pressable>
           ))}
         </ScrollView>
@@ -58,9 +52,9 @@ export function ProvincePicker({
           style={[styles.option, { borderTopWidth: 1, borderTopColor: "#223" }]}
           onPress={handleSelectAuto}
         >
-          <Text style={[styles.optionText, { color: "#4da6ff" }]}>
+          <Texto style={[styles.optionText, { color: "#4da6ff" }]}>
             Detectar automáticamente
-          </Text>
+          </Texto>
         </Pressable>
       </View>
     </Modal>

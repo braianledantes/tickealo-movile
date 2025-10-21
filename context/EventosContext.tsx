@@ -1,7 +1,8 @@
-import { EventoDto } from "@/api/dto/evento.dto";
+import { EventoDto, ProductoraDto } from "@/api/dto/evento.dto";
 import {
   fetchUpcomingEvents,
   getEventosById,
+  getEventosSeguidos,
   getProximosEventos,
 } from "@/api/events";
 import React, { createContext, useMemo, useState } from "react";
@@ -9,8 +10,11 @@ import React, { createContext, useMemo, useState } from "react";
 interface EventosContextType {
   events: EventoDto[];
   proximos: EventoDto[];
+  seguidos: EventoDto[];
+  productoraSeguida: ProductoraDto[];
   loadingUpcoming: boolean;
   loadingProximos: boolean;
+  loadingSeguidos: boolean;
   error: string | null;
   search: string;
   setSearch: (val: string) => void;
@@ -21,6 +25,7 @@ interface EventosContextType {
   ) => Promise<EventoDto[] | undefined>;
   fetchUpcoming: () => Promise<EventoDto[] | undefined>;
   fetchProximos: () => Promise<void>;
+  fetchSeguidos: () => Promise<void>;
 }
 
 export const EventosContext = createContext<EventosContextType | undefined>(
@@ -32,8 +37,13 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [events, setEvents] = useState<EventoDto[]>([]);
   const [proximos, setProximos] = useState<EventoDto[]>([]);
+  const [seguidos, setSeguidos] = useState<EventoDto[]>([]);
+  const [productoraSeguida, setProductoraSeguida] = useState<ProductoraDto[]>(
+    [],
+  );
   const [loadingUpcoming, setLoadingUpcoming] = useState(false);
   const [loadingProximos, setLoadingProximos] = useState(false);
+  const [loadingSeguidos, setLoadingSeguidos] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [province, setProvince] = useState<string | null>(null);
@@ -88,6 +98,40 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const fetchSeguidos = async () => {
+    setLoadingSeguidos(true);
+    setError(null);
+    try {
+      const eventos = await getEventosSeguidos();
+      if (eventos) {
+        const proximosSeguidos = eventos.filter(
+          (e) => new Date(e.inicioAt) >= new Date(),
+        );
+
+        const productorasSeguidas = Array.from(
+          new Map(
+            eventos.map((e) => [e.productora.userId, e.productora]),
+          ).values(),
+        );
+        setProductoraSeguida(productorasSeguidas);
+
+        setSeguidos(proximosSeguidos);
+      } else {
+        setSeguidos([]);
+      }
+    } catch (err: any) {
+      console.error("Error obteniendo eventos seguidos:", err);
+      setSeguidos([]);
+      setError(
+        err.response?.status === 403
+          ? "No autorizado para ver eventos seguidos"
+          : "No se pudieron cargar los eventos seguidos",
+      );
+    } finally {
+      setLoadingSeguidos(false);
+    }
+  };
+
   const filteredEvents = useMemo(() => {
     return events.filter((e) => {
       const matchesSearch =
@@ -104,8 +148,11 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         events: filteredEvents,
         proximos,
+        seguidos,
+        productoraSeguida,
         loadingUpcoming,
         loadingProximos,
+        loadingSeguidos,
         error,
         search,
         setSearch,
@@ -114,6 +161,7 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         getEventosByProductora,
         fetchUpcoming,
         fetchProximos,
+        fetchSeguidos,
       }}
     >
       {children}

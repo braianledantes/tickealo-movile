@@ -4,7 +4,7 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EventList } from "@/components/Eventos/EventList";
-import EventosProximos from "@/components/Eventos/EventosProximos";
+import { EventSection } from "@/components/Eventos/EventosProximos";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { ProvincePicker } from "@/components/Input/ProvinciaPicker";
 import { Header } from "@/components/Layout/Header";
@@ -14,6 +14,9 @@ export default function Index() {
   const router = useRouter();
   const {
     events,
+    proximos,
+    seguidos,
+    productoraSeguida,
     loadingUpcoming,
     error,
     search,
@@ -22,22 +25,20 @@ export default function Index() {
     setProvince,
     fetchProximos,
     fetchUpcoming,
+    fetchSeguidos,
   } = useEventos();
 
   const [pickerOpen, setPickerOpen] = useState(false);
-
-  // Fetch inicial solo una vez al montar
   useEffect(() => {
     const fetchData = async () => {
       try {
         await fetchUpcoming();
         await fetchProximos();
-      } catch (err) {
-        // errores ya manejados en el provider
-      }
+        await fetchSeguidos();
+      } catch (err) {}
     };
     fetchData();
-  }, []); // <-- array vacío evita bucles
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
@@ -53,13 +54,19 @@ export default function Index() {
         />
 
         <Busqueda
-          location={province ?? "Selecciona provincia"}
+          location={province ?? "Seleccionar provincia"}
           onPress={() => setPickerOpen(true)}
           search={search}
           setSearch={setSearch}
         />
 
-        <EventosProximos />
+        <EventSection title="PROXIMOS EVENTOS" eventos={proximos} />
+
+        <EventSection
+          title="EVENTOS SEGUIDOS"
+          color="#90E0EF"
+          eventos={seguidos}
+        />
 
         <View className="flex-1">
           {loadingUpcoming ? (

@@ -1,13 +1,14 @@
 import { Input } from "@/components/Input/Input";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { Texto } from "../Texto";
 
 interface BusquedaProps {
-  onPress: () => void; // abrir modal de provincia
-  location: string; // provincia actual
-  search: string; // valor actual del buscador
-  setSearch: (value: string) => void; // función para actualizar búsqueda
+  onPress: () => void;
+  location: string;
+  search: string;
+  setSearch: (value: string) => void;
 }
 
 export const Busqueda: React.FC<BusquedaProps> = ({
@@ -20,13 +21,15 @@ export const Busqueda: React.FC<BusquedaProps> = ({
     <View className="bg-[#05081b] py-2 px-4">
       {/* Selector de provincia */}
       <TouchableOpacity
-        className="flex-row items-center mb-3"
+        className="flex-row justify-between items-center mb-3"
         onPress={onPress}
       >
-        <Ionicons name="location-outline" size={18} color="white" />
-        <Text className="text-white text-base mx-2 font-poppins">
-          {location}
-        </Text>
+        <View className="flex-row items-center">
+          <Ionicons name="location-outline" size={18} color="white" />
+          <Texto className="text-white text-base mx-2 font-poppins">
+            {location}
+          </Texto>
+        </View>
         <Ionicons name="chevron-down" size={18} color="white" />
       </TouchableOpacity>
 
