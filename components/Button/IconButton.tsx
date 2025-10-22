@@ -7,6 +7,8 @@ export type IconButtonProps = {
   iconName?: string;
   iconType?: string;
   size?: number;
+  color?: string;
+  colorDisabled?: string;
   disabled?: boolean;
   loading?: boolean;
   onPress: () => void;
@@ -17,12 +19,14 @@ export const IconButton: React.FC<IconButtonProps> = ({
   iconName,
   iconType,
   size = 24,
+  color = "#1E40AF",
+  colorDisabled = "#0F1D4C",
   disabled = false,
   loading = false,
   onPress,
   style,
 }) => {
-  const finalColor = disabled ? "#0F1D4C" : loading ? "#1E40AF" : "#1E40AF";
+  const finalColor = disabled ? colorDisabled : loading ? color : color;
 
   return (
     <Pressable
@@ -31,7 +35,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
       style={[styles.button, style]}
     >
       {loading ? (
-        <ActivityIndicator size="small" color="#4da6ff" />
+        <ActivityIndicator size={size} color={colorDisabled} />
       ) : iconType ? (
         renderIcon(iconType, iconName, { color: finalColor, fontSize: size })
       ) : iconName ? (
