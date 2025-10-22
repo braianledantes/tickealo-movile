@@ -4,6 +4,21 @@ import { getEventoById } from "@/api/events";
 import { useComentarios } from "@/hooks/useComentarios";
 import { useEffect, useMemo, useState } from "react";
 
+export type ProductoraDatos = {
+  nombre?: string;
+  cuit?: string;
+  telefono?: string;
+  userId?: number;
+};
+
+export type CuentaBancariaDatos = {
+  titular?: string;
+  cbu?: string;
+  alias?: string;
+  banco?: string;
+  instrucciones?: string;
+};
+
 export const useEvento = (id?: string | number) => {
   const [evento, setEvento] = useState<EventoDto | null>(null);
   const [comentarios, setComentarios] = useState<ComentarioDto[] | null>(null);
@@ -11,7 +26,6 @@ export const useEvento = (id?: string | number) => {
   const [error, setError] = useState<string | null>(null);
 
   const { comentariosDeEvento } = useComentarios();
-
   const eventoId = Number(id);
 
   useEffect(() => {
@@ -52,9 +66,11 @@ export const useEvento = (id?: string | number) => {
     const ahora = new Date();
     const finEvento = new Date(evento.finAt);
 
-    // Retorna true si el evento ya finalizo
     return ahora >= finEvento;
   }, [evento]);
+
+  const productora = evento?.productora;
+  const cuentaBancaria = evento?.cuentaBancaria;
 
   return {
     evento,
@@ -62,6 +78,7 @@ export const useEvento = (id?: string | number) => {
     mostrarComentarios,
     loading,
     error,
-    productoraId: evento?.productora?.userId ?? null,
+    productora,
+    cuentaBancaria,
   };
 };

@@ -16,11 +16,11 @@ export default function InfoEvento() {
     evento,
     comentarios,
     mostrarComentarios,
-    productoraId,
+    productora,
     loading,
     error,
   } = useEvento(eventoId);
-
+  console.log(evento);
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
@@ -44,7 +44,7 @@ export default function InfoEvento() {
       <HeaderBack />
 
       <ScrollView className="flex-1">
-        <EventInfo evento={evento} productoraId={productoraId} />
+        <EventInfo evento={evento} productoraId={productora?.userId} />
 
         {/* Entradas */}
         <View className="mt-4 px-4 mb-5">

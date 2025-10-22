@@ -36,6 +36,14 @@ export const HeartIcon = (props: any) => (
   <Entypo name="heart" size={24} color="red" />
 );
 
+export const Copy = (props: any) => (
+  <Ionicons name="copy-outline" size={24} color="#999" {...props} />
+);
+
+export const Close = (props: any) => (
+  <Ionicons name="close" size={24} color="white" {...props} />
+);
+
 //Estrella llena
 export const Rating: React.FC<{ size?: number; style?: any }> = ({
   size = 14,

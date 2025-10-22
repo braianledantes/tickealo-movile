@@ -43,15 +43,16 @@ export interface TicketDto {
   createdAt: string;
   updatedAt: string;
 
-  entrada: {
-    id: number;
-    nombre: string;
-    precio: number;
-    tipo: string;
-    cantidad: number;
-    evento: EventoDto;
-  };
+  entrada: EntradaDto;
 }
+type EntradaDto = {
+  id: number;
+  nombre: string;
+  precio: number;
+  tipo: string;
+  cantidad: number;
+  evento: EventoDto;
+};
 
 type EventoDto = {
   id: number;

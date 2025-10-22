@@ -43,3 +43,8 @@ export const getCompras = async (
   });
   return response.data;
 };
+
+export const getCompra = async (compraId: number): Promise<CompraDto> => {
+  const response = await api.get(`/compras/${compraId}`);
+  return response.data;
+};

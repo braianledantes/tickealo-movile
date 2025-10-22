@@ -10,21 +10,24 @@ export interface EventoDto {
   lugar: LugarDto;
   productora: ProductoraDto;
   entradas: EntradaDto[];
-  cuentaBancaria: {
-    id: number;
-    nombreTitular: string;
-    nombreBanco: string;
-    alias: string;
-    cbu: string;
-    instrucciones: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  cuentaBancaria: CuentaBancariaDto;
   capacidad: number;
   stockEntradas: number;
   createdAt: Date;
   updatedAt: Date;
+  esFavorito: boolean;
   comentarios?: ComentarioDto[];
+}
+
+export interface CuentaBancariaDto {
+  id: number;
+  nombreTitular: string;
+  nombreBanco: string;
+  alias: string;
+  cbu: string;
+  instrucciones: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface LugarDto {

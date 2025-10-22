@@ -1,6 +1,8 @@
+import { Copy } from "@/components/Input/Icons";
+import { Texto } from "@/components/Texto";
 import * as ClipBoard from "expo-clipboard";
-import React from "react";
-import { Alert, Pressable, Text } from "react-native";
+import React, { useState } from "react";
+import { Alert, Pressable } from "react-native";
 
 // Fila individual que se puede copiar
 export function BankRow({ label, value }: { label: string; value?: string }) {
@@ -12,25 +14,46 @@ export function BankRow({ label, value }: { label: string; value?: string }) {
   };
 
   return (
-    <Pressable onLongPress={copy} className="mt-1.5">
-      <Text className="text-slate-300 text-base mt-1.5">
-        {label}: <Text className="text-white font-bold">{value}</Text>
-      </Text>
-      <Text className="text-xs text-indigo-300">
-        Mantener presionado para copiar
-      </Text>
+    <Pressable onLongPress={copy} className="">
+      <Texto semiBold className="text-slate-300 text-base">
+        {label}:{" "}
+        <Texto bold className="text-white">
+          {value}
+        </Texto>
+      </Texto>
+    </Pressable>
+  );
+}
+
+export function CopyAll({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+
+  if (!text) return null;
+
+  const handleCopy = async () => {
+    await ClipBoard.setStringAsync(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Pressable onPress={handleCopy} className="flex-row items-center space-x-2">
+      <Copy />
+      {copied && (
+        <Texto className="text-[#999] text-sm ml-1">Copiado exitosamente</Texto>
+      )}
     </Pressable>
   );
 }
 
 // Función de formato ARS
-export function formatARS(value: number) {
+export function formatARS(value: string | number) {
   try {
     return new Intl.NumberFormat("es-AR", {
       style: "currency",
       currency: "ARS",
       maximumFractionDigits: 0,
-    }).format(value);
+    }).format(Number(value));
   } catch {
     return `$${value.toLocaleString("es-AR")}`;
   }

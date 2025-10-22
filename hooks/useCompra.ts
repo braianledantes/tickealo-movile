@@ -33,9 +33,6 @@ export function useCompra() {
   const [comprobanteUri, setComprobanteUri] = useState<string | null>(null);
   const [entrada, setEntrada] = useState<Entrada | null>(null);
   const [loading, setLoading] = useState(true);
-  const [datosBancarios, setDatosBancarios] = useState<DatosBancarios | null>(
-    null,
-  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const { evento } = useEvento(eventoId);
@@ -57,20 +54,6 @@ export function useCompra() {
       (e: any) => Number(e.id) === entradaIdNum,
     );
     setEntrada(entradaSeleccionada ?? null);
-
-    const cuenta =
-      evento?.cuentaBancaria ?? ({} as Partial<EventoDto["cuentaBancaria"]>);
-    const prod = evento?.productora ?? ({} as Partial<EventoDto["productora"]>);
-
-    setDatosBancarios({
-      titular: cuenta.nombreTitular ?? "",
-      cuit: prod.cuit?.toString() ?? "",
-      cbu: cuenta.cbu ?? "",
-      alias: cuenta.alias ?? "",
-      banco: cuenta.nombreBanco ?? "",
-      instrucciones: cuenta.instrucciones ?? "",
-    });
-
     setLoading(false);
   }, [evento, entradaIdNum]);
 
@@ -110,7 +93,7 @@ export function useCompra() {
 
       formData.append("comprobanteTransferencia", file);
       await terminarCompra(compraId as string, formData);
-      router.replace("/(app)/entradas/mis-entradas");
+      router.replace("/(app)/compra/mis-compras");
     } catch (err: any) {
       setErrorMsg(err.response?.data?.message || "Error en la compra.");
     }
@@ -119,7 +102,6 @@ export function useCompra() {
   return {
     entrada,
     loading,
-    datosBancarios,
     totalCalculado,
     cantNum,
     comprobanteUri,

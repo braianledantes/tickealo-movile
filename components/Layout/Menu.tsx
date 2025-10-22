@@ -25,10 +25,16 @@ export const Menu: React.FC = () => {
   const items = [
     { key: "inicio", label: "Inicio", icon: "home-outline", route: "/" },
     {
-      key: "entradas",
+      key: "compras",
       label: "Mis compras",
+      icon: "bag-handle-outline",
+      route: "/(app)/compra/mis-compras" as Href,
+    },
+    {
+      key: "tickets",
+      label: "Mis tickets",
       icon: "ticket-outline",
-      route: "/(app)/entradas/mis-entradas" as Href,
+      route: "/(app)/ticket/mis-tickets" as Href,
     },
     {
       key: "favoritos",

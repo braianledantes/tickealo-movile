@@ -28,7 +28,7 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
 
   useEffect(() => {
     if (evento && esFavorito === null) {
-      setFavorito(!!evento.productora?.isSeguido);
+      setFavorito(!!evento?.esFavorito);
     }
   }, [evento, esFavorito]);
 
@@ -53,7 +53,7 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
 
           {estaSiguiendo === true && (
             <SecondaryButton
-              title="Dejar de seguir"
+              title="Siguiendo"
               onPress={async () => {
                 if (!productoraId) return;
                 await dejarSeguir(productoraId);
@@ -63,7 +63,7 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
             />
           )}
 
-          {esFavorito === true && (
+          {esFavorito === false && (
             <TouchableOpacity
               className="p-2 bg-[#1b1b40] rounded-full item-center justify-center"
               onPress={async () => {
@@ -76,7 +76,7 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
             </TouchableOpacity>
           )}
 
-          {esFavorito === false && (
+          {esFavorito === true && (
             <TouchableOpacity
               className="p-2 bg-[#1b1b40] rounded-full item-center justify-center"
               onPress={async () => {

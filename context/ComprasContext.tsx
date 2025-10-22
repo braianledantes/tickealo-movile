@@ -1,4 +1,9 @@
-import { finalizarCompra, getCompras, iniciarCompra } from "@/api/compras";
+import {
+  finalizarCompra,
+  getCompra,
+  getCompras,
+  iniciarCompra,
+} from "@/api/compras";
 import { CompraDto, ComprasResponse } from "@/api/dto/compras.dto";
 import React, { createContext } from "react";
 
@@ -15,6 +20,7 @@ interface ComprasContextProps {
     page?: number,
     limit?: number,
   ) => Promise<ComprasResponse | void>;
+  miCompra: (compraId: number) => Promise<CompraDto | undefined>;
 }
 
 export const ComprasContext = createContext<ComprasContextProps | undefined>(
@@ -57,8 +63,19 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const miCompra = async (compraId: number) => {
+    try {
+      const response = await getCompra(compraId);
+      return response;
+    } catch (err) {
+      console.error(" Error obteniendo compra del usuario:", err);
+    }
+  };
+
   return (
-    <ComprasContext.Provider value={{ comprar, terminarCompra, misCompras }}>
+    <ComprasContext.Provider
+      value={{ comprar, terminarCompra, misCompras, miCompra }}
+    >
       {children}
     </ComprasContext.Provider>
   );

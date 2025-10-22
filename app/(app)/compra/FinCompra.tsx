@@ -1,23 +1,26 @@
 import { Button } from "@/components/Button/Button";
-import { CuentaBancaria } from "@/components/CuentaBancaria";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { useCompra } from "@/hooks/useCompra";
+import { useEvento } from "@/hooks/useEvento";
+import { useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function Compra() {
+  const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
   const {
     entrada,
     loading,
-    datosBancarios,
     totalCalculado,
     cantNum,
-    comprobanteUri,
     setComprobanteUri,
     errorMsg,
     handleComprar,
   } = useCompra();
+
+  const { productora, cuentaBancaria } = useEvento(eventoId);
 
   if (loading || !entrada) {
     return (
@@ -52,7 +55,7 @@ export default function Compra() {
             right={RightQty}
           />
 
-          <CuentaBancaria datos={datosBancarios} />
+          <CuentaBancaria p={productora} c={cuentaBancaria} />
 
           <InputImageUpLoader
             label="Subí el comprobante de transferencia"
