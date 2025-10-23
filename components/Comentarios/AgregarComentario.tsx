@@ -24,7 +24,7 @@ export function AgregarComentario({
   const { showToast } = useToast();
 
   const [comentario, setComentario] = useState("");
-  const [calificacion, setCalificacion] = useState(0);
+  const [calificacion, setCalificacion] = useState(1);
   const [loading, setLoading] = useState(false);
   const [canSend, setCanSend] = useState(false);
 
@@ -39,6 +39,7 @@ export function AgregarComentario({
     } else {
       setCanSend(true);
     }
+    // eslint-disable-next-line
   }, [comentario, calificacion]);
 
   const handleEnviar = async () => {
@@ -60,7 +61,7 @@ export function AgregarComentario({
       setCanSend(false);
 
       if (onComentarioEnviado && nuevoComentario) {
-        onComentarioEnviado(nuevoComentario); // solo recarga lista
+        onComentarioEnviado(nuevoComentario);
       }
     } catch (err) {
       console.error("Error al enviar el comentario:", err);

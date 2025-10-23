@@ -9,14 +9,15 @@ import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
 import { ProvincePicker } from "@/components/Modal/ProvinciaPicker";
 import { useEventos } from "@/hooks/useEventos";
+import { useToast } from "@/hooks/useToast";
 
 export default function Index() {
   const router = useRouter();
+  const { showToast } = useToast();
   const {
     events,
     proximos,
     seguidos,
-    productoraSeguida,
     loadingUpcoming,
     error,
     search,
@@ -35,9 +36,13 @@ export default function Index() {
         await fetchUpcoming();
         await fetchProximos();
         await fetchSeguidos();
-      } catch (err) {}
+      } catch (err) {
+        console.log("Error obteniendo los eventos:", err);
+        showToast("error", "Error", "Error obteniendo eventos");
+      }
     };
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   return (

@@ -9,10 +9,11 @@ import { ComentarioDto } from "@/api/dto/comentario.dto";
 import React, { createContext, useState } from "react";
 
 interface ComentariosContextProps {
+  comentarios: ComentarioDto[];
   obtenerComentario: (
     comentarioId: number,
   ) => Promise<ComentarioDto | undefined>;
-  comentariosDeEvento: (eventoId: number) => Promise<ComentarioDto[]>;
+  cargarComentarios: (eventoId: number) => Promise<void>;
   comentar: (
     eventoId: number,
     data: { comentario: string; calificacion: number },
@@ -34,6 +35,7 @@ export const ComentariosContext = createContext<
 export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [comentarios, setComentarios] = useState<ComentarioDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +47,6 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await getComentario(comentarioId);
       return response;
     } catch (err: any) {
-      console.error("Error obteniendo el comentario:", err);
       setError("No se pudo obtener el comentario.");
       return undefined;
     } finally {
@@ -53,19 +54,16 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const comentariosDeEvento = async (
-    eventoId: number,
-  ): Promise<ComentarioDto[]> => {
+  const cargarComentarios = async (eventoId: number) => {
     setLoading(true);
     setError(null);
     try {
       const response = await getComentarios(eventoId);
-      return response || [];
+      setComentarios(response || []);
     } catch (err: any) {
-      console.error("Error obteniendo los comentarios del evento:", err);
-      if (err?.response?.status === 404) return [];
+      console.log("Error obteniendo comentarios del evento:", err);
       setError("No se pudieron obtener los comentarios del evento.");
-      return [];
+      setComentarios([]);
     } finally {
       setLoading(false);
     }
@@ -79,9 +77,10 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const response = await postComentario(eventoId, data);
+      if (response) setComentarios((prev) => [response, ...prev]);
       return response;
     } catch (err: any) {
-      console.error("Error subiendo comentario:", err);
+      console.log("Error subiendo un nuevo comentario:", err);
       setError("No se pudo subir el comentario.");
       return undefined;
     } finally {
@@ -97,9 +96,14 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const response = await patchComentario(comentarioId, data);
+      if (response) {
+        setComentarios((prev) =>
+          prev.map((c) => (c.id === comentarioId ? response : c)),
+        );
+      }
       return response;
     } catch (err: any) {
-      console.error("Error al editar el comentario:", err);
+      console.log("Error editando comentario:", err);
       setError("No se pudo editar el comentario.");
       return undefined;
     } finally {
@@ -112,9 +116,10 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       await deleteComentario(comentarioId);
+      setComentarios((prev) => prev.filter((c) => c.id !== comentarioId));
       return true;
     } catch (err: any) {
-      console.error("Error eliminando el comentario:", err);
+      console.log("Error eliminando comentario:", err);
       setError("No se pudo eliminar el comentario.");
       return false;
     } finally {
@@ -125,8 +130,9 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <ComentariosContext.Provider
       value={{
+        comentarios,
         obtenerComentario,
-        comentariosDeEvento,
+        cargarComentarios,
         comentar,
         editarComentario,
         eliminarComentario,

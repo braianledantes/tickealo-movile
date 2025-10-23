@@ -37,16 +37,14 @@ export function MiComentario({
 
   useEffect(() => {
     if (onEdit && inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [onEdit]);
 
   return (
     <Modal
       visible={modalVisible}
-      transparent={true}
+      transparent
       animationType="fade"
       onRequestClose={onClose}
     >
@@ -61,14 +59,13 @@ export function MiComentario({
             </View>
           )}
 
-          {/* Cabecera */}
           <View className="flex-row items-center justify-between mb-2">
             <UsuarioPerfil
               username={c.cliente.nombre}
               imagenPerfilUrl={c.cliente.imagenPerfilUrl}
               icono="w-14 h-14"
               className="p-0"
-              disabled={true}
+              disabled
             />
 
             <View className="ml-3 flex-1">
@@ -83,17 +80,14 @@ export function MiComentario({
               </Texto>
             </View>
 
-            {onClose && (
-              <IconButton
-                iconName="close"
-                size={24}
-                color="#999"
-                onPress={onClose}
-              />
-            )}
+            <IconButton
+              iconName="close"
+              size={24}
+              color="#999"
+              onPress={onClose}
+            />
           </View>
 
-          {/* Cuerpo */}
           {!onEdit ? (
             <>
               <Estrellas calificacion={c.calificacion} />
@@ -105,7 +99,7 @@ export function MiComentario({
             <>
               <Estrellas
                 calificacion={calificacion}
-                editable={true}
+                editable
                 onChange={setCalificacion}
                 starSize={20}
                 starSpacing={10}
@@ -122,14 +116,12 @@ export function MiComentario({
             </>
           )}
 
-          {/* Fecha */}
           <View>
             <Texto className="text-gray-400 text-xs mt-2">
               {fechaFormateada}
             </Texto>
           </View>
 
-          {/* Acciones */}
           {esMiComentario && (
             <View className="border-t border-white/20 flex-row justify-between mt-5 pt-2">
               <IconButton
@@ -140,49 +132,57 @@ export function MiComentario({
                 onPress={async () => {
                   if (!c.id) return;
                   await eliminarComentario(c.id);
+                  onClose();
+                  showToast(
+                    "success",
+                    "Listo!",
+                    "Comentario eliminado con éxito",
+                  );
                 }}
                 disabled={loading}
                 loading={loading}
               />
               {!onEdit ? (
-                <>
-                  <IconButton
-                    iconType="Feather"
-                    iconName="edit-2"
-                    size={24}
-                    color="#999"
-                    onPress={() => setOnEdit(true)}
-                    disabled={loadingEdit}
-                    loading={loadingEdit}
-                  />
-                </>
+                <IconButton
+                  iconType="Feather"
+                  iconName="edit-2"
+                  size={24}
+                  color="#999"
+                  onPress={() => setOnEdit(true)}
+                  disabled={loadingEdit}
+                  loading={loadingEdit}
+                />
               ) : (
-                <>
-                  <IconButton
-                    iconType="Feather"
-                    iconName="check"
-                    size={24}
-                    color="#4CAF50"
-                    onPress={async () => {
-                      if (!c.id) return;
-                      if (!comentarioEditado?.trim()) {
-                        return showToast(
-                          "error",
-                          "Error",
-                          "No debe enviar un comentario vacio",
-                        );
-                      }
-                      await editarComentario(c.id, {
-                        comentario: comentarioEditado.trim(),
-                        calificacion,
-                      });
-                      Keyboard.dismiss();
-                      setOnEdit(false);
-                    }}
-                    disabled={loadingEdit}
-                    loading={loadingEdit}
-                  />
-                </>
+                <IconButton
+                  iconType="Feather"
+                  iconName="check"
+                  size={24}
+                  color="#4CAF50"
+                  onPress={async () => {
+                    if (!c.id) return;
+                    if (!comentarioEditado?.trim()) {
+                      return showToast(
+                        "error",
+                        "Error",
+                        "No debe enviar un comentario vacío",
+                      );
+                    }
+                    await editarComentario(c.id, {
+                      comentario: comentarioEditado.trim(),
+                      calificacion,
+                    });
+                    Keyboard.dismiss();
+                    setOnEdit(false);
+                    onClose();
+                    showToast(
+                      "success",
+                      "Listo!",
+                      "Comentario modificado con éxito",
+                    );
+                  }}
+                  disabled={loadingEdit}
+                  loading={loadingEdit}
+                />
               )}
             </View>
           )}

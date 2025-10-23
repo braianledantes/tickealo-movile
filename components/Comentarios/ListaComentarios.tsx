@@ -12,12 +12,13 @@ import { Texto } from "../Texto";
 
 interface ListaComentariosProps {
   comentarios?: ComentarioDto[] | null;
+  loading?: boolean;
   productora?: ProductoraDto;
-  onComentarioEliminado?: (id: number) => void;
 }
 
 export function ListaComentarios({
-  comentarios = [],
+  comentarios,
+  loading,
   productora,
 }: ListaComentariosProps) {
   const { user } = useAuth();
@@ -26,6 +27,16 @@ export function ListaComentarios({
   const [esMio, setEsMio] = useState(false);
   const [comentarioSeleccionado, setComentarioSeleccionado] =
     useState<ComentarioDto | null>(null);
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center px-6 py-40">
+        <Texto className="text-gray-400 text-center text-lg">
+          Cargando comentarios...
+        </Texto>
+      </View>
+    );
+  }
 
   if (!comentarios?.length) {
     return (
@@ -54,7 +65,7 @@ export function ListaComentarios({
     const esMio = c.cliente.userId === user?.userId;
 
     return (
-      <Pressable onLongPress={() => abrirPreview(c, esMio)}>
+      <Pressable key={c.id} onLongPress={() => abrirPreview(c, esMio)}>
         <View
           className={`bg-[#0c0f2b] rounded-3xl mb-4 p-4`}
           style={{ marginLeft: indent * 16 }}

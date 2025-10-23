@@ -1,7 +1,7 @@
 import { PreviewComentarios } from "@/components/Comentarios/PreviewComentarios";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
+import { EventInfo } from "@/components/Eventos/EventInfo";
 import { EventTimer } from "@/components/Eventos/EventTimer";
-import { EventInfo } from "@/components/Eventos/InfoEvento";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
@@ -20,7 +20,7 @@ export default function InfoEvento() {
     loading,
     error,
   } = useEvento(eventoId);
-  console.log(evento);
+
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
@@ -91,7 +91,6 @@ export default function InfoEvento() {
         <EventTimer fechaFin={evento.inicioAt} />
       </ScrollView>
 
-      {/* Mostrar comentarios según la lógica del hook */}
       <PreviewComentarios
         comentarios={comentarios}
         evento={evento}

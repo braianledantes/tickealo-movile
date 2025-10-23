@@ -2,10 +2,9 @@ import { ComentarioDto } from "@/api/dto/comentario.dto";
 import { EventoDto } from "@/api/dto/evento.dto";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Texto } from "../Texto";
-import { ModalComentarios } from "./ModalComentarios";
 
 interface PreviewComentariosProps {
   comentarios?: ComentarioDto[] | null;
@@ -19,12 +18,10 @@ export const PreviewComentarios: React.FC<PreviewComentariosProps> = ({
   finalizo,
 }) => {
   const router = useRouter();
-  const [modalVisible, setModalVisible] = useState(false);
 
   if (!evento) return null;
 
   const safeComentarios = comentarios ?? [];
-  const total = safeComentarios.length;
 
   const uniqueUsuarios: ComentarioDto[] = [];
   const seenUserIds = new Set<number>();
@@ -44,55 +41,99 @@ export const PreviewComentarios: React.FC<PreviewComentariosProps> = ({
     });
   };
 
-  // Calculamos los comentarios restantes considerando usuarios repetidos
   const remaining = safeComentarios.length - uniqueUsuarios.length;
   const circleText = remaining > 0 ? `+${remaining}` : null;
 
   return (
-    <View className="absolute bottom-16 left-4 right-4 flex-row items-center justify-between z-50">
-      <TouchableOpacity
-        className="flex-row"
-        activeOpacity={0.8}
-        onPress={() => setModalVisible(true)}
-      >
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={goToComentarios}
+      style={styles.container}
+    >
+      <View style={styles.avatarsContainer}>
         {uniqueUsuarios.map((c, index) => (
           <Image
-            key={index}
+            key={c.cliente.userId}
             source={{ uri: c.cliente.imagenPerfilUrl ?? "" }}
-            className="w-16 h-16 rounded-full"
-            style={{
-              marginLeft: index === 0 ? 0 : -12,
-              zIndex: 10 - index,
-            }}
+            style={[
+              styles.avatar,
+              { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index },
+            ]}
           />
         ))}
 
         {circleText && (
           <View
-            className="w-16 h-16 rounded-full bg-[#03045E] flex justify-center items-center"
-            style={{ marginLeft: -12, zIndex: 0 }}
+            style={[
+              styles.avatar,
+              styles.moreCircle,
+              { marginLeft: -12, zIndex: 0 },
+            ]}
           >
             <Texto className="text-white font-bold text-sm tracking-wider">
               {circleText}
             </Texto>
           </View>
         )}
-      </TouchableOpacity>
+      </View>
 
       {!finalizo && (
-        <TouchableOpacity
-          onPress={goToComentarios}
-          className="w-16 h-16 rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-[8px] bg-[#03045E] justify-center items-center shadow-lg"
-        >
+        <View style={styles.addButton}>
           <Ionicons name="add" size={24} color="white" />
-        </TouchableOpacity>
+        </View>
       )}
-
-      <ModalComentarios
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        comentarios={safeComentarios}
-      />
-    </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    bottom: 50,
+    right: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#0b1030",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    // shadow iOS
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    // shadow Android
+    elevation: 8,
+  },
+  avatarsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#222",
+  },
+  moreCircle: {
+    backgroundColor: "#03045E",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#03045E",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 8,
+    // shadow iOS
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    // shadow Android
+    elevation: 6,
+  },
+});
