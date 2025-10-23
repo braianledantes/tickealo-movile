@@ -2,12 +2,13 @@ import { DatosPersonales } from "@/components/Form/DatosPersonales";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/useAuth";
-import { router } from "expo-router";
+import { useToast } from "@/hooks/useToast";
 import React, { useState } from "react";
 import { Alert, Platform, ScrollView, View } from "react-native";
 
 export default function EditProfile() {
   const { actualizarPerfilCliente, user } = useAuth();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleActualizarPerfil = async (data: any) => {
@@ -41,8 +42,7 @@ export default function EditProfile() {
       }
 
       await actualizarPerfilCliente(formData);
-      Alert.alert("Éxito", "Perfil actualizado correctamente");
-      router.replace("/"); // redirigir al home o perfil
+      showToast("success", "Listo!", "Perfil ctualizado correctamente");
     } catch (err: any) {
       console.error("Error al actualizar perfil:", err.response?.data || err);
       const backendMsg =
@@ -69,6 +69,7 @@ export default function EditProfile() {
             telefono: user?.telefono,
             imagenPerfilUrl: user?.imagenPerfilUrl,
           }}
+          loading={isLoading}
           format="edit"
         />
       </ScrollView>

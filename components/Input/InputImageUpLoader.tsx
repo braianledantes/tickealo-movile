@@ -1,7 +1,7 @@
-import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { IconButton } from "../Button/IconButton";
 import { Texto } from "../Texto";
 
 interface ImageUploaderInputProps {
@@ -66,17 +66,23 @@ export function InputImageUpLoader({
             <Texto style={styles.fileName}>{fileName}</Texto>
           </View>
           {!readOnly && (
-            <TouchableOpacity
-              onPress={handleRemove}
-              style={styles.removeButton}
-            >
-              <Feather name="trash-2" size={20} color="red" />
+            <TouchableOpacity style={styles.removeButton}>
+              <IconButton
+                iconName="close"
+                color="#ff4d4d"
+                onPress={handleRemove}
+              />
             </TouchableOpacity>
           )}
         </View>
       ) : (
-        <TouchableOpacity style={styles.placeholder} onPress={pickImage}>
-          <Feather name="camera" size={24} color="#888" />
+        <TouchableOpacity style={styles.placeholder}>
+          <IconButton
+            iconType="Feather"
+            iconName="camera"
+            color="#888"
+            onPress={pickImage}
+          />
           <Texto style={styles.placeholderText}>{placeholder}</Texto>
         </TouchableOpacity>
       )}
@@ -103,12 +109,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#555",
-    borderRadius: 8,
-    padding: 8,
+    borderColor: "#1E40AF",
+    borderTopEndRadius: 999,
+    borderBottomEndRadius: 999,
+    padding: 10,
     backgroundColor: "#080C22",
   },
-  image: { width: 50, height: 50, borderRadius: 6 },
+  image: { width: 50, height: 50, borderRadius: 0 },
   info: { flex: 1, marginLeft: 8 },
   fileName: { color: "#fff", fontSize: 14 },
   removeButton: { marginLeft: 8 },

@@ -2,9 +2,10 @@ import { Button } from "@/components/Button/Button";
 import { Input } from "@/components/Input/Input";
 import { InputDisplay } from "@/components/Input/InputDisplay";
 import { Texto } from "@/components/Texto";
+import { useToast } from "@/hooks/useToast";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Alert, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 export function ClavePersonal({
   onRegister,
@@ -21,10 +22,11 @@ export function ClavePersonal({
 }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { showToast } = useToast();
 
   const handleSubmit = () => {
     if (!password || !confirmPassword || password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden.");
+      showToast("error", "Error", "Las contraseñas no coinciden.");
       return;
     }
     onRegister({ password });

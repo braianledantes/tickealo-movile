@@ -12,6 +12,7 @@ type EntradaCardProps = {
   priceValueOverride?: number;
   priceSuffixText?: string;
   disabled?: boolean;
+  fechaFin?: string;
 };
 
 export const EntradaCard: React.FC<EntradaCardProps> = ({
@@ -22,11 +23,17 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
   priceValueOverride,
   priceSuffixText,
   disabled = false,
+  fechaFin,
 }) => {
   const tipoColor = tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
 
+  // ✅ Determinar si la entrada ya venció
+  const finalizo =
+    disabled ||
+    (fechaFin ? new Date(fechaFin).getTime() < new Date().getTime() : false);
+
   const Content = (
-    <View style={stylesDynamic(disabled)}>
+    <View style={stylesDynamic(finalizo)}>
       <LinearGradient
         colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
         start={{ x: 0.5, y: 0 }}
@@ -71,12 +78,12 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
         {right ?? <Ionicons name="add" size={24} color="#fff" />}
       </View>
 
-      {/* Overlay si está deshabilitado */}
-      {disabled && <View style={styles.disabledOverlay} />}
+      {/* Overlay si está deshabilitado o vencido */}
+      {finalizo && <View style={styles.disabledOverlay}></View>}
     </View>
   );
 
-  return onPress && !disabled ? (
+  return onPress && !finalizo ? (
     <TouchableOpacity
       className="my-2 overflow-hidden"
       activeOpacity={0.9}
@@ -88,6 +95,8 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
     <View className="my-2 overflow-hidden">{Content}</View>
   );
 };
+
+// ✅ Estilos dinámicos
 const stylesDynamic = (disabled: boolean) =>
   StyleSheet.create({
     card: {
@@ -119,6 +128,8 @@ const styles = StyleSheet.create({
   },
   disabledOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.55)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

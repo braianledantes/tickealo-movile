@@ -16,12 +16,7 @@ type Props = {
 
 export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
   const { showToast } = useToast();
-  const {
-    seguir,
-    dejarSeguir,
-    loading: loadingSeguimiento,
-    error: errorSiguiendo,
-  } = useSeguidores();
+  const { seguir, dejarSeguir, loading: loadingSeguimiento } = useSeguidores();
   const {
     agregarFavorito,
     eliminarFavorito,
@@ -29,8 +24,8 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
     error: errorFavorito,
   } = useFavorito();
 
-  const [estaSiguiendo, setEstaSiguiendo] = useState<boolean>(false);
-  const [esFavorito, setFavorito] = useState<boolean>(false);
+  const [estaSiguiendo, setEstaSiguiendo] = useState<boolean | null>(null);
+  const [esFavorito, setFavorito] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (evento) {
@@ -43,17 +38,6 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
 
   const handleErrorToast = (error: string | null) => {
     if (error) showToast("error", "Error", error);
-  };
-
-  const toggleSeguimiento = async () => {
-    if (!productoraId) return;
-    const action = estaSiguiendo ? dejarSeguir : seguir;
-    const success = await action(productoraId);
-    if (success) {
-      setEstaSiguiendo(!estaSiguiendo);
-    } else {
-      handleErrorToast(errorSiguiendo);
-    }
   };
 
   const toggleFavorito = async () => {
@@ -80,20 +64,28 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
       {estaSiguiendo ? (
         <SecondaryButton
           title="Siguiendo"
-          onPress={toggleSeguimiento}
+          onPress={async () => {
+            if (!productoraId) return;
+            await dejarSeguir(productoraId);
+            setEstaSiguiendo(false);
+          }}
           className="flex-1"
           disabled={loadingSeguimiento}
         />
       ) : (
         <Button
           title="Seguir Productora"
-          onPress={toggleSeguimiento}
+          onPress={async () => {
+            if (!productoraId) return;
+            await seguir(productoraId);
+            setEstaSiguiendo(true);
+          }}
           className="flex-1"
           disabled={loadingSeguimiento}
         />
       )}
 
-      {/* Botón Favoritos */}
+      {/* Botón Favorito */}
       <IconButton
         iconName={esFavorito ? "heart" : "heart-outline"}
         size={50}

@@ -107,14 +107,12 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         const proximosSeguidos = eventos.filter(
           (e) => new Date(e.inicioAt) >= new Date(),
         );
-
         const productorasSeguidas = Array.from(
           new Map(
             eventos.map((e) => [e.productora.userId, e.productora]),
           ).values(),
         );
         setProductoraSeguida(productorasSeguidas);
-
         setSeguidos(proximosSeguidos);
       } else {
         setSeguidos([]);

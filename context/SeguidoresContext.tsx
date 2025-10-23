@@ -1,6 +1,8 @@
 import { Me } from "@/api/dto/me.dto";
-import React, { createContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+
 import { dejarSeguirProductora, seguirProductora } from "../api/seguidores";
+import { EventosContext } from "./EventosContext";
 
 interface SeguidoresContextProps {
   seguir: (idProductora: number) => Promise<Me | undefined>;
@@ -19,11 +21,14 @@ export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const eventosContext = useContext(EventosContext);
+
   const seguir = async (idProductora: number) => {
     setLoading(true);
     setError(null);
     try {
       const response = await seguirProductora(idProductora);
+      if (eventosContext) await eventosContext.fetchSeguidos();
       return response;
     } catch (err) {
       console.error("Error siguiendo productora:", err);
@@ -38,6 +43,7 @@ export const SeguidoresProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const response = await dejarSeguirProductora(idProductora);
+      if (eventosContext) await eventosContext.fetchSeguidos();
       return response;
     } catch (err) {
       console.error("Error dejando de seguir productora:", err);

@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
+import { useToast } from "@/hooks/useToast";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
@@ -9,10 +10,12 @@ import { Image, TouchableOpacity, View } from "react-native";
 export function DatosPersonales({
   onNext,
   initialValues = {},
+  loading,
   format = "default",
 }: {
   onNext: (data: any) => void;
   initialValues?: any;
+  loading?: boolean;
   format?: "default" | "edit";
 }) {
   const [nombre, setNombre] = useState(initialValues.nombre || "");
@@ -20,6 +23,7 @@ export function DatosPersonales({
   const [telefono, setTelefono] = useState(initialValues.telefono || "");
   const [email, setEmail] = useState(initialValues.email || "");
   const [username, setUsername] = useState(initialValues.username || "");
+  const { showToast } = useToast();
   const [image, setImage] = useState<string | null>(
     initialValues.imagenPerfilUrl || null,
   );
@@ -38,7 +42,10 @@ export function DatosPersonales({
   };
 
   const handleNext = () => {
-    if (!nombre || !apellido || !telefono || !email || !username) return;
+    if (!nombre || !apellido || !telefono || !email || !username) {
+      showToast("error", "Error", "Las contraseñas no coinciden.");
+      return;
+    }
     onNext({
       nombre,
       apellido,
@@ -99,9 +106,9 @@ export function DatosPersonales({
 
       {format === "edit" ? (
         <Button
-          title="Actualizar Cambios"
           onPress={handleNext}
-          disabled={!canProceed}
+          disabled={loading}
+          title={loading ? "Actualizando..." : "Actualizar Cambios"}
           className="mt-4 w-full"
         />
       ) : (
