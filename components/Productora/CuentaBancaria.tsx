@@ -45,9 +45,11 @@ export function CuentaBancaria({
           <BankRow label="CUIT" value={String(p.cuit)} />
         </View>
       </View>
-      <BankRow label="CBU" value={c.cbu} />
-      <BankRow label="Alias" value={c.alias} />
-      <BankRow label="Banco" value={c.nombreBanco} />
+      <View className="gap-2">
+        <BankRow label="CBU" value={c.cbu} />
+        <BankRow label="Alias" value={c.alias} />
+        <BankRow label="Banco" value={c.nombreBanco} />
+      </View>
 
       {c.instrucciones && (
         <View className="mt-2">

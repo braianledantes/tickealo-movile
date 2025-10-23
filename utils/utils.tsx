@@ -2,29 +2,33 @@ import { Copy } from "@/components/Input/Icons";
 import { Texto } from "@/components/Texto";
 import * as ClipBoard from "expo-clipboard";
 import React, { useState } from "react";
-import { Alert, Pressable } from "react-native";
+import { Pressable } from "react-native";
 
 // Fila individual que se puede copiar
 export function BankRow({ label, value }: { label: string; value?: string }) {
+  const [copied, setCopied] = useState(false);
   if (!value) return null;
 
   const copy = async () => {
     await ClipBoard.setStringAsync(value);
-    Alert.alert("Copiado", `${label} copiado al portapapeles`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <Pressable onLongPress={copy} className="">
       <Texto semiBold className="text-slate-300 text-base">
         {label}:{" "}
-        <Texto bold className="text-white">
-          {value}
+        <Texto bold className="text-white mr-5">
+          {value}{" "}
+          {copied && <Texto className="text-[#999] text-sm">Copiado</Texto>}
         </Texto>
       </Texto>
     </Pressable>
   );
 }
 
+//Copia todo un bloque de texto
 export function CopyAll({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 

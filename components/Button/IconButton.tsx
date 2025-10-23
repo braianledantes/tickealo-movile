@@ -1,5 +1,6 @@
 import { renderIcon } from "@/components/Input/Icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
+
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 
@@ -17,7 +18,7 @@ export type IconButtonProps = {
 
 export const IconButton: React.FC<IconButtonProps> = ({
   iconName,
-  iconType,
+  iconType = "Ionicons",
   size = 24,
   color = "#1E40AF",
   colorDisabled = "#0F1D4C",
@@ -26,7 +27,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   onPress,
   style,
 }) => {
-  const finalColor = disabled ? colorDisabled : loading ? color : color;
+  const finalColor = disabled ? colorDisabled : color;
 
   return (
     <Pressable
@@ -36,11 +37,15 @@ export const IconButton: React.FC<IconButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator size={size} color={colorDisabled} />
-      ) : iconType ? (
-        renderIcon(iconType, iconName, { color: finalColor, fontSize: size })
-      ) : iconName ? (
+      ) : iconType === "Entypo" ? (
+        <Entypo name={iconName as any} size={size} color={finalColor} />
+      ) : iconType === "Ionicons" ? (
         <Ionicons name={iconName as any} size={size} color={finalColor} />
-      ) : null}
+      ) : iconType === "Feather" ? (
+        <Feather name={iconName as any} size={size} color={finalColor} />
+      ) : (
+        renderIcon(iconType, iconName, { color: finalColor, fontSize: size })
+      )}
     </Pressable>
   );
 };

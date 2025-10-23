@@ -29,8 +29,9 @@ export const postComentario = async (
 //Editar comentario
 export const patchComentario = async (
   comentarioId: number,
+  data: { comentario: string; calificacion: number },
 ): Promise<ComentarioDto> => {
-  const response = await api.patch(`/comentarios/${comentarioId}`);
+  const response = await api.patch(`/comentarios/${comentarioId}`, data);
   return response.data;
 };
 

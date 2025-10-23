@@ -19,9 +19,11 @@ interface ComentariosContextProps {
   ) => Promise<ComentarioDto | undefined>;
   editarComentario: (
     comentarioId: number,
+    data: { comentario: string; calificacion: number },
   ) => Promise<ComentarioDto | undefined>;
   eliminarComentario: (comentarioId: number) => Promise<boolean>;
   loading: boolean;
+  loadingEdit: boolean;
   error: string | null;
 }
 
@@ -33,6 +35,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const obtenerComentario = async (comentarioId: number) => {
@@ -86,18 +89,21 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const editarComentario = async (comentarioId: number) => {
-    setLoading(true);
+  const editarComentario = async (
+    comentarioId: number,
+    data: { comentario: string; calificacion: number },
+  ) => {
+    setLoadingEdit(true);
     setError(null);
     try {
-      const response = await patchComentario(comentarioId);
+      const response = await patchComentario(comentarioId, data);
       return response;
     } catch (err: any) {
       console.error("Error al editar el comentario:", err);
       setError("No se pudo editar el comentario.");
       return undefined;
     } finally {
-      setLoading(false);
+      setLoadingEdit(false);
     }
   };
 
@@ -125,6 +131,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
         editarComentario,
         eliminarComentario,
         loading,
+        loadingEdit,
         error,
       }}
     >

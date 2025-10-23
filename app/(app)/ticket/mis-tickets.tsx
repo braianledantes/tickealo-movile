@@ -75,7 +75,7 @@ export default function MisEntradas() {
           compras={compras}
           onPressCompra={(compra) =>
             router.push({
-              pathname: "/(app)/entradas/mi-entrada",
+              pathname: "/(app)/ticket/mi-ticket",
               params: { compraId: compra.id },
             })
           }

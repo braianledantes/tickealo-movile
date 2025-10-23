@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#05081b",
   },
   textWhite: { color: "#fff" },
-  content: { padding: 16 },
+  content: { padding: 16, paddingBottom: 50 },
   bannerContainer: {
     width: "100%",
     aspectRatio: 11 / 4,

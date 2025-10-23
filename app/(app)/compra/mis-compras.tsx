@@ -20,7 +20,6 @@ export default function MisEntradas() {
       if (pagina === 1) setLoading(true);
 
       const data = await misCompras(pagina, 50);
-      console.log(data);
       const nuevasCompras = data?.data ?? [];
 
       setCompras((prev) =>
