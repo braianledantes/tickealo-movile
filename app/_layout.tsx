@@ -1,34 +1,14 @@
-import { Logo } from "@/components/Layout/Logo";
 import { Toast } from "@/components/Toast";
-import { ComentariosProvider } from "@/context/ComentariosContext";
-import { ComprasProvider } from "@/context/ComprasContext";
-import { EventosProvider } from "@/context/EventosContext";
-import { FavoritoProvider } from "@/context/FavoritosContext";
-import { SeguidoresProvider } from "@/context/SeguidoresContext";
-import { ToastProvider } from "@/context/ToastContext";
-import { ValidadorProvider } from "@/context/ValidadorContext";
-import { useAuth } from "@/hooks/useAuth";
-import {
-  Poppins_400Regular,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-  useFonts,
-} from "@expo-google-fonts/poppins";
-import { Stack } from "expo-router";
+import { appFonts } from "@/config/fonts";
+import { RootNavigator } from "@/navigation/RootNavigator";
+import { AppProviders } from "@/providers/AppProviders";
+import { SplashScreenController } from "@/screens/splash";
+import { useFonts } from "expo-font";
 import { Text, View } from "react-native";
-import { AuthProvider } from "../context/AuthContext";
 import "../global.css";
-import { SplashScreenController } from "../screens/splash";
 
 export default function Root() {
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-    Poppins_600SemiBold,
-    Poppins_500Medium,
-  });
-
+  const [fontsLoaded] = useFonts(appFonts);
   if (!fontsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -44,61 +24,10 @@ export default function Root() {
   };
 
   return (
-    <ToastProvider>
-      <AuthProvider>
-        <EventosProvider>
-          <SeguidoresProvider>
-            <ComprasProvider>
-              <ValidadorProvider>
-                <ComentariosProvider>
-                  <FavoritoProvider>
-                    <Toast />
-                    <SplashScreenController />
-                    <RootNavigator />
-                  </FavoritoProvider>
-                </ComentariosProvider>
-              </ValidadorProvider>
-            </ComprasProvider>
-          </SeguidoresProvider>
-        </EventosProvider>
-      </AuthProvider>
-    </ToastProvider>
-  );
-}
-
-function RootNavigator() {
-  const { accessToken } = useAuth();
-
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!accessToken}>
-        <Stack.Screen name="(app)" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={!accessToken}>
-        <Stack.Screen
-          name="login"
-          options={{
-            headerShown: true,
-            title: "",
-            headerTintColor: "#1E90FF",
-            headerStyle: { backgroundColor: "#05081b" },
-            headerShadowVisible: false,
-            headerTitle: () => <Logo />,
-          }}
-        />
-        <Stack.Screen
-          name="register-cliente"
-          options={{
-            headerShown: true,
-            title: "",
-            headerTintColor: "#1E90FF",
-            headerStyle: { backgroundColor: "#05081b" },
-            headerShadowVisible: false,
-            headerTitle: () => <Logo />,
-          }}
-        />
-      </Stack.Protected>
-    </Stack>
+    <AppProviders>
+      <Toast />
+      <SplashScreenController />
+      <RootNavigator />
+    </AppProviders>
   );
 }
