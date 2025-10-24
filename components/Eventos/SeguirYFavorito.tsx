@@ -1,11 +1,9 @@
 import { EventoDto } from "@/api/dto/evento.dto";
-import { Button } from "@/components/Button/Button";
-import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { useFavorito } from "@/hooks/useFavoritos";
-import { useSeguidores } from "@/hooks/useSeguidores";
 import { useToast } from "@/hooks/useToast";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
+import { FollowButton } from "../Button/FollowButton";
 import { IconButton } from "../Button/IconButton";
 
 type Props = {
@@ -16,7 +14,6 @@ type Props = {
 
 export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
   const { showToast } = useToast();
-  const { seguir, dejarSeguir, loading: loadingSeguimiento } = useSeguidores();
   const {
     agregarFavorito,
     eliminarFavorito,
@@ -24,12 +21,10 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
     error: errorFavorito,
   } = useFavorito();
 
-  const [estaSiguiendo, setEstaSiguiendo] = useState<boolean | null>(null);
   const [esFavorito, setFavorito] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (evento) {
-      setEstaSiguiendo(!!evento.productora?.isSeguido);
       setFavorito(!!evento.esFavorito);
     }
   }, [evento]);
@@ -60,30 +55,7 @@ export function SeguiryFavorito({ evento, productoraId, view = true }: Props) {
 
   return (
     <View className="flex-row items-center justify-between mt-3 mx-4 gap-2 min-h-[56px]">
-      {/* Botón Seguir / Siguiendo */}
-      {estaSiguiendo ? (
-        <SecondaryButton
-          title="Siguiendo"
-          onPress={async () => {
-            if (!productoraId) return;
-            await dejarSeguir(productoraId);
-            setEstaSiguiendo(false);
-          }}
-          className="flex-1"
-          disabled={loadingSeguimiento}
-        />
-      ) : (
-        <Button
-          title="Seguir Productora"
-          onPress={async () => {
-            if (!productoraId) return;
-            await seguir(productoraId);
-            setEstaSiguiendo(true);
-          }}
-          className="flex-1"
-          disabled={loadingSeguimiento}
-        />
-      )}
+      <FollowButton evento={evento} productoraId={productoraId} />
 
       {/* Botón Favorito */}
       <IconButton

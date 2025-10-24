@@ -80,3 +80,11 @@ export function formatDate(timestamp: string | number) {
     })
   );
 }
+
+//Obtener estadisticas de cada comentario
+export function porcentaje(valorInicial: number, total: number) {
+  const porcentajeFinal =
+    total > 0 ? Math.round((valorInicial / total) * 100) : 0;
+
+  return porcentajeFinal;
+}

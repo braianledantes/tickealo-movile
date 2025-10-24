@@ -6,12 +6,17 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../../assets/images/logotipo.png";
 
-export const HeaderBack: React.FC = () => {
+export const HeaderBack: React.FC<{ onHeight?: (h: number) => void }> = ({
+  onHeight,
+}) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View
+      style={[styles.container, { paddingTop: insets.top }]}
+      onLayout={(e) => onHeight?.(e.nativeEvent.layout.height)}
+    >
       {/* Flecha hacia atrás */}
       <TouchableOpacity
         onPress={() => {

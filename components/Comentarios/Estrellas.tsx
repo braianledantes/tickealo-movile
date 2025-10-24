@@ -1,14 +1,14 @@
-import { Rating, RatingOut } from "@/components/Input/Icons";
+import { Rating, RatingHalf, RatingOut } from "@/components/Input/Icons";
 import React, { useState } from "react";
 import { TouchableOpacity, View, ViewStyle } from "react-native";
 
 interface EstrellasProps {
   calificacion: number;
   max?: number;
-  editable?: boolean; // si es editable
-  onChange?: (valor: number) => void; // callback al seleccionar
-  starSize?: number; // tamaño de la estrella
-  starSpacing?: number; // espacio entre estrellas
+  editable?: boolean;
+  onChange?: (valor: number) => void;
+  starSize?: number;
+  starSpacing?: number;
 }
 
 export const Estrellas: React.FC<EstrellasProps> = ({
@@ -32,8 +32,18 @@ export const Estrellas: React.FC<EstrellasProps> = ({
   return (
     <View style={{ flexDirection: "row", marginTop: 8 }}>
       {Array.from({ length: max }, (_, i) => {
-        const filled = i < valor;
-        const Star = filled ? Rating : RatingOut;
+        let Star;
+
+        if (i + 1 <= Math.floor(valor)) {
+          // Estrella llena
+          Star = Rating;
+        } else if (i < valor && valor % 1 !== 0) {
+          // Estrella mitad
+          Star = RatingHalf;
+        } else {
+          // Estrella vacía
+          Star = RatingOut;
+        }
 
         const starElement = (
           <Star style={{ fontSize: starSize, ...starStyle }} />

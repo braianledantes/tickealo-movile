@@ -65,3 +65,14 @@ export interface User {
   email: string;
   username: string;
 }
+
+//Estadisticas de un evento
+export interface EstadisticasDto {
+  cantCinco: number;
+  cantCuatro: number;
+  cantDos: number;
+  cantTres: number;
+  cantUno: number;
+  promedio: number;
+  total: number;
+}

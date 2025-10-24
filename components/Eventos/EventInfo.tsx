@@ -10,9 +10,10 @@ import { SeguiryFavorito } from "./SeguirYFavorito";
 type Props = {
   evento: EventoDto;
   productoraId?: number | null;
+  onSelect: () => void;
 };
 
-export function EventInfo({ evento, productoraId }: Props) {
+export function EventInfo({ evento, productoraId, onSelect }: Props) {
   const banner = evento.bannerUrl?.trim()
     ? { uri: evento.bannerUrl }
     : defaultEvent;
@@ -53,9 +54,11 @@ export function EventInfo({ evento, productoraId }: Props) {
         <Texto className="text-[#ddd] text-md leading-5">
           {evento.descripcion}
         </Texto>
-        <Texto semiBold className="text-[#20347F] text-lg mt-2">
-          Organizado por {evento.productora.nombre}
-        </Texto>
+        <TouchableOpacity onPress={onSelect}>
+          <Texto semiBold className="text-[#20347F] text-lg mt-2">
+            Organizado por {evento.productora.nombre}
+          </Texto>
+        </TouchableOpacity>
       </View>
 
       {/* Fecha */}

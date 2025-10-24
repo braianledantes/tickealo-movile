@@ -6,7 +6,7 @@ import { IconButton } from "../Button/IconButton";
 import { Fijar } from "../Input/Icons";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
 import { Texto } from "../Texto";
-import { Estrellas } from "./Rating";
+import { Estrellas } from "./Estrellas";
 
 interface PreviewComentarioProps {
   comentarioSeleccionado: any;
