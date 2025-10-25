@@ -1,6 +1,6 @@
 import { ComentarioDto } from "@/api/dto/comentario.dto";
 import { ProductoraDto } from "@/api/dto/evento.dto";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { IconButton } from "../Button/IconButton";

@@ -2,7 +2,7 @@ import { EventList } from "@/components/Eventos/EventList";
 import { Header } from "@/components/Layout/Header";
 import { ProductoraPerfil } from "@/components/Productora/ProductoraPerfil";
 import { Texto } from "@/components/Texto";
-import { useValidador } from "@/hooks/useValidador";
+import { useValidador } from "@/hooks/context/useValidador";
 import { useRouter } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

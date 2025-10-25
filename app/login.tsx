@@ -3,7 +3,7 @@ import { LinkButton } from "@/components/Button/LinkButton";
 import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";

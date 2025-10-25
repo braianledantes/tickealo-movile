@@ -8,8 +8,8 @@ import { EventSection } from "@/components/Eventos/EventosProximos";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
 import { ProvincePicker } from "@/components/Modal/ProvinciaPicker";
-import { useEventos } from "@/hooks/useEventos";
-import { useToast } from "@/hooks/useToast";
+import { useEventos } from "@/hooks/context/useEventos";
+import { useToast } from "@/hooks/context/useToast";
 
 export default function Index() {
   const router = useRouter();

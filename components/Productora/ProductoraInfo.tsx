@@ -1,5 +1,5 @@
 import { EventoDto } from "@/api/dto/evento.dto";
-import { useEventos } from "@/hooks/useEventos";
+import { useEventos } from "@/hooks/context/useEventos";
 import { LinearGradient } from "expo-linear-gradient"; // ✅ Importar
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";

@@ -1,8 +1,8 @@
 import { DatosPersonales } from "@/components/Form/DatosPersonales";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/useToast";
+import { useAuth } from "@/hooks/context/useAuth";
+import { useToast } from "@/hooks/context/useToast";
 import React, { useState } from "react";
 import { Alert, Platform, ScrollView, View } from "react-native";
 

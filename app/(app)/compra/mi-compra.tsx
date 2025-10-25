@@ -6,7 +6,7 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { ComprobanteView } from "@/components/Modal/Comprobante";
 import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { Texto } from "@/components/Texto";
-import { useCompras } from "@/hooks/useCompras";
+import { useCompras } from "@/hooks/context/useCompras";
 import { useEvento } from "@/hooks/useEvento";
 import { formatARS, formatDate } from "@/utils/utils";
 import { LinearGradient } from "expo-linear-gradient";

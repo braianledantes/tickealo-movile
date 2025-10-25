@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 

@@ -1,6 +1,6 @@
 import { EventoDto } from "@/api/dto/evento.dto";
-import { useFavorito } from "@/hooks/useFavoritos";
-import { useToast } from "@/hooks/useToast";
+import { useFavorito } from "@/hooks/context/useFavoritos";
+import { useToast } from "@/hooks/context/useToast";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { FollowButton } from "../Button/FollowButton";

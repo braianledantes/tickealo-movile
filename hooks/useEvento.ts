@@ -1,6 +1,6 @@
 import { EstadisticasDto, EventoDto } from "@/api/dto/evento.dto";
 import { getEstadisticas, getEventoById } from "@/api/events";
-import { useComentarios } from "@/hooks/useComentarios";
+import { useComentarios } from "@/hooks/context/useComentarios";
 import { useEffect, useState } from "react";
 
 export const useEvento = (id?: string | number) => {

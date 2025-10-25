@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SeguidoresContext } from "../context/SeguidoresContext";
+import { SeguidoresContext } from "../../context/SeguidoresContext";
 
 export const useSeguidores = () => {
   const context = useContext(SeguidoresContext);

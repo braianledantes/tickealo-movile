@@ -1,6 +1,6 @@
 // hooks/useTicketsEvento.ts
 import type { TicketDto } from "@/api/dto/ticket-validador";
-import { useValidador } from "@/hooks/useValidador";
+import { useValidador } from "@/hooks/context/useValidador";
 import { useEffect, useState } from "react";
 
 export const useTicketValidador = (eventoId?: string | number) => {

@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, Platform } from "react-native";

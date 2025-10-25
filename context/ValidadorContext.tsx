@@ -2,7 +2,7 @@ import {
   EventoValidadorDto,
   ProductoraValidadorDto,
 } from "@/api/dto/eventos-validador.dto";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import React, {
   createContext,
   useCallback,

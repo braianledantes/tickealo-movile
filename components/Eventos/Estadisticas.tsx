@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function Estadisticas({ estadisticas }: Props) {
-  if (!estadisticas) return null;
+  if (!estadisticas?.total) return null;
 
   const estrellas = [
     { label: "Inolvidable", count: estadisticas.cantCinco },
@@ -64,6 +64,7 @@ export function Estadisticas({ estadisticas }: Props) {
 
 const styles = StyleSheet.create({
   card: {
+    marginTop: 20,
     margin: 20,
   },
   row: {

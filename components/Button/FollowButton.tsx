@@ -1,7 +1,7 @@
 import { EventoDto } from "@/api/dto/evento.dto";
 import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
-import { useSeguidores } from "@/hooks/useSeguidores";
+import { useSeguidores } from "@/hooks/context/useSeguidores";
 import { useEffect, useState } from "react";
 
 type Props = {

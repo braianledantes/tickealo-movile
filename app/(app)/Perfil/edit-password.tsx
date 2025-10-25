@@ -1,7 +1,7 @@
 import { ClavePersonal } from "@/components/Form/ClavePersonal";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import { router } from "expo-router";
 import React from "react";
 import { ScrollView, View } from "react-native";

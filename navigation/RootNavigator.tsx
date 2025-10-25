@@ -1,5 +1,5 @@
 import { Logo } from "@/components/Layout/Logo";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import { Stack } from "expo-router";
 
 export function RootNavigator() {

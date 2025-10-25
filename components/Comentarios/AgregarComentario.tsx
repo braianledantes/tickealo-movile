@@ -1,7 +1,7 @@
 import { ComentarioDto } from "@/api/dto/comentario.dto";
-import { useAuth } from "@/hooks/useAuth";
-import { useComentarios } from "@/hooks/useComentarios";
-import { useToast } from "@/hooks/useToast";
+import { useAuth } from "@/hooks/context/useAuth";
+import { useComentarios } from "@/hooks/context/useComentarios";
+import { useToast } from "@/hooks/context/useToast";
 import { validarComentario } from "@/utils/validations/comentarioValidation";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";

@@ -2,7 +2,7 @@ import { CompraDto } from "@/api/dto/compras.dto";
 import { ComprasFiltro } from "@/components/Compras/ComprasFiltro";
 import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
-import { useCompras } from "@/hooks/useCompras";
+import { useCompras } from "@/hooks/context/useCompras";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";

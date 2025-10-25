@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks/context/useToast";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
