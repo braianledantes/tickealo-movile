@@ -1,12 +1,15 @@
-import { EventoDto } from "@/api/dto/evento.dto";
-import { getEventoById } from "@/api/events";
-import { useComentarios } from "@/hooks/useComentarios";
-import { useEffect, useMemo, useState } from "react";
+import { EstadisticasDto, EventoDto } from "@/api/dto/evento.dto";
+import { getEstadisticas, getEventoById } from "@/api/events";
+import { useComentarios } from "@/hooks/context/useComentarios";
+import { useEffect, useState } from "react";
 
 export const useEvento = (id?: string | number) => {
   const [evento, setEvento] = useState<EventoDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [estadisticas, setEstadisticas] = useState<EstadisticasDto | null>(
+    null,
+  );
 
   const eventoId = Number(id);
   const { comentarios, cargarComentarios } = useComentarios();
@@ -25,6 +28,8 @@ export const useEvento = (id?: string | number) => {
         if (!cancelled) setEvento(evt);
 
         await cargarComentarios(eventoId);
+        const estadisticas = await getEstadisticas(eventoId);
+        setEstadisticas(estadisticas);
       } catch (err) {
         console.error("No se pudo cargar el evento.", err);
         if (!cancelled) setError("No se pudo cargar el evento.");
@@ -41,20 +46,13 @@ export const useEvento = (id?: string | number) => {
     // eslint-disable-next-line
   }, [eventoId]);
 
-  const mostrarComentarios = useMemo(() => {
-    if (!evento) return false;
-    const ahora = new Date();
-    const finEvento = new Date(evento.finAt);
-    return ahora >= finEvento;
-  }, [evento]);
-
   const productora = evento?.productora;
   const cuentaBancaria = evento?.cuentaBancaria;
 
   return {
     evento,
     comentarios,
-    mostrarComentarios,
+    estadisticas,
     loading,
     error,
     productora,

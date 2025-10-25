@@ -1,6 +1,6 @@
 import { EventoDto } from "@/api/dto/evento.dto";
-import { useCompras } from "@/hooks/useCompras";
-import { useToast } from "@/hooks/useToast";
+import { useCompras } from "@/hooks/context/useCompras";
+import { useToast } from "@/hooks/context/useToast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { Platform } from "react-native";

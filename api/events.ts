@@ -1,5 +1,5 @@
 import api from "./axiosConfig";
-import { EventoDto } from "./dto/evento.dto";
+import { EstadisticasDto, EventoDto } from "./dto/evento.dto";
 
 export const fetchUpcomingEvents = async (): Promise<EventoDto[]> => {
   const today = new Date().toISOString().split("T")[0]; // "YYYY-MM-DD"
@@ -40,5 +40,13 @@ export const getEventosById = async (
   idProductora: number,
 ): Promise<EventoDto[]> => {
   const response = await api.get(`/productora/${idProductora}/eventos`);
+  return response.data;
+};
+
+//Obtener estadisticas de un evento
+export const getEstadisticas = async (
+  eventoId: number,
+): Promise<EstadisticasDto> => {
+  const response = await api.get(`/eventos/${eventoId}/calificaciones`);
   return response.data;
 };

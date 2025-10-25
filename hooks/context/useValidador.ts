@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ValidadorContext } from "../context/ValidadorContext";
+import { ValidadorContext } from "../../context/ValidadorContext";
 
 export const useValidador = () => {
   const context = useContext(ValidadorContext);

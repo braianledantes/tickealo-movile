@@ -1,12 +1,12 @@
-import { useComentarios } from "@/hooks/useComentarios";
-import { useToast } from "@/hooks/useToast";
+import { useComentarios } from "@/hooks/context/useComentarios";
+import { useToast } from "@/hooks/context/useToast";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, Modal, TextInput, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
 import { Fijar } from "../Input/Icons";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
 import { Texto } from "../Texto";
-import { Estrellas } from "./Rating";
+import { Estrellas } from "./Estrellas";
 
 interface PreviewComentarioProps {
   comentarioSeleccionado: any;

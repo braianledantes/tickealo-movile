@@ -1,14 +1,14 @@
 import { ComentarioDto } from "@/api/dto/comentario.dto";
-import { useAuth } from "@/hooks/useAuth";
-import { useComentarios } from "@/hooks/useComentarios";
-import { useToast } from "@/hooks/useToast";
+import { useAuth } from "@/hooks/context/useAuth";
+import { useComentarios } from "@/hooks/context/useComentarios";
+import { useToast } from "@/hooks/context/useToast";
 import { validarComentario } from "@/utils/validations/comentarioValidation";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { IconButton } from "../Button/IconButton";
 import { Input } from "../Input/Input";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
-import { Estrellas } from "./Rating";
+import { Estrellas } from "./Estrellas";
 
 interface ComentarioProps {
   evento: number;
@@ -96,7 +96,6 @@ export function AgregarComentario({
           onChangeValue={setComentario}
           placeholder="Cuentanos tu experiencia!"
           containerStyle={{ marginHorizontal: 12, flex: 1 }}
-          autofocus={true}
         />
 
         <IconButton

@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/context/useAuth";
 import { Image, View } from "react-native";
 import Logo from "../../assets/images/logotipo.png";
 import { Menu } from "./Menu";

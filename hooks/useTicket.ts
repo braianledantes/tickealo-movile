@@ -1,4 +1,4 @@
-import { useValidador } from "@/hooks/useValidador";
+import { useValidador } from "@/hooks/context/useValidador";
 import { useEffect, useRef, useState } from "react";
 
 export const useTicket = (ticketId: string | undefined) => {

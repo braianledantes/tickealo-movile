@@ -1,6 +1,11 @@
-import { EventoDto, ProductoraDto } from "@/api/dto/evento.dto";
+import {
+  EstadisticasDto,
+  EventoDto,
+  ProductoraDto,
+} from "@/api/dto/evento.dto";
 import {
   fetchUpcomingEvents,
+  getEstadisticas,
   getEventosById,
   getEventosSeguidos,
   getProximosEventos,
@@ -26,6 +31,9 @@ interface EventosContextType {
   fetchUpcoming: () => Promise<EventoDto[] | undefined>;
   fetchProximos: () => Promise<void>;
   fetchSeguidos: () => Promise<void>;
+  obtenerEstadisticas: (
+    eventoId: number,
+  ) => Promise<EstadisticasDto | undefined>;
 }
 
 export const EventosContext = createContext<EventosContextType | undefined>(
@@ -58,6 +66,15 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const obtenerEstadisticas = async (eventoId: number) => {
+    try {
+      return await getEstadisticas(eventoId);
+    } catch (err: any) {
+      console.error("Error obteniendo estadisticas del evento:", err);
+      setError("No se pudieron cargar las estadisticas del evento");
+      return undefined;
+    }
+  };
   const fetchUpcoming = async () => {
     setLoadingUpcoming(true);
     setError(null);
@@ -160,6 +177,7 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchUpcoming,
         fetchProximos,
         fetchSeguidos,
+        obtenerEstadisticas,
       }}
     >
       {children}

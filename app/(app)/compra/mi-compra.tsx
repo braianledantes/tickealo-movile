@@ -6,16 +6,17 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { ComprobanteView } from "@/components/Modal/Comprobante";
 import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { Texto } from "@/components/Texto";
-import { useCompras } from "@/hooks/useCompras";
+import { useCompras } from "@/hooks/context/useCompras";
 import { useEvento } from "@/hooks/useEvento";
 import { formatARS, formatDate } from "@/utils/utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  Dimensions,
   ImageBackground,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -27,6 +28,9 @@ export default function MiCompra() {
   const [loading, setLoading] = useState(true);
   const [compra, setCompra] = useState<CompraDto | undefined>(undefined);
   const [showComprobante, setShowComprobante] = useState(false);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [headerHeight, setHeaderHeight] = useState(0);
+
   const { productora, cuentaBancaria } = useEvento(
     compra?.tickets[0].entrada.evento.id,
   );
@@ -66,12 +70,26 @@ export default function MiCompra() {
 
   const bannerUrl = compra.tickets[0]?.entrada?.evento?.bannerUrl;
 
+  const { width } = Dimensions.get("window");
+  const bannerHeight = width * (4 / 11);
+  const bannerOpacity = scrollY.interpolate({
+    inputRange: [0, 43],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
+
   return (
     <View style={styles.container}>
-      <HeaderBack />
+      <HeaderBack onHeight={setHeaderHeight} />
 
       {bannerUrl && (
-        <View style={styles.bannerContainer}>
+        <Animated.View
+          style={[
+            styles.bannerContainer,
+            { top: headerHeight },
+            { opacity: bannerOpacity },
+          ]}
+        >
           <ImageBackground
             source={{ uri: bannerUrl }}
             style={styles.bannerImage}
@@ -88,10 +106,17 @@ export default function MiCompra() {
               style={styles.gradient}
             />
           </ImageBackground>
-        </View>
+        </Animated.View>
       )}
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <Animated.ScrollView
+        contentContainerStyle={[styles.content, { paddingTop: bannerHeight }]}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true },
+        )}
+        scrollEventThrottle={16}
+      >
         <View className="flex-1 items-center justify-center">
           <Texto bold className="text-white text-xl mb-3">
             DETALLE DE LA COMPRA
@@ -184,7 +209,7 @@ export default function MiCompra() {
           showComprobante={showComprobante}
           setShowComprobante={setShowComprobante}
         />
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -198,10 +223,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#05081b",
   },
   textWhite: { color: "#fff" },
-  content: { padding: 16, paddingBottom: 50 },
+  content: { padding: 16, paddingBottom: 50, paddingTop: 200 },
   bannerContainer: {
+    position: "absolute",
+    left: 0,
     width: "100%",
     aspectRatio: 11 / 4,
+    zIndex: 0,
     overflow: "hidden",
   },
   bannerImage: {

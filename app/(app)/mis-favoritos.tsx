@@ -2,7 +2,7 @@ import { EventoDto } from "@/api/dto/evento.dto";
 import { EventList } from "@/components/Eventos/EventList";
 import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
-import { useFavorito } from "@/hooks/useFavoritos";
+import { useFavorito } from "@/hooks/context/useFavoritos";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";

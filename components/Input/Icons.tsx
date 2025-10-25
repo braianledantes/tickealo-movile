@@ -44,18 +44,20 @@ export const Close = (props: any) => (
   <Ionicons name="close" size={24} color="white" {...props} />
 );
 
-//Estrella llena
 export const Rating: React.FC<{ size?: number; style?: any }> = ({
   size = 14,
   style,
 }) => <FontAwesome name="star" size={size} color="#999" style={style} />;
 
-// Estrella vacía
 export const RatingOut: React.FC<{ size?: number; style?: any }> = ({
   size = 14,
   style,
 }) => <FontAwesome name="star-o" size={size} color="#999" style={style} />;
-//color #F3CA61
+
+export const RatingHalf: React.FC<{ size?: number; style?: any }> = ({
+  size = 14,
+  style,
+}) => <FontAwesome name="star-half-o" size={size} color="#999" style={style} />;
 
 export const Fijar = (props: any) => (
   <Entypo name="pin" size={14} color="#999" />

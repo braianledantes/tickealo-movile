@@ -27,7 +27,6 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
 }) => {
   const tipoColor = tipo.toLowerCase() === "vip" ? "#4da6ff" : "#77c3ff";
 
-  // ✅ Determinar si la entrada ya venció
   const finalizo =
     disabled ||
     (fechaFin ? new Date(fechaFin).getTime() < new Date().getTime() : false);
@@ -41,7 +40,6 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
         style={styles.gradientBar}
       />
 
-      {/* Izquierda */}
       <View className="flex-1 py-[14px] px-5">
         <View className="flex-row items-center gap-1.5">
           <Texto semiBold className="text-[#bbb] text-[14px] tracking-[0.5px]">
@@ -70,15 +68,12 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
         </View>
       </View>
 
-      {/* Separador */}
       <View className="w-[1px] h-[70%] border-l border-dashed border-[#666]" />
 
-      {/* Derecha */}
       <View className="w-[60px] justify-center items-center bg-[#0b1030]">
         {right ?? <Ionicons name="add" size={24} color="#fff" />}
       </View>
 
-      {/* Overlay si está deshabilitado o vencido */}
       {finalizo && <View style={styles.disabledOverlay}></View>}
     </View>
   );
@@ -96,7 +91,6 @@ export const EntradaCard: React.FC<EntradaCardProps> = ({
   );
 };
 
-// ✅ Estilos dinámicos
 const stylesDynamic = (disabled: boolean) =>
   StyleSheet.create({
     card: {

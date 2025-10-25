@@ -1,6 +1,6 @@
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
-import { useCompras } from "@/hooks/useCompras";
+import { useCompras } from "@/hooks/context/useCompras";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {

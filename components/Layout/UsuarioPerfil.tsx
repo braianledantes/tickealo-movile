@@ -1,5 +1,5 @@
 import { Texto } from "@/components/Texto";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, TouchableOpacity, View } from "react-native";
 
@@ -21,6 +21,7 @@ export const UsuarioPerfil: React.FC<UsuarioPerfilProps> = ({
   onPress,
   disabled = false,
 }) => {
+  const router = useRouter();
   const handlePress = () => {
     if (disabled) return;
     if (onPress) {
