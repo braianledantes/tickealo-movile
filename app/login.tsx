@@ -1,5 +1,6 @@
 import { Button } from "@/components/Button/Button";
 import { LinkButton } from "@/components/Button/LinkButton";
+import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
@@ -10,7 +11,7 @@ import React, { useState } from "react";
 import { Alert, View } from "react-native";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -25,6 +26,12 @@ export default function Login() {
       Alert.alert("Error", "No se pudo iniciar sesión. Verifica tus datos.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    if (googleLogin) {
+      googleLogin();
     }
   };
 
@@ -58,6 +65,11 @@ export default function Login() {
           onPress={handleLogin}
           disabled={isLoading}
           title={isLoading ? "Ingresando..." : "Iniciar Sesión"}
+        />
+        <SecondaryButton
+          disabled={isLoading}
+          title="Iniciar sesión con Google"
+          onPress={handleGoogleLogin}
         />
       </View>
 

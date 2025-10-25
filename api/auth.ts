@@ -39,3 +39,8 @@ export async function actualizarPerfil(data: FormData) {
   });
   return response.data;
 }
+
+export async function getGoogleToken(idToken: string) {
+  const response = await api.post("/auth/google/token", { idToken });
+  return response.data;
+}

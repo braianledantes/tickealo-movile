@@ -8,6 +8,7 @@ import {
 import {
   actualizarPerfil,
   currentUser,
+  getGoogleToken,
   login,
   registerCliente,
 } from "@/api/auth";
@@ -15,6 +16,8 @@ import { LoginDto } from "@/api/dto/login.dto";
 import { useStorageState } from "../hooks/useStorageState";
 
 import * as api from "@/api/axiosConfig";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
+import { Alert } from "react-native";
 import { Me } from "../api/dto/me.dto";
 
 export const AuthContext = createContext<{
@@ -25,6 +28,7 @@ export const AuthContext = createContext<{
   user?: Me | null;
   isLoading: boolean;
   actualizarPerfilCliente: (data: FormData) => Promise<void>;
+  googleLogin?: () => void;
 }>({
   login: () => null,
   registerCliente: () => null,
@@ -33,9 +37,11 @@ export const AuthContext = createContext<{
   user: null,
   isLoading: false,
   actualizarPerfilCliente: async () => {},
+  googleLogin: () => {},
 });
 
 export function AuthProvider({ children }: PropsWithChildren) {
+  const { request, response, promptAsync } = useGoogleAuth();
   const [[isLoading, accessToken], setAccessToken] =
     useStorageState("access_token");
 
@@ -50,6 +56,25 @@ export function AuthProvider({ children }: PropsWithChildren) {
   } else {
     api.removeHeaderAuthorization();
   }
+
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      getGoogleToken(id_token)
+        .then((res) => {
+          console.log("Token de Google recibido:", res);
+          const token = res.access_token;
+          setAccessToken(token);
+        })
+        .catch(() => {
+          console.error("Error al obtener el token de Google");
+          Alert.alert(
+            "Error",
+            "No se pudo iniciar sesión con Google. Intenta de nuevo.",
+          );
+        });
+    }
+  }, [response, setAccessToken]);
 
   useEffect(() => {
     if (accessToken) {
@@ -92,6 +117,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
           } catch (error) {
             console.error("Error actualizando perfil:", error);
           }
+        },
+        googleLogin: () => {
+          promptAsync();
         },
       }}
     >

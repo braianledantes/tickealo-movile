@@ -1,3 +1,12 @@
+Configuration: Build Credentials yxK-8pkqVV (Default)
+Keystore
+Type                JKS
+Key Alias           5a30a8993280b9e10eeb651a36137b2d
+MD5 Fingerprint     82:74:F7:97:E9:F0:AC:FA:32:A5:17:DD:01:97:47:0E
+SHA1 Fingerprint    A3:16:DE:47:5A:FA:0C:9B:C6:30:1D:48:04:A9:ED:46:F8:47:B3:B7
+SHA256 Fingerprint  EC:E6:79:DF:9A:9E:98:35:10:3E:D1:19:C4:D1:15:42:2E:36:2D:68:03:79:1C:93:96:F2:A1:47:14:80:47:9D
+Updated             5 seconds ago
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
