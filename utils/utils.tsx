@@ -81,10 +81,41 @@ export function formatDate(timestamp: string | number) {
   );
 }
 
-//Obtener estadisticas de cada comentario
+//Obtener estadisticas en barra  de cada comentario o ventas de validador
 export function porcentaje(valorInicial: number, total: number) {
   const porcentajeFinal =
     total > 0 ? Math.round((valorInicial / total) * 100) : 0;
 
   return porcentajeFinal;
+}
+
+//Obtener hace cuanto fue publicado un comentario, pasadas las 24hs tira la fecha
+export function recentTime(comentario: Date) {
+  const fechaComentario = new Date(comentario);
+  const ahora = new Date();
+  const diferenciaMs = ahora.getTime() - fechaComentario.getTime();
+  const diferenciaMin = Math.floor(diferenciaMs / (1000 * 60));
+  const diferenciaHoras = Math.floor(diferenciaMin / 60);
+
+  let fechaFormateada: string;
+
+  if (diferenciaHoras < 24) {
+    if (diferenciaMin < 1) {
+      fechaFormateada = "Justo ahora";
+    } else if (diferenciaMin < 60) {
+      fechaFormateada = `Hace ${diferenciaMin} min`;
+    } else if (diferenciaHoras === 1) {
+      fechaFormateada = "Hace 1 h";
+    } else {
+      fechaFormateada = `Hace ${diferenciaHoras} h`;
+    }
+  } else {
+    fechaFormateada = fechaComentario.toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  return fechaFormateada;
 }

@@ -27,13 +27,14 @@ export function AgregarComentario({
   const [calificacion, setCalificacion] = useState(1);
   const [loading, setLoading] = useState(false);
   const [canSend, setCanSend] = useState(false);
+  const [touched, setTouched] = useState(false);
 
   // Validación en tiempo real
   useEffect(() => {
     const error = validarComentario({ comentario, calificacion });
     if (error) {
       setCanSend(false);
-      if (comentario || calificacion) {
+      if (touched) {
         showToast("error", "Error", error);
       }
     } else {
@@ -59,6 +60,7 @@ export function AgregarComentario({
       setComentario("");
       setCalificacion(0);
       setCanSend(false);
+      setTouched(false);
 
       if (onComentarioEnviado && nuevoComentario) {
         onComentarioEnviado(nuevoComentario);
@@ -77,7 +79,10 @@ export function AgregarComentario({
         <Estrellas
           calificacion={calificacion}
           editable={true}
-          onChange={setCalificacion}
+          onChange={(valor) => {
+            setCalificacion(valor);
+            setTouched(true);
+          }}
           starSize={20}
           starSpacing={10}
         />
@@ -86,15 +91,18 @@ export function AgregarComentario({
         <UsuarioPerfil
           username={user?.user.username}
           imagenPerfilUrl={user?.imagenPerfilUrl}
-          icono="w-12 h-12"
+          icono="w-10 h-10"
           className="p-0"
           disabled={true}
         />
 
         <Input
           value={comentario}
-          onChangeValue={setComentario}
-          placeholder="Cuentanos tu experiencia!"
+          onChangeValue={(valor) => {
+            setComentario(valor);
+            setTouched(true);
+          }}
+          placeholder="¡Cuéntanos tu experiencia!"
           containerStyle={{ marginHorizontal: 12, flex: 1 }}
         />
 

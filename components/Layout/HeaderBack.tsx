@@ -23,11 +23,11 @@ export const HeaderBack: React.FC<{ onHeight?: (h: number) => void }> = ({
           if (router.canGoBack()) {
             router.back();
           } else {
-            router.push("/"); // o la ruta principal de tu app
+            router.push("/");
           }
         }}
       >
-        <Ionicons name="arrow-back" size={28} color="#1E90FF" />
+        <Ionicons name="arrow-back" size={28} color="white" />
       </TouchableOpacity>
 
       {/* Logo en el medio */}

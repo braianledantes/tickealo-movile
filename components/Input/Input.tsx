@@ -4,8 +4,8 @@ import { TextInput, TouchableOpacity, View } from "react-native";
 import { renderIcon } from "./Icons";
 
 export type InputProps = {
-  value: string;
-  onChangeValue: (value: string) => void;
+  value?: string;
+  onChangeValue?: (value: string) => void;
   placeholder?: string;
   type?: "text" | "password" | "email" | "phone" | "default";
   iconName?: keyof typeof Ionicons.glyphMap;

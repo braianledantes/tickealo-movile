@@ -1,5 +1,6 @@
 import { useComentarios } from "@/hooks/context/useComentarios";
 import { useToast } from "@/hooks/context/useToast";
+import { recentTime } from "@/utils/utils";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, Modal, TextInput, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
@@ -28,12 +29,6 @@ export function MiComentario({
   const [calificacion, setCalificacion] = useState(c.calificacion);
   const [comentarioEditado, setComentarioEditado] = useState(c.comentario);
   const inputRef = useRef<TextInput>(null);
-
-  const fechaFormateada = new Date(c.createdAt).toLocaleDateString("es-AR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 
   useEffect(() => {
     if (onEdit && inputRef.current) {
@@ -118,7 +113,7 @@ export function MiComentario({
 
           <View>
             <Texto className="text-gray-400 text-xs mt-2">
-              {fechaFormateada}
+              {recentTime(c.createdAt)}
             </Texto>
           </View>
 

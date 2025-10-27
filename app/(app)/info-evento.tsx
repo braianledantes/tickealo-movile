@@ -6,7 +6,6 @@ import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-
 import {
   ActivityIndicator,
   Animated,
@@ -96,13 +95,18 @@ export default function InfoEvento() {
             <EventTimer fechaFin={evento.inicioAt} />
 
             <Estadisticas estadisticas={estadisticas} />
-
-            <Texto semiBold className="text-white tracking-wider p-4">
-              Comentarios{" "}
-              <Texto semiBold className="text-white/50 tracking-wide">
-                {comentarios.length}
+            {comentarios.length !== 0 ? (
+              <Texto semiBold className="text-white tracking-wider p-4">
+                Comentarios{" "}
+                <Texto semiBold className="text-white/50 tracking-wide">
+                  {comentarios.length}
+                </Texto>
               </Texto>
-            </Texto>
+            ) : (
+              <Texto className="text-center trackig-wider text-white/50 p-4">
+                No hay comentarios por el momento... Agrega uno!
+              </Texto>
+            )}
           </>
         )}
         contentContainerStyle={{

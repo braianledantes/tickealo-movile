@@ -34,7 +34,7 @@ export function EventInfo({ evento, productoraId, onSelect }: Props) {
           {evento.nombre}
         </Texto>
         <TouchableOpacity
-          className="flex-row items-center mb-2"
+          className="flex-row justify-start items-center mb-2"
           onPress={() =>
             abrirEnMaps(evento?.lugar?.latitud, evento?.lugar?.longitud)
           }
@@ -43,9 +43,9 @@ export function EventInfo({ evento, productoraId, onSelect }: Props) {
             name="location-outline"
             size={18}
             color="#4da6ff"
-            className="mr-1.5"
+            className="mr-1.5 "
           />
-          <Texto semiBold className="text-[#4da6ff] text-center text-md">
+          <Texto semiBold className="text-[#4da6ff] text-md">
             {evento.lugar?.direccion
               ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
               : (evento.lugar?.ciudad ?? "Ubicación no disponible")}

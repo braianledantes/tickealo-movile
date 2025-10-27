@@ -47,7 +47,7 @@ type Compra = {
   estado: "PENDIENTE" | "ACEPTADA" | "RECHAZADA";
   monto: string;
   tickets: Ticket[];
-  updatedAt: string; // viene como string ISO desde el backend
+  updatedAt: string;
 };
 
 export default function MiEntrada() {
@@ -233,7 +233,6 @@ export default function MiEntrada() {
   );
 }
 
-// 🎨 Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -279,7 +278,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // 🎟️ Estilo de ticket
   ticket: {
     backgroundColor: "#0b1530",
     borderRadius: 25,

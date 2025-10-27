@@ -1,4 +1,3 @@
-// hooks/useTicketsEvento.ts
 import type { TicketDto } from "@/api/dto/ticket-validador";
 import { useValidador } from "@/hooks/context/useValidador";
 import { useEffect, useState } from "react";
@@ -43,8 +42,8 @@ export const useTicketValidador = (eventoId?: string | number) => {
   }, [eventoId, ticketsValidadosEvento, ticketsValidadosEventoTotales]);
 
   return {
-    ticketsValidados, // tickets que validó el usuario
-    ticketsTotalesEvento, // tickets totales validados del evento
+    ticketsValidados,
+    ticketsTotalesEvento,
     loading,
   };
 };

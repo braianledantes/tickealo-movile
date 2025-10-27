@@ -17,6 +17,8 @@ export default function MisEventosFavoritos() {
   const [response, setResponse] = useState<ResponseDto | null>(null);
   const router = useRouter();
 
+  console.log(response);
+
   // 👇 useEffect no puede ser async directamente, por eso lo manejamos así
   useEffect(() => {
     const fetchFavoritos = async () => {

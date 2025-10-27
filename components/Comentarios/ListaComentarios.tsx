@@ -1,6 +1,7 @@
 import { ComentarioDto } from "@/api/dto/comentario.dto";
 import { ProductoraDto } from "@/api/dto/evento.dto";
 import { useAuth } from "@/hooks/context/useAuth";
+import { recentTime } from "@/utils/utils";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
@@ -24,11 +25,6 @@ export const ComentarioCard: React.FC<ComentarioCardProps> = ({
 
   const esMio = comentario.cliente.userId === user?.userId;
 
-  const fechaFormateada = new Date(comentario.createdAt).toLocaleDateString(
-    "es-AR",
-    { day: "2-digit", month: "short", year: "numeric" },
-  );
-
   const abrirPreview = () => {
     setModalVisible(true);
   };
@@ -50,7 +46,7 @@ export const ComentarioCard: React.FC<ComentarioCardProps> = ({
             <UsuarioPerfil
               username={comentario.cliente.nombre}
               imagenPerfilUrl={comentario.cliente.imagenPerfilUrl}
-              icono="w-14 h-14"
+              icono="w-10 h-10"
               className="p-0"
               disabled={true}
             />
@@ -82,7 +78,7 @@ export const ComentarioCard: React.FC<ComentarioCardProps> = ({
           </Texto>
 
           <Texto className="text-gray-400 text-xs mt-2 ">
-            {fechaFormateada}
+            {recentTime(comentario.createdAt)}
           </Texto>
         </View>
       </Pressable>
