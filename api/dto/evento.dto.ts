@@ -16,6 +16,7 @@ export interface EventoDto {
   createdAt: Date;
   updatedAt: Date;
   esFavorito: boolean;
+  tieneRecordatorio: boolean;
   comentarios?: ComentarioDto[];
 }
 

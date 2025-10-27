@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { EventoDto } from "@/api/dto/evento.dto";
 import { Image, TouchableOpacity, View } from "react-native";
 import defaultEvent from "../../assets/images/defaultEvent.jpg";
-import { SeguiryFavorito } from "./SeguirYFavorito";
+import { EventActions } from "./EventActions";
 
 type Props = {
   evento: EventoDto;
@@ -26,7 +26,7 @@ export function EventInfo({ evento, productoraId, onSelect }: Props) {
         resizeMode="cover"
       />
 
-      <SeguiryFavorito evento={evento} productoraId={productoraId} />
+      <EventActions evento={evento} productoraId={productoraId} />
 
       {/* Descripción */}
       <View className="px-4 mt-4">

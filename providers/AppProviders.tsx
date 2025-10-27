@@ -3,6 +3,7 @@ import { ComentariosProvider } from "@/context/ComentariosContext";
 import { ComprasProvider } from "@/context/ComprasContext";
 import { EventosProvider } from "@/context/EventosContext";
 import { FavoritoProvider } from "@/context/FavoritosContext";
+import { RecordatoriosProvider } from "@/context/RecordatoriosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
@@ -17,7 +18,9 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
             <ComprasProvider>
               <ValidadorProvider>
                 <ComentariosProvider>
-                  <FavoritoProvider>{children}</FavoritoProvider>
+                  <FavoritoProvider>
+                    <RecordatoriosProvider>{children}</RecordatoriosProvider>
+                  </FavoritoProvider>
                 </ComentariosProvider>
               </ValidadorProvider>
             </ComprasProvider>
