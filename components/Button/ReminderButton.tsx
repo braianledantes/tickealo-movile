@@ -16,9 +16,10 @@ export function ReminderButton({ evento }: Props) {
   const [tieneRecordatorio, setRecordatorio] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (evento) {
+    if (evento && tieneRecordatorio === null) {
       setRecordatorio(!!evento.tieneRecordatorio);
     }
+    // eslint-disable-next-line
   }, [evento]);
 
   const handleErrorToast = (error: string | null) => {
@@ -27,26 +28,27 @@ export function ReminderButton({ evento }: Props) {
 
   const toggleReminder = async () => {
     if (!evento.id) return;
-    const action = tieneRecordatorio ? sacarRecordatorio : ponerRecordatorio;
+    const next = !tieneRecordatorio;
+    setRecordatorio(next);
+    const action = next ? ponerRecordatorio : sacarRecordatorio;
     const success = await action(evento.id);
-    if (success) {
-      setRecordatorio(!tieneRecordatorio);
-      if (!tieneRecordatorio) {
-        showToast("success", "¡Listo!", "Recordatorio agendado");
-      }
-    } else {
+    if (!success) {
+      setRecordatorio(!next);
       handleErrorToast(error);
+    } else if (next) {
+      showToast("success", "¡Listo!", "Recordatorio agendado");
     }
   };
+
   return (
     <>
       <IconButton
         iconName={
           tieneRecordatorio
-            ? "notifications-off-outline"
-            : "notifications-outline"
+            ? "notifications-outline"
+            : "notifications-off-outline"
         }
-        size={50}
+        size={35}
         color="#999"
         colorDisabled="#999"
         onPress={toggleReminder}

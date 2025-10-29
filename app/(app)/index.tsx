@@ -7,7 +7,7 @@ import { EventList } from "@/components/Eventos/EventList";
 import { EventSection } from "@/components/Eventos/EventosProximos";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
-import { ProvincePicker } from "@/components/Modal/ProvinciaPicker";
+import { ProvinciaPicker2 } from "@/components/Modal/ProvinciaPicker2";
 import { useEventos } from "@/hooks/context/useEventos";
 import { useToast } from "@/hooks/context/useToast";
 
@@ -52,7 +52,7 @@ export default function Index() {
         contentContainerClassName="pb-10"
         showsVerticalScrollIndicator={false}
       >
-        <ProvincePicker
+        <ProvinciaPicker2
           visible={pickerOpen}
           onClose={() => setPickerOpen(false)}
           onSelectProvince={(provincia) => setProvince(provincia)}

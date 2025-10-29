@@ -44,12 +44,6 @@ export function AgregarComentario({
   }, [comentario, calificacion]);
 
   const handleEnviar = async () => {
-    const error = validarComentario({ comentario, calificacion });
-    if (error) {
-      showToast("error", "Error", error);
-      return;
-    }
-
     setLoading(true);
     try {
       const nuevoComentario = await comentar(evento, {

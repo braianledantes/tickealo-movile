@@ -36,3 +36,12 @@ export async function getUserProvince(): Promise<Provincia | null> {
   // Match con lista conocida (maneja casos como 'Córdoba' vs 'Cordoba')
   return (NORMALIZED.get(normalized) as Provincia | undefined) || null;
 }
+
+export function normalizarNombreProvincia(nombre: string): string {
+  return nombre
+    .replace(
+      / Province| Region| State| District| Governorate| Department/gi,
+      "",
+    )
+    .trim();
+}

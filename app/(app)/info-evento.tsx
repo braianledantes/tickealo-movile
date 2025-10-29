@@ -25,9 +25,7 @@ export default function InfoEvento() {
 
   const { evento, comentarios, estadisticas, productora, loading, error } =
     useEvento(eventoId);
-
   console.log(evento);
-
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputOffset = useRef(new Animated.Value(0)).current;
   const bottomOffset = Platform.OS === "android" ? 20 : 0;
