@@ -4,12 +4,20 @@ import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { ClavePersonal } from "@/components/Form/ClavePersonal";
+import { DatosNacionalidad } from "@/components/Form/DatosNacionalidad";
 import { DatosPersonales } from "@/components/Form/DatosPersonales";
 import { useRegister } from "@/hooks/useRegistro";
 
 export default function RegisterCliente() {
-  const { step, setStep, isLoading, handleNext, handleRegister, formData } =
-    useRegister();
+  const {
+    step,
+    setStep,
+    isLoading,
+    handleNext,
+    handleNextNacionalidad,
+    handleRegister,
+    formData,
+  } = useRegister();
 
   return (
     <KeyboardAwareScrollView
@@ -21,17 +29,27 @@ export default function RegisterCliente() {
     >
       <Screen className="flex-1 px-8 justify-center">
         <Title className="mb-4 text-center">
-          {step === 1 ? "Datos personales" : "Crea tu contraseña"}
+          {step === 1
+            ? "Datos personales"
+            : step === 2
+              ? "Tu nacionalidad"
+              : "Crea tu contraseña"}
         </Title>
 
         {step === 1 ? (
           <DatosPersonales onNext={handleNext} initialValues={formData} />
+        ) : step === 2 ? (
+          <DatosNacionalidad
+            onNext={handleNextNacionalidad}
+            onBack={() => setStep(1)}
+            initialValues={formData}
+          />
         ) : (
           <ClavePersonal
             onRegister={handleRegister}
             isLoading={isLoading}
             email={formData.email}
-            onBack={() => setStep(1)}
+            onBack={() => setStep(2)}
           />
         )}
       </Screen>

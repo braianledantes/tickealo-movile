@@ -11,4 +11,5 @@ export interface Me {
   telefono: string;
   imagenPerfilUrl: string | null;
   puntosAcumulados: number;
+  pais: string;
 }

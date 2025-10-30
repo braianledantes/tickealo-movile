@@ -6,16 +6,22 @@ import { Alert, Platform } from "react-native";
 export const useRegister = () => {
   const { registerCliente } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2 | 3>(1);
   const [formData, setFormData] = useState<any>({});
 
   /** Paso 1 → guardar datos personales */
   const handleNext = (data: any) => {
-    setFormData(data);
+    setFormData((prev: any) => ({ ...prev, ...data }));
     setStep(2);
   };
 
-  /** Paso 2 → crear contraseña y enviar al backend */
+  /** Paso 2 → guardar nacionalidad */
+  const handleNextNacionalidad = (data: any) => {
+    setFormData((prev: any) => ({ ...prev, ...data }));
+    setStep(3);
+  };
+
+  /** Paso 3 → crear contraseña y enviar al backend */
   const handleRegister = async (passwordData: any) => {
     const finalData = { ...formData, ...passwordData };
 
@@ -28,7 +34,7 @@ export const useRegister = () => {
           formDataToSend.append(key, value as string);
       });
 
-      // Manejar imagen de perfil
+      // Imagen de perfil
       const image = finalData.imagenPerfilUrl;
       if (image) {
         let file: any;
@@ -67,6 +73,7 @@ export const useRegister = () => {
     setStep,
     isLoading,
     handleNext,
+    handleNextNacionalidad,
     handleRegister,
     formData,
   };

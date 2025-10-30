@@ -16,7 +16,7 @@ interface ApiResponse {
   };
 }
 
-export const useStatesByCountry = (country: string) => {
+export const useStatesByCountry = (country: string | undefined) => {
   const [states, setStates] = useState<State[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

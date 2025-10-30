@@ -12,7 +12,6 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 export default function Profile() {
   const { user } = useAuth();
   const router = useRouter();
-
   return (
     <View className="flex-1">
       <HeaderBack />
@@ -58,8 +57,24 @@ export default function Profile() {
             <Texto className="text-white text-xl">{user?.user.email}</Texto>
           </View>
           <View className="border border-2 border-[#1b1e5e] p-6 rounded-bl-2xl rounded-br-2xl">
-            <Texto className="text-[#7a86b6] mb-2">Telofono</Texto>
-            <Texto className="text-white text-xl">{user?.telefono}</Texto>
+            <View className="flex-row">
+              <View className="flex-1">
+                <Texto className="text-[#7a86b6] mb-2">Telofono</Texto>
+                <Texto className="text-white text-xl">{user?.telefono}</Texto>
+              </View>
+              <View className="flex-1">
+                <Texto className="text-[#7a86b6] mb-2">País</Texto>
+                <View className="flex-row justify-between">
+                  <Texto className="text-white text-xl">{user?.pais}</Texto>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => router.push("/(app)/Perfil/edit-country")}
+                  >
+                    <AntDesign name="right" size={24} color="#4da6ff" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
         <View className="mt-10">

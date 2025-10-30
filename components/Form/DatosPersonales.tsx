@@ -20,14 +20,14 @@ export function DatosPersonales({
 }) {
   const [nombre, setNombre] = useState(initialValues.nombre || "");
   const [apellido, setApellido] = useState(initialValues.apellido || "");
-  const [telefono, setTelefono] = useState(initialValues.telefono || "");
   const [email, setEmail] = useState(initialValues.email || "");
   const [username, setUsername] = useState(initialValues.username || "");
   const { showToast } = useToast();
   const [image, setImage] = useState<string | null>(
     initialValues.imagenPerfilUrl || null,
   );
-  const canProceed = nombre && apellido && email && username && telefono;
+  const canProceed = nombre && apellido && email && username && image;
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -42,14 +42,13 @@ export function DatosPersonales({
   };
 
   const handleNext = () => {
-    if (!nombre || !apellido || !telefono || !email || !username) {
-      showToast("error", "Error", "Las contraseñas no coinciden.");
+    if (!nombre || !apellido || !email || !username || !image) {
+      showToast("error", "Error", "Asegurate de completar todos los campos");
       return;
     }
     onNext({
       nombre,
       apellido,
-      telefono,
       email,
       username,
       imagenPerfilUrl: image,
@@ -84,12 +83,6 @@ export function DatosPersonales({
         placeholder="Apellido"
         value={apellido}
         onChangeValue={setApellido}
-      />
-      <Input
-        type="phone"
-        placeholder="Teléfono"
-        value={telefono}
-        onChangeValue={setTelefono}
       />
       <Input
         type="email"

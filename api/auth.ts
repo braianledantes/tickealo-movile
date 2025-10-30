@@ -6,7 +6,7 @@ import { LoginDto } from "./dto/login.dto";
 import { Me } from "./dto/me.dto";
 
 export async function login(loginDto: LoginDto) {
-  const response = await api.post("/auth/login", loginDto);
+  const response = await api.post("/auth/login-cliente", loginDto);
 
   // 👇 el backend devuelve { access_token: "..." }
   const token = response.data?.access_token;

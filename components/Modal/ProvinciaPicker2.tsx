@@ -1,6 +1,7 @@
+import { useAuth } from "@/hooks/context/useAuth";
 import { useStatesByCountry } from "@/hooks/useStatesByCountry";
 import { normalizarNombreProvincia } from "@/utils/ProvinciaPicker/location";
-import React, { useState } from "react";
+import React from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { Texto } from "../Texto";
 
@@ -15,8 +16,8 @@ export function ProvinciaPicker2({
   onClose,
   onSelectProvince,
 }: CountryStatePickerProps) {
-  const [country] = useState("Argetina"); // default
-  const { states, loading, error } = useStatesByCountry(country);
+  const { user } = useAuth();
+  const { states, loading, error } = useStatesByCountry(user?.pais);
 
   const handleSelectAuto = () => {
     if (states && states.length > 0) {

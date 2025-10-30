@@ -12,7 +12,7 @@ export type IconButtonProps = {
   colorDisabled?: string;
   disabled?: boolean;
   loading?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   style?: any;
 };
 
