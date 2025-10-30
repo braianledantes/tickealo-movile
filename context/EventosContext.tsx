@@ -10,6 +10,7 @@ import {
   getEventosSeguidos,
   getProximosEventos,
 } from "@/api/events";
+import { useAuth } from "@/hooks/context/useAuth";
 import React, { createContext, useMemo, useState } from "react";
 
 interface EventosContextType {
@@ -56,6 +57,8 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
   const [search, setSearch] = useState("");
   const [province, setProvince] = useState<string | null>(null);
 
+  const { user } = useAuth();
+
   const getEventosByProductora = async (idProductora: number) => {
     try {
       return await getEventosById(idProductora);
@@ -80,7 +83,11 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const data = await fetchUpcomingEvents();
-      setEvents(data || []);
+      const filtered = data.filter(
+        (evento: any) =>
+          evento.lugar?.pais?.toLowerCase() === user?.pais?.toLowerCase(),
+      );
+      setEvents(filtered || []);
       return data;
     } catch (err: any) {
       console.error("Error obteniendo eventos futuros:", err);
@@ -101,7 +108,11 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const data = await getProximosEventos();
-      setProximos(data || []);
+      const filtered = data.filter(
+        (evento: any) =>
+          evento.lugar?.pais?.toLowerCase() === user?.pais?.toLowerCase(),
+      );
+      setProximos(filtered || []);
     } catch (err: any) {
       console.error("Error obteniendo próximos eventos:", err);
       setProximos([]);
