@@ -30,10 +30,8 @@ export function DatosNacionalidad({
   const [phonePrefix, setPhonePrefix] = useState("");
   const [paisNombre, setPaisNombre] = useState(initialValues?.pais || "");
 
-  // ✅ El usuario puede avanzar si hay país seleccionado y teléfono
   const canProceed = paisSeleccionado && telefono;
 
-  // Cuando cambia el país, obtenemos el prefijo
   useEffect(() => {
     if (!paisSeleccionado) return;
 
@@ -88,7 +86,6 @@ export function DatosNacionalidad({
             : telefono
         }
         onChangeValue={(val) => {
-          // Mandamos al estado el valor completo incluyendo el prefijo si aplica
           const finalValue = phonePrefix ? phonePrefix + val : val;
           setTelefono(finalValue);
         }}

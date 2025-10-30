@@ -3,6 +3,7 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useToast } from "@/hooks/context/useToast";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Platform, ScrollView, View } from "react-native";
 
@@ -10,6 +11,7 @@ export default function EditProfile() {
   const { actualizarPerfilCliente, user } = useAuth();
   const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleActualizarPerfil = async (data: any) => {
     try {
@@ -43,6 +45,7 @@ export default function EditProfile() {
 
       await actualizarPerfilCliente(formData);
       showToast("success", "Listo!", "Perfil ctualizado correctamente");
+      router.back();
     } catch (err: any) {
       console.error("Error al actualizar perfil:", err.response?.data || err);
       const backendMsg =

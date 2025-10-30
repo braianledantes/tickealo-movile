@@ -17,6 +17,19 @@ export const fetchUpcomingEvents = async (): Promise<EventoDto[]> => {
   return res.data.data;
 };
 
+export const fetchAllEvents = async (): Promise<EventoDto[]> => {
+  const res = await api.get("/eventos", {
+    params: {
+      page: 1,
+      limit: 50,
+      search: "",
+      orderDir: "DESC",
+    },
+  });
+
+  return res.data.data;
+};
+
 //Obtener eventos proximos de productoras que sigue
 export const getEventosSeguidos = async (): Promise<EventoDto[]> => {
   const response = await api.get("eventos/seguidos");

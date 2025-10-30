@@ -4,6 +4,7 @@ import {
   ProductoraDto,
 } from "@/api/dto/evento.dto";
 import {
+  fetchAllEvents,
   fetchUpcomingEvents,
   getEstadisticas,
   getEventosById,
@@ -15,10 +16,12 @@ import React, { createContext, useMemo, useState } from "react";
 
 interface EventosContextType {
   events: EventoDto[];
+  eventosFinalizados: EventoDto[];
   proximos: EventoDto[];
   seguidos: EventoDto[];
   productoraSeguida: ProductoraDto[];
-  loadingUpcoming: boolean;
+  loading: boolean;
+  loadingFinalizados: boolean;
   loadingProximos: boolean;
   loadingSeguidos: boolean;
   error: string | null;
@@ -29,7 +32,8 @@ interface EventosContextType {
   getEventosByProductora: (
     idProductora: number,
   ) => Promise<EventoDto[] | undefined>;
-  fetchUpcoming: () => Promise<EventoDto[] | undefined>;
+  fetchEventos: () => Promise<EventoDto[] | undefined>;
+  fetchFinalizados: () => Promise<EventoDto[] | undefined>;
   fetchProximos: () => Promise<void>;
   fetchSeguidos: () => Promise<void>;
   obtenerEstadisticas: (
@@ -47,10 +51,12 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
   const [events, setEvents] = useState<EventoDto[]>([]);
   const [proximos, setProximos] = useState<EventoDto[]>([]);
   const [seguidos, setSeguidos] = useState<EventoDto[]>([]);
+  const [eventosFinalizados, setEventosFinalizados] = useState<EventoDto[]>([]);
   const [productoraSeguida, setProductoraSeguida] = useState<ProductoraDto[]>(
     [],
   );
-  const [loadingUpcoming, setLoadingUpcoming] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingFinalizados, setLoadingFinalizados] = useState(false);
   const [loadingProximos, setLoadingProximos] = useState(false);
   const [loadingSeguidos, setLoadingSeguidos] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,11 +84,11 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
       return undefined;
     }
   };
-  const fetchUpcoming = async () => {
-    setLoadingUpcoming(true);
+  const fetchEventos = async () => {
+    setLoading(true);
     setError(null);
     try {
-      const data = await fetchUpcomingEvents();
+      const data = await fetchAllEvents();
       const filtered = data.filter(
         (evento: any) =>
           evento.lugar?.pais?.toLowerCase() === user?.pais?.toLowerCase(),
@@ -90,8 +96,33 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
       setEvents(filtered || []);
       return data;
     } catch (err: any) {
-      console.error("Error obteniendo eventos futuros:", err);
+      console.error("Error obteniendo todos los eventos:", err);
       setEvents([]);
+      setError(
+        err.response?.status === 403
+          ? "No autorizado para ver todos los eventos"
+          : "No se pudieron cargar todos los evento",
+      );
+      return undefined;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFinalizados = async () => {
+    setLoadingFinalizados(true);
+    setError(null);
+    try {
+      const data = await fetchUpcomingEvents();
+      const filtered = data.filter(
+        (evento: any) =>
+          evento.lugar?.pais?.toLowerCase() === user?.pais?.toLowerCase(),
+      );
+      setEventosFinalizados(filtered || []);
+      return data;
+    } catch (err: any) {
+      console.error("Error obteniendo eventos futuros:", err);
+      setEventosFinalizados([]);
       setError(
         err.response?.status === 403
           ? "No autorizado para ver eventos futuros"
@@ -99,7 +130,7 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       return undefined;
     } finally {
-      setLoadingUpcoming(false);
+      setLoadingFinalizados(false);
     }
   };
 
@@ -164,7 +195,9 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         !search ||
         e.nombre?.toLowerCase().includes(search.toLowerCase()) ||
         e.lugar?.ciudad?.toLowerCase().includes(search.toLowerCase());
-      const matchesProvincia = !province || e.lugar?.provincia === province;
+      const matchesProvincia =
+        !province ||
+        e.lugar?.provincia?.toLowerCase().includes(province.toLowerCase());
       return matchesSearch && matchesProvincia;
     });
   }, [events, search, province]);
@@ -173,10 +206,12 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
     <EventosContext.Provider
       value={{
         events: filteredEvents,
+        eventosFinalizados,
         proximos,
         seguidos,
         productoraSeguida,
-        loadingUpcoming,
+        loading,
+        loadingFinalizados,
         loadingProximos,
         loadingSeguidos,
         error,
@@ -185,7 +220,8 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         province,
         setProvince,
         getEventosByProductora,
-        fetchUpcoming,
+        fetchEventos,
+        fetchFinalizados,
         fetchProximos,
         fetchSeguidos,
         obtenerEstadisticas,

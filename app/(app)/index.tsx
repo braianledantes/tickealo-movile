@@ -1,6 +1,16 @@
+import { Texto } from "@/components/Texto";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Easing,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EventList } from "@/components/Eventos/EventList";
@@ -16,24 +26,32 @@ export default function Index() {
   const { showToast } = useToast();
   const {
     events,
+    eventosFinalizados,
     proximos,
     seguidos,
-    loadingUpcoming,
+    loading,
     error,
     search,
     setSearch,
     province,
     setProvince,
+    fetchEventos,
     fetchProximos,
-    fetchUpcoming,
+    fetchFinalizados,
     fetchSeguidos,
   } = useEventos();
 
   const [pickerOpen, setPickerOpen] = useState(false);
+  const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  const noHayEventos = events.length === 0;
+
   useEffect(() => {
+    setProvince(null);
     const fetchData = async () => {
       try {
-        await fetchUpcoming();
+        await fetchEventos();
+        await fetchFinalizados();
         await fetchProximos();
         await fetchSeguidos();
       } catch (err) {
@@ -44,6 +62,27 @@ export default function Index() {
     fetchData();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (noHayEventos) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(bounceAnim, {
+            toValue: -10,
+            duration: 600,
+            easing: Easing.out(Easing.quad),
+            useNativeDriver: true,
+          }),
+          Animated.timing(bounceAnim, {
+            toValue: 0,
+            duration: 600,
+            easing: Easing.in(Easing.quad),
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    }
+  }, [noHayEventos]);
 
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
@@ -65,16 +104,8 @@ export default function Index() {
           setSearch={setSearch}
         />
 
-        <EventSection title="PROXIMOS EVENTOS" eventos={proximos} />
-
-        <EventSection
-          title="EVENTOS SEGUIDOS"
-          color="#90E0EF"
-          eventos={seguidos}
-        />
-
         <View className="flex-1">
-          {loadingUpcoming ? (
+          {loading ? (
             <View className="justify-center items-center py-5">
               <ActivityIndicator size="large" color="#4da6ff" />
             </View>
@@ -82,11 +113,21 @@ export default function Index() {
             <Text className="text-[#A5A6AD] text-center mt-5 text-base font-poppins-400">
               {error}
             </Text>
-          ) : events.length === 0 ? (
-            <Text className="text-[#A5A6AD] text-center mt-5 text-base font-poppins-400">
-              No se encontraron eventos
-            </Text>
-          ) : (
+          ) : noHayEventos ? (
+            <View style={styles.emptyContainer}>
+              <Texto
+                bold
+                className="text-[#CAF0F8] text-center tracking-wider mb-5"
+              >
+                Ups… ¡ningún evento por aquí todavía!
+              </Texto>
+              <Animated.View
+                style={{ transform: [{ translateY: bounceAnim }] }}
+              >
+                <Ionicons name="calendar-outline" size={50} color="#CAF0F8" />
+              </Animated.View>
+            </View>
+          ) : search ? (
             <EventList
               events={events}
               onPressEvent={(id) =>
@@ -96,9 +137,33 @@ export default function Index() {
                 })
               }
             />
+          ) : (
+            <>
+              <EventSection
+                title="EVENTOS SEGUIDOS"
+                color="#90E0EF"
+                eventos={seguidos}
+              />
+
+              <EventSection title="PROXIMOS EVENTOS" eventos={proximos} />
+
+              <EventSection
+                title="EVENTOS FINALIZADOS"
+                eventos={eventosFinalizados}
+              />
+            </>
           )}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 5,
+  },
+});
