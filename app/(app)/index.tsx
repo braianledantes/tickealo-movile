@@ -18,6 +18,7 @@ import { EventSection } from "@/components/Eventos/EventosProximos";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
 import { ProvinciaPicker2 } from "@/components/Modal/ProvinciaPicker2";
+import { useAuth } from "@/hooks/context/useAuth";
 import { useEventos } from "@/hooks/context/useEventos";
 import { useToast } from "@/hooks/context/useToast";
 
@@ -30,6 +31,9 @@ export default function Index() {
     proximos,
     seguidos,
     loading,
+    loadingFinalizados,
+    loadingProximos,
+    loadingSeguidos,
     error,
     search,
     setSearch,
@@ -40,28 +44,54 @@ export default function Index() {
     fetchFinalizados,
     fetchSeguidos,
   } = useEventos();
+  const { user } = useAuth();
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
-  const noHayEventos = events.length === 0;
+  const anyLoading =
+    loading || loadingFinalizados || loadingProximos || loadingSeguidos;
+
+  const noHayEventos =
+    !anyLoading &&
+    events.length === 0 &&
+    proximos.length === 0 &&
+    seguidos.length === 0 &&
+    eventosFinalizados.length === 0;
+
+  // Filtrar por provincia
+  const filterByProvince = (array: any[]) =>
+    province
+      ? array.filter(
+          (e) => e.lugar?.provincia?.toLowerCase() === province.toLowerCase(),
+        )
+      : array;
+
+  const proximosFiltrados = filterByProvince(proximos);
+  const finalizadosFiltrados = filterByProvince(eventosFinalizados);
+  const seguidosFiltrados = filterByProvince(seguidos);
 
   useEffect(() => {
+    if (!user) return;
     setProvince(null);
+
     const fetchData = async () => {
       try {
-        await fetchEventos();
-        await fetchFinalizados();
-        await fetchProximos();
-        await fetchSeguidos();
+        await Promise.all([
+          fetchEventos(),
+          fetchFinalizados(),
+          fetchProximos(),
+          fetchSeguidos(),
+        ]);
       } catch (err) {
         console.log("Error obteniendo los eventos:", err);
         showToast("error", "Error", "Error obteniendo eventos");
       }
     };
+
     fetchData();
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (noHayEventos) {
@@ -105,7 +135,7 @@ export default function Index() {
         />
 
         <View className="flex-1">
-          {loading ? (
+          {anyLoading ? (
             <View className="justify-center items-center py-5">
               <ActivityIndicator size="large" color="#4da6ff" />
             </View>
@@ -142,14 +172,17 @@ export default function Index() {
               <EventSection
                 title="EVENTOS SEGUIDOS"
                 color="#90E0EF"
-                eventos={seguidos}
+                eventos={seguidosFiltrados}
               />
 
-              <EventSection title="PROXIMOS EVENTOS" eventos={proximos} />
+              <EventSection
+                title="PROXIMOS EVENTOS"
+                eventos={proximosFiltrados}
+              />
 
               <EventSection
                 title="EVENTOS FINALIZADOS"
-                eventos={eventosFinalizados}
+                eventos={finalizadosFiltrados}
               />
             </>
           )}

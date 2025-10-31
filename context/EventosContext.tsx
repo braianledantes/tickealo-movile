@@ -197,7 +197,8 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         e.lugar?.ciudad?.toLowerCase().includes(search.toLowerCase());
       const matchesProvincia =
         !province ||
-        e.lugar?.provincia?.toLowerCase().includes(province.toLowerCase());
+        e.lugar?.provincia?.toLowerCase().includes(province.toLowerCase()) ||
+        e.lugar?.ciudad?.toLowerCase().includes(province.toLowerCase());
       return matchesSearch && matchesProvincia;
     });
   }, [events, search, province]);
