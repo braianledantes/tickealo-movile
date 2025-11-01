@@ -10,7 +10,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 
 type Filtro = "PROXIMOS" | "FINALIZADOS";
 
@@ -24,6 +24,7 @@ export default function Profile() {
     loadingFin,
     loadingProx,
   } = useProductora();
+
   const [eventosProximos, setEventosProximos] = useState<EventoDto[]>([]);
   const [eventosFinalizados, setEventosFinalizados] = useState<EventoDto[]>([]);
   const [filtroActivo, setFiltroActivo] = useState<Filtro>("PROXIMOS");
@@ -75,6 +76,24 @@ export default function Profile() {
     }
   }, [options]);
 
+  // ✅ Loading para eventos PROXIMOS
+  if (loadingProx && filtroActivo === "PROXIMOS") {
+    return (
+      <View className="flex-1 justify-center items-center bg-[#05081b]">
+        <ActivityIndicator size="large" color="#4da6ff" />
+      </View>
+    );
+  }
+
+  // ✅ Loading para eventos FINALIZADOS
+  if (loadingFin && filtroActivo === "FINALIZADOS") {
+    return (
+      <View className="flex-1 justify-center items-center bg-[#05081b]">
+        <ActivityIndicator size="large" color="#4da6ff" />
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1">
       <HeaderBack />
@@ -115,7 +134,7 @@ export default function Profile() {
 
         {/* Estadísticas */}
         <View className="flex-row justify-center px-4">
-          <View className="items-center ">
+          <View className="items-center">
             <Texto className="text-white text-3xl font-bold tracking-wide">
               {eventosFinalizados.length + eventosProximos.length}
             </Texto>
@@ -144,19 +163,14 @@ export default function Profile() {
         {/* Contacto */}
         <View className="flex-row justify-center my-2 mb-4 px-4">
           <View className="flex-row items-center">
-            <Ionicons
-              name="mail-outline"
-              size={14}
-              color="#999"
-              className="mr-1.5 "
-            />
-            <Texto semiBold className="text-[#999] ">
+            <Ionicons name="mail-outline" size={14} color="#999" />
+            <Texto semiBold className="text-[#999] ml-1.5">
               {productora?.user.email}
             </Texto>
           </View>
           <View className="flex-row items-center ml-2">
-            <Feather name="map-pin" size={14} color="#999" className="mr-1" />
-            <Texto semiBold className="text-[#999]">
+            <Feather name="map-pin" size={14} color="#999" />
+            <Texto semiBold className="text-[#999] ml-1">
               {productora?.pais}
             </Texto>
           </View>
@@ -171,7 +185,7 @@ export default function Profile() {
           />
         </View>
 
-        {/* Eventos según filtro */}
+        {/* Contenido según filtro */}
         {filtroActivo === "PROXIMOS" && (
           <EventSection title="EVENTOS PROXIMOS" eventos={eventosProximos} />
         )}

@@ -1,83 +1,62 @@
-import { EventoDto, ProductoraDto } from "@/api/dto/evento.dto";
-import { FilterButton, FiltroItem } from "@/components/Button/FilterButton";
-import { EventSection } from "@/components/Eventos/EventSection";
+import { ComentarioCard } from "@/components/Comentarios/ListaComentarios";
+import { EntradaList } from "@/components/Entradas/EntradasList";
+import { Estadisticas } from "@/components/Eventos/Estadisticas";
+import { EventInfo } from "@/components/Eventos/EventInfo";
+import { EventTimer } from "@/components/Eventos/EventTimer";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
-import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
-import { useProductora } from "@/hooks/context/useProductora";
-import { useToast } from "@/hooks/context/useToast";
-import { Feather, Ionicons } from "@expo/vector-icons";
-import Entypo from "@expo/vector-icons/Entypo";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import { useEvento } from "@/hooks/useEvento";
+import { LinearGradient } from "expo-linear-gradient";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
+  ImageBackground,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 
-type Filtro = "PROXIMOS" | "FINALIZADOS";
+export default function InfoEvento() {
+  const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const router = useRouter();
 
-export default function Profile() {
-  const { data } = useLocalSearchParams();
-  const [productora, setProductora] = useState<ProductoraDto | null>(null);
-  const { showToast } = useToast();
-  const {
-    getEventosFinalizadosByProductora,
-    getEventosProximosByProductora,
-    loadingFin,
-    loadingProx,
-  } = useProductora();
-
-  const [eventosProximos, setEventosProximos] = useState<EventoDto[]>([]);
-  const [eventosFinalizados, setEventosFinalizados] = useState<EventoDto[]>([]);
-  const [filtroActivo, setFiltroActivo] = useState<Filtro>("PROXIMOS");
-
-  useEffect(() => {
-    const dataString = Array.isArray(data) ? data[0] : data;
-
-    if (dataString) {
-      const parsed = JSON.parse(dataString);
-      setProductora(parsed);
-    }
-  }, [data]);
+  const { evento, comentarios, estadisticas, productora, loading, error } =
+    useEvento(eventoId);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const inputOffset = useRef(new Animated.Value(0)).current;
+  const bottomOffset = Platform.OS === "android" ? 20 : 0;
+  const inputHeight = 80;
 
   useEffect(() => {
-    if (!productora?.userId) return;
-
-    const fetchEventos = async () => {
-      const proximos = await getEventosProximosByProductora(productora.userId);
-      const finalizados = await getEventosFinalizadosByProductora(
-        productora.userId,
-      );
-
-      setEventosProximos(proximos || []);
-      setEventosFinalizados(finalizados || []);
+    const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+      Animated.timing(inputOffset, {
+        toValue: e.endCoordinates.height + bottomOffset,
+        duration: 250,
+        useNativeDriver: false,
+      }).start();
+    });
+    const hideSub = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardHeight(0);
+      Animated.timing(inputOffset, {
+        toValue: bottomOffset,
+        duration: 250,
+        useNativeDriver: false,
+      }).start();
+    });
+    return () => {
+      showSub.remove();
+      hideSub.remove();
     };
+  }, [inputOffset, bottomOffset]);
 
-    fetchEventos();
-  }, [productora]);
-
-  const options: FiltroItem[] = useMemo(() => {
-    const f: FiltroItem[] = [
-      {
-        key: "PROXIMOS",
-        label: "Eventos Proximos",
-        count: eventosProximos.length,
-      },
-      {
-        key: "FINALIZADOS",
-        label: "Eventos Finalizados",
-        count: eventosFinalizados.length,
-      },
-    ];
-    return f.filter((f) => f.count > 0);
-  }, [eventosFinalizados, eventosProximos]);
-
-  useEffect(() => {
-    if (options.length && !options.find((o) => o.key === filtroActivo)) {
-      setFiltroActivo(options[0].key as Filtro);
-    }
-  }, [options]);
-
-  // ✅ Loading para eventos PROXIMOS
-  if (loadingProx && filtroActivo === "PROXIMOS") {
+  if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
         <ActivityIndicator size="large" color="#4da6ff" />
@@ -85,117 +64,122 @@ export default function Profile() {
     );
   }
 
-  // ✅ Loading para eventos FINALIZADOS
-  if (loadingFin && filtroActivo === "FINALIZADOS") {
+  if (error || !evento) {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
-        <ActivityIndicator size="large" color="#4da6ff" />
+        <Texto className="text-white">
+          {error ?? "No se encontró el evento."}
+        </Texto>
       </View>
     );
   }
+
+  const { width } = Dimensions.get("window");
+  const bannerHeight = width * (4 / 11);
+  const bannerOpacity = scrollY.interpolate({
+    inputRange: [0, 43],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
   return (
-    <View className="flex-1">
-      <HeaderBack />
-      <ScrollView className="bg-[#05081b]">
-        {/* Avatar */}
-        <View className="flex-row justify-center px-4">
-          <UsuarioPerfil
-            username={productora?.user.username}
-            imagenPerfilUrl={productora?.imagenUrl}
-            icono="w-28 h-28"
-            disabled={true}
-          />
-          <View className="ml-5 justify-center">
-            <Texto className="text-white text-3xl font-bold tracking-wide mr-4">
-              {productora?.nombre}
-            </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
-              @{productora?.user.username}
-            </Texto>
-            <View className="flex-row justify-start gap-2">
-              <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
-                <Texto bold className="text-blue-800 mr-2 text-xs">
-                  ORGANIZADOR
-                </Texto>
-                <Entypo name="check" size={10} color="#1E40AF" />
-              </View>
-              {productora?.isSeguido && (
-                <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
-                  <Texto bold className="text-blue-800 mr-2 text-xs">
-                    Siguiendo
-                  </Texto>
-                  <Entypo name="check" size={10} color="#1E40AF" />
-                </View>
-              )}
-            </View>
-          </View>
-        </View>
+    <View style={[styles.container]}>
+      <HeaderBack onHeight={setHeaderHeight} />
 
-        {/* Estadísticas */}
-        <View className="flex-row justify-center px-4">
-          <View className="items-center">
-            <Texto className="text-white text-3xl font-bold tracking-wide">
-              {eventosFinalizados.length + eventosProximos.length}
-            </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
-              eventos
-            </Texto>
-          </View>
-          <View className="items-center mx-5">
-            <Texto className="text-white text-3xl font-bold tracking-wide">
-              {productora?.cantSeguidores}
-            </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
-              seguidores
-            </Texto>
-          </View>
-          <View className="items-center">
-            <Texto className="text-white text-3xl font-bold tracking-wide">
-              {productora?.calificacion}
-            </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
-              calificacion
-            </Texto>
-          </View>
-        </View>
-
-        {/* Contacto */}
-        <View className="flex-row justify-center my-2 mb-4 px-4">
-          <View className="flex-row items-center">
-            <Ionicons name="mail-outline" size={14} color="#999" />
-            <Texto semiBold className="text-[#999] ml-1.5">
-              {productora?.user.email}
-            </Texto>
-          </View>
-          <View className="flex-row items-center ml-2">
-            <Feather name="map-pin" size={14} color="#999" />
-            <Texto semiBold className="text-[#999] ml-1">
-              {productora?.pais}
-            </Texto>
-          </View>
-        </View>
-
-        {/* Filtros */}
-        <View className="px-4">
-          <FilterButton
-            filtros={options}
-            filtroActivo={filtroActivo}
-            setFiltroActivo={(key) => setFiltroActivo(key as Filtro)}
-          />
-        </View>
-
-        {/* Contenido según filtro */}
-        {filtroActivo === "PROXIMOS" && (
-          <EventSection title="EVENTOS PROXIMOS" eventos={eventosProximos} />
+      {evento.bannerUrl && (
+        <Animated.View
+          style={[
+            styles.bannerContainer,
+            { top: headerHeight },
+            { opacity: bannerOpacity },
+          ]}
+        >
+          <ImageBackground
+            source={{ uri: evento.bannerUrl }}
+            style={styles.bannerImage}
+            resizeMode="cover"
+          >
+            <LinearGradient
+              colors={[
+                "rgba(5, 8, 27, 0)",
+                "rgba(5, 8, 27, 0.3)",
+                "rgba(5, 8, 27, 0.6)",
+                "rgba(5, 8, 27, 0.85)",
+                "#05081b",
+              ]}
+              style={styles.gradient}
+            />
+          </ImageBackground>
+        </Animated.View>
+      )}
+      <Animated.ScrollView
+        contentContainerStyle={[styles.content, { paddingTop: bannerHeight }]}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true },
         )}
-        {filtroActivo === "FINALIZADOS" && (
-          <EventSection
-            title="EVENTOS FINALIZADOS"
-            eventos={eventosFinalizados}
-          />
+        scrollEventThrottle={16}
+      >
+        <EventInfo evento={evento} productora={productora} />
+
+        <EntradaList evento={evento} />
+
+        <EventTimer fechaFin={evento.inicioAt} />
+
+        <Estadisticas estadisticas={estadisticas} />
+
+        {comentarios.length !== 0 ? (
+          <Texto semiBold className="text-white tracking-wider p-4">
+            Comentarios{" "}
+            <Texto semiBold className="text-white/50 tracking-wide">
+              {comentarios.length}
+            </Texto>
+          </Texto>
+        ) : (
+          <Texto className="text-center trackig-wider text-white/50 p-4">
+            No hay comentarios por el momento... Agrega uno!
+          </Texto>
         )}
-      </ScrollView>
+
+        {comentarios.map((item) => (
+          <ComentarioCard
+            key={item.id}
+            comentario={item}
+            productora={productora}
+          />
+        ))}
+      </Animated.ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#05081b" },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#05081b",
+  },
+  textWhite: { color: "#fff" },
+  content: { paddingBottom: 50, paddingTop: 200 },
+  bannerContainer: {
+    position: "absolute",
+    left: 0,
+    width: "100%",
+    aspectRatio: 11 / 4,
+    zIndex: 0,
+    overflow: "hidden",
+  },
+  bannerImage: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  gradient: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "100%",
+  },
+});
