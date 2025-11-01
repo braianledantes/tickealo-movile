@@ -32,6 +32,7 @@ export function DatosNacionalidad({
 
   const canProceed = paisSeleccionado && telefono;
 
+  // Solo obtenemos el prefijo y nombre del país para mostrarlo
   useEffect(() => {
     if (!paisSeleccionado) return;
 
@@ -59,6 +60,7 @@ export function DatosNacionalidad({
       return;
     }
 
+    // Aquí enviamos solo el número que ingresó el usuario, SIN prefijo
     onNext({
       pais: paisSeleccionado,
       telefono,
@@ -79,16 +81,9 @@ export function DatosNacionalidad({
       />
 
       <InputNumber
-        prefix={phonePrefix}
-        value={
-          telefono.startsWith(phonePrefix)
-            ? telefono.replace(phonePrefix, "")
-            : telefono
-        }
-        onChangeValue={(val) => {
-          const finalValue = phonePrefix ? phonePrefix + val : val;
-          setTelefono(finalValue);
-        }}
+        prefix={phonePrefix} // Solo visual
+        value={telefono} // Número real
+        onChangeValue={setTelefono}
         placeholder="Teléfono"
       />
 

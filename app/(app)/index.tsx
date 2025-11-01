@@ -1,4 +1,5 @@
 import { Texto } from "@/components/Texto";
+import { normalizarNombreProvincia } from "@/utils/ProvinciaPicker/location";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EventList } from "@/components/Eventos/EventList";
-import { EventSection } from "@/components/Eventos/EventosProximos";
+import { EventSection } from "@/components/Eventos/EventSection";
 import { Busqueda } from "@/components/Input/Busqueda";
 import { Header } from "@/components/Layout/Header";
 import { ProvinciaPicker2 } from "@/components/Modal/ProvinciaPicker2";
@@ -60,16 +61,28 @@ export default function Index() {
     eventosFinalizados.length === 0;
 
   // Filtrar por provincia
-  const filterByProvince = (array: any[]) =>
-    province
-      ? array.filter(
-          (e) => e.lugar?.provincia?.toLowerCase() === province.toLowerCase(),
-        )
-      : array;
+  const filterByProvince = (array: any[]) => {
+    if (!province) return array;
+    const selectedProvincia = normalizarNombreProvincia(province.toLowerCase());
+    return array.filter((e) => {
+      const eventoProvinciaRaw = e.lugar?.provincia || "";
+      const eventoProvincia = normalizarNombreProvincia(
+        eventoProvinciaRaw.toLowerCase(),
+      );
+      return eventoProvincia.includes(selectedProvincia);
+    });
+  };
 
   const proximosFiltrados = filterByProvince(proximos);
   const finalizadosFiltrados = filterByProvince(eventosFinalizados);
   const seguidosFiltrados = filterByProvince(seguidos);
+
+  // Flag para mostrar animación si no hay eventos después de filtrar por provincia
+  const noHayEventosProvincia =
+    !anyLoading &&
+    proximosFiltrados.length === 0 &&
+    finalizadosFiltrados.length === 0 &&
+    seguidosFiltrados.length === 0;
 
   useEffect(() => {
     if (!user) return;
@@ -94,7 +107,7 @@ export default function Index() {
   }, [user]);
 
   useEffect(() => {
-    if (noHayEventos) {
+    if (noHayEventos || noHayEventosProvincia) {
       Animated.loop(
         Animated.sequence([
           Animated.timing(bounceAnim, {
@@ -112,7 +125,7 @@ export default function Index() {
         ]),
       ).start();
     }
-  }, [noHayEventos]);
+  }, [noHayEventos, noHayEventosProvincia]);
 
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
@@ -143,7 +156,7 @@ export default function Index() {
             <Text className="text-[#A5A6AD] text-center mt-5 text-base font-poppins-400">
               {error}
             </Text>
-          ) : noHayEventos ? (
+          ) : noHayEventos || noHayEventosProvincia ? (
             <View style={styles.emptyContainer}>
               <Texto
                 bold

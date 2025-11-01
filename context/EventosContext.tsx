@@ -7,7 +7,6 @@ import {
   fetchAllEvents,
   fetchUpcomingEvents,
   getEstadisticas,
-  getEventosById,
   getEventosSeguidos,
   getProximosEventos,
 } from "@/api/events";
@@ -29,9 +28,6 @@ interface EventosContextType {
   setSearch: (val: string) => void;
   province: string | null;
   setProvince: (val: string | null) => void;
-  getEventosByProductora: (
-    idProductora: number,
-  ) => Promise<EventoDto[] | undefined>;
   fetchEventos: () => Promise<EventoDto[] | undefined>;
   fetchFinalizados: () => Promise<EventoDto[] | undefined>;
   fetchProximos: () => Promise<void>;
@@ -64,16 +60,6 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
   const [province, setProvince] = useState<string | null>(null);
 
   const { user } = useAuth();
-
-  const getEventosByProductora = async (idProductora: number) => {
-    try {
-      return await getEventosById(idProductora);
-    } catch (err: any) {
-      console.error("Error obteniendo eventos de productora:", err);
-      setError("No se pudieron cargar los eventos de la productora.");
-      return undefined;
-    }
-  };
 
   const obtenerEstadisticas = async (eventoId: number) => {
     try {
@@ -197,8 +183,7 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         e.lugar?.ciudad?.toLowerCase().includes(search.toLowerCase());
       const matchesProvincia =
         !province ||
-        e.lugar?.provincia?.toLowerCase().includes(province.toLowerCase()) ||
-        e.lugar?.ciudad?.toLowerCase().includes(province.toLowerCase());
+        e.lugar?.provincia?.toLowerCase().includes(province.toLowerCase());
       return matchesSearch && matchesProvincia;
     });
   }, [events, search, province]);
@@ -220,7 +205,6 @@ export const EventosProvider: React.FC<{ children: React.ReactNode }> = ({
         setSearch,
         province,
         setProvince,
-        getEventosByProductora,
         fetchEventos,
         fetchFinalizados,
         fetchProximos,

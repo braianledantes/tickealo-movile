@@ -48,14 +48,6 @@ export const getProximosEventos = async (): Promise<EventoDto[]> => {
   return response.data;
 };
 
-//obtiene los eventos de una productora
-export const getEventosById = async (
-  idProductora: number,
-): Promise<EventoDto[]> => {
-  const response = await api.get(`/productora/${idProductora}/eventos`);
-  return response.data;
-};
-
 //Obtener estadisticas de un evento
 export const getEstadisticas = async (
   eventoId: number,

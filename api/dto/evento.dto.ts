@@ -59,6 +59,8 @@ export interface ProductoraDto {
   creditosDisponibles: number;
   calificacion: number;
   isSeguido: boolean;
+  cantSeguidores: number;
+  pais: string;
   user: User;
 }
 
