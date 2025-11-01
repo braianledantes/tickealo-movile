@@ -18,8 +18,12 @@ export default function Profile() {
   const { data } = useLocalSearchParams();
   const [productora, setProductora] = useState<ProductoraDto | null>(null);
   const { showToast } = useToast();
-  const { getEventosFinalizadosByProductora, getEventosProximosByProductora } =
-    useProductora();
+  const {
+    getEventosFinalizadosByProductora,
+    getEventosProximosByProductora,
+    loadingFin,
+    loadingProx,
+  } = useProductora();
   const [eventosProximos, setEventosProximos] = useState<EventoDto[]>([]);
   const [eventosFinalizados, setEventosFinalizados] = useState<EventoDto[]>([]);
   const [filtroActivo, setFiltroActivo] = useState<Filtro>("PROXIMOS");
@@ -74,9 +78,9 @@ export default function Profile() {
   return (
     <View className="flex-1">
       <HeaderBack />
-      <ScrollView className="bg-[#05081b] px-5">
+      <ScrollView className="bg-[#05081b]">
         {/* Avatar */}
-        <View className="flex-row justify-start">
+        <View className="flex-row justify-center px-4">
           <UsuarioPerfil
             username={productora?.user.username}
             imagenPerfilUrl={productora?.imagenUrl}
@@ -110,16 +114,16 @@ export default function Profile() {
         </View>
 
         {/* Estadísticas */}
-        <View className="flex-row justify-center">
-          <View className="items-center mr-5">
+        <View className="flex-row justify-center px-4">
+          <View className="items-center ">
             <Texto className="text-white text-3xl font-bold tracking-wide">
-              {productora?.calificacion}
+              {eventosFinalizados.length + eventosProximos.length}
             </Texto>
             <Texto bold className="text-md text-white/70 tracking-wider">
               eventos
             </Texto>
           </View>
-          <View className="items-center mr-10">
+          <View className="items-center mx-5">
             <Texto className="text-white text-3xl font-bold tracking-wide">
               {productora?.cantSeguidores}
             </Texto>
@@ -138,7 +142,7 @@ export default function Profile() {
         </View>
 
         {/* Contacto */}
-        <View className="flex-row justify-center my-2 mb-4">
+        <View className="flex-row justify-center my-2 mb-4 px-4">
           <View className="flex-row items-center">
             <Ionicons
               name="mail-outline"
@@ -159,11 +163,13 @@ export default function Profile() {
         </View>
 
         {/* Filtros */}
-        <FilterButton
-          filtros={options}
-          filtroActivo={filtroActivo}
-          setFiltroActivo={(key) => setFiltroActivo(key as Filtro)}
-        />
+        <View className="px-4">
+          <FilterButton
+            filtros={options}
+            filtroActivo={filtroActivo}
+            setFiltroActivo={(key) => setFiltroActivo(key as Filtro)}
+          />
+        </View>
 
         {/* Eventos según filtro */}
         {filtroActivo === "PROXIMOS" && (

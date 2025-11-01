@@ -13,7 +13,7 @@ import { MiComentario } from "./MiComentario";
 
 interface ComentarioCardProps {
   comentario: ComentarioDto;
-  productora?: ProductoraDto;
+  productora?: ProductoraDto | null;
 }
 
 export const ComentarioCard: React.FC<ComentarioCardProps> = ({

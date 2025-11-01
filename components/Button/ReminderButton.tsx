@@ -48,7 +48,7 @@ export function ReminderButton({ evento }: Props) {
             ? "notifications-outline"
             : "notifications-off-outline"
         }
-        size={35}
+        size={25}
         color="#999"
         colorDisabled="#999"
         onPress={toggleReminder}

@@ -51,7 +51,7 @@ export function FavoriteButton({ evento }: Props) {
     <>
       <IconButton
         iconName={esFavorito ? "heart" : "heart-outline"}
-        size={35}
+        size={25}
         color="#BD4C4C"
         colorDisabled="#BD4C4C"
         onPress={toggleFavorito}

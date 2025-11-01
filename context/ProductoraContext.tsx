@@ -5,6 +5,8 @@ import React, { createContext, useState } from "react";
 interface ProductoraContextType {
   loadingProductora: boolean;
   loading: boolean;
+  loadingFin: boolean;
+  loadingProx: boolean;
   error: string | null;
   getEventosByProductora: (
     idProductora: number,
@@ -16,6 +18,7 @@ interface ProductoraContextType {
     idProductora: number,
   ) => Promise<EventoDto[] | undefined>;
   getProductora: (idProductora: number) => Promise<ProductoraDto | undefined>;
+  productora: ProductoraDto | null;
 }
 
 export const ProductoraContext = createContext<
@@ -27,6 +30,9 @@ export const ProductoraProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [loadingProductora, setLoadingProductora] = useState(false);
+  const [loadingFin, setLoadingFin] = useState(false);
+  const [loadingProx, setLoadingProx] = useState(false);
+  const [productora, setProductora] = useState<ProductoraDto | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const getEventosByProductora = async (idProductora: number) => {
@@ -45,14 +51,20 @@ export const ProductoraProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const getEventosFinalizadosByProductora = async (idProductora: number) => {
+    setLoadingFin(true);
     const eventos = await getEventosByProductora(idProductora);
+    setLoadingFin(false);
+
     if (!eventos) return [];
     const hoy = new Date();
     return eventos.filter((evento) => new Date(evento.finAt) < hoy);
   };
 
   const getEventosProximosByProductora = async (idProductora: number) => {
+    setLoadingProx(true);
     const eventos = await getEventosByProductora(idProductora);
+    setLoadingProx(false);
+
     if (!eventos) return [];
     const hoy = new Date();
     return eventos.filter((evento) => new Date(evento.inicioAt) >= hoy);
@@ -63,10 +75,11 @@ export const ProductoraProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const productora = await getProductoraById(idProductora);
-      return productora;
+      setProductora(productora);
     } catch (err: any) {
       console.error("Error obteniendo productora:", err);
       setError("No se pudo cargar la productora.");
+      setProductora(null);
       return undefined;
     } finally {
       setLoadingProductora(false);
@@ -78,11 +91,14 @@ export const ProductoraProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         loading,
         loadingProductora,
+        loadingFin,
+        loadingProx,
         error,
         getEventosByProductora,
         getEventosFinalizadosByProductora,
         getEventosProximosByProductora,
         getProductora,
+        productora,
       }}
     >
       {children}
