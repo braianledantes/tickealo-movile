@@ -21,8 +21,6 @@ export function ReminderButton({ evento }: Props) {
     }
   }, [evento]);
 
-  console.log("cambio a:", evento.tieneRecordatorio);
-
   const handleErrorToast = (error: string | null) => {
     if (error) showToast("error", "Error", error);
     console.log(error);

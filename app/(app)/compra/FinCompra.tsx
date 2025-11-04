@@ -6,6 +6,7 @@ import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { useCompra } from "@/hooks/useCompra";
 import { useEvento } from "@/hooks/useEvento";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function Compra() {
@@ -21,6 +22,27 @@ export default function Compra() {
   } = useCompra();
 
   const { productora, cuentaBancaria } = useEvento(eventoId);
+
+  // ✅ TIMER: 1 hora = 3600 segundos
+  const [timeLeft, setTimeLeft] = useState(3600);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  const formatTime = () => {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  const tiempoAgotado = timeLeft <= 0;
 
   if (loading || !entrada) {
     return (
@@ -69,12 +91,27 @@ export default function Compra() {
       </ScrollView>
 
       <View className="mb-14 px-4">
+        {!tiempoAgotado ? (
+          <Text className="text-center text-[#999] mb-3 text-base sm:text-lg tracking-wider">
+            Tiempo restante para confirmar: {formatTime()}
+          </Text>
+        ) : (
+          <Text className="text-center text-[#BD4C4C] mb-3 text-base sm:text-lg tracking-wider">
+            Tiempo de espera agotado. Inicia una nueva compra.
+          </Text>
+        )}
+
         {errorMsg && (
           <Text className="text-center text-red-400 mb-2 text-sm">
             {errorMsg}
           </Text>
         )}
-        <Button title="Confirmar compra" onPress={handleComprar} />
+
+        <Button
+          title="Confirmar compra"
+          onPress={handleComprar}
+          disabled={tiempoAgotado}
+        />
       </View>
     </View>
   );

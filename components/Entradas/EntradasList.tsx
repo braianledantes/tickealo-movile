@@ -31,6 +31,7 @@ export const EntradaList: React.FC<EntradaCardProps> = ({ evento }) => {
                     precio: String(entrada.precio),
                     portadaUrl: evento.bannerUrl ?? "",
                     eventoId: String(evento.id),
+                    cantEntradas: entrada.stock,
                   },
                 })
               }

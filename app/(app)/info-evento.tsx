@@ -1,3 +1,4 @@
+import { AgregarComentario } from "@/components/Comentarios/AgregarComentario";
 import { ComentarioCard } from "@/components/Comentarios/ListaComentarios";
 import { EntradaList } from "@/components/Entradas/EntradasList";
 import { Estadisticas } from "@/components/Eventos/Estadisticas";
@@ -113,12 +114,20 @@ export default function InfoEvento() {
         </Animated.View>
       )}
       <Animated.ScrollView
-        contentContainerStyle={[styles.content, { paddingTop: bannerHeight }]}
+        contentContainerStyle={[
+          styles.content,
+          {
+            paddingTop: bannerHeight,
+            paddingBottom: inputHeight + keyboardHeight + bottomOffset + 60,
+          },
+        ]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
         )}
         scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+        style={{ flex: 1 }}
       >
         <EventInfo evento={evento} productora={productora} />
 
@@ -149,6 +158,20 @@ export default function InfoEvento() {
           />
         ))}
       </Animated.ScrollView>
+      <Animated.View
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          paddingBottom: keyboardHeight > 0 ? 28 : 50,
+          bottom: keyboardHeight > 0 ? inputOffset : 0,
+          borderTopWidth: 1,
+          borderTopColor: "#0F1D4C",
+          backgroundColor: "#05081b",
+        }}
+      >
+        <AgregarComentario evento={Number(eventoId)} />
+      </Animated.View>
     </View>
   );
 }

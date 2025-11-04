@@ -14,7 +14,7 @@ interface ImageUploaderInputProps {
 
 export function InputImageUpLoader({
   label,
-  placeholder = "Subir imagen",
+  placeholder = "Click para subir comprobante.",
   value = null,
   onFileSelect,
   readOnly = false,
@@ -76,7 +76,7 @@ export function InputImageUpLoader({
           )}
         </View>
       ) : (
-        <TouchableOpacity style={styles.placeholder}>
+        <TouchableOpacity style={styles.placeholder} onPress={pickImage}>
           <IconButton
             iconType="Feather"
             iconName="camera"
@@ -100,16 +100,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#0F1D4C",
     borderRadius: 100,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 2,
+    paddingHorizontal: 10,
     backgroundColor: "#080C22",
   },
   placeholderText: { color: "#888", fontSize: 14 },
   previewContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#1E40AF",
+    borderWidth: 1,
+    borderColor: "#00ff9d",
     borderTopEndRadius: 999,
     borderBottomEndRadius: 999,
     padding: 10,

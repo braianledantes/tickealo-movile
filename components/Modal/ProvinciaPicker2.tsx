@@ -72,7 +72,10 @@ export function ProvinciaPicker2({
         )}
 
         <Pressable
-          style={[styles.option, { borderTopWidth: 1, borderTopColor: "#223" }]}
+          style={[
+            styles.option,
+            { borderTopWidth: 1, borderTopColor: "#1b1e5e" },
+          ]}
           onPress={handleSelectAuto}
         >
           <Texto style={[styles.optionText, { color: "#4da6ff" }]}>
@@ -99,10 +102,10 @@ const styles = StyleSheet.create({
     right: 20,
     top: 140,
     backgroundColor: "#0b1030",
-    borderRadius: 12,
+    borderRadius: 24,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#223",
+    borderColor: "#1b1e5e",
   },
   modalTitle: {
     color: "#fff",

@@ -1,14 +1,24 @@
 import { Button } from "@/components/Button/Button";
 import { EntradaContador } from "@/components/Entradas/EntradaContador";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { Texto } from "@/components/Texto";
 import { useCantEntradas } from "@/hooks/useCantEntradas";
 import React from "react";
 import { Image, ScrollView, View } from "react-native";
 import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 export default function InfoEntrada() {
-  const { qty, total, precioUnit, onMinus, onPlus, onCheckout, params } =
-    useCantEntradas();
+  const {
+    qty,
+    total,
+    precioUnit,
+    onMinus,
+    onPlus,
+    onCheckout,
+    params,
+    error,
+    disabled,
+  } = useCantEntradas();
 
   const banner =
     params.portadaUrl && params.portadaUrl.trim() !== ""
@@ -18,9 +28,7 @@ export default function InfoEntrada() {
   return (
     <View className="flex-1 bg-[#05081b]">
       {/* Header */}
-      <View className="px-4 pt-2 pb-2">
-        <HeaderBack />
-      </View>
+      <HeaderBack />
 
       <ScrollView className="flex-1">
         {/* Banner */}
@@ -38,10 +46,21 @@ export default function InfoEntrada() {
           onMinus={onMinus}
           onPlus={onPlus}
         />
+        {error && (
+          <View className="px-4 mt-2">
+            <Texto className="text-center tracking-wider text-[#BD4C4C]">
+              {error}
+            </Texto>
+          </View>
+        )}
 
         {/* Botón de compra */}
         <View className="px-4 mt-3 mb-6">
-          <Button title="Ir a la compra" onPress={onCheckout} />
+          <Button
+            title="Ir a la compra"
+            onPress={onCheckout}
+            disabled={disabled}
+          />
         </View>
       </ScrollView>
     </View>

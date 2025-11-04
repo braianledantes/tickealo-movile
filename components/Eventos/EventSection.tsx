@@ -19,9 +19,16 @@ export function EventSection({ title, color, eventos }: Props) {
   }
 
   return (
-    <View className="px-4 pb-10">
+    <View className="px-4">
       {/* Header del dropdown */}
-      <Texto bold style={{ color: color ?? "#CAF0F8", letterSpacing: 1 }}>
+      <Texto
+        bold
+        style={{
+          color: color ?? "#CAF0F8",
+          letterSpacing: 1,
+          marginBottom: 10,
+        }}
+      >
         {title}
       </Texto>
 

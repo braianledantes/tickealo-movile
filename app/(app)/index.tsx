@@ -49,6 +49,7 @@ export default function Index() {
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const bounceAnim = useRef(new Animated.Value(0)).current;
+  const clearLocation = () => setProvince(null);
 
   const anyLoading =
     loading || loadingFinalizados || loadingProximos || loadingSeguidos;
@@ -145,6 +146,7 @@ export default function Index() {
           onPress={() => setPickerOpen(true)}
           search={search}
           setSearch={setSearch}
+          onClearLocation={clearLocation}
         />
 
         <View className="flex-1">
@@ -171,20 +173,35 @@ export default function Index() {
               </Animated.View>
             </View>
           ) : search ? (
-            <EventList
-              events={events}
-              onPressEvent={(id) =>
-                router.push({
-                  pathname: "/info-evento",
-                  params: { eventoId: String(id) },
-                })
-              }
-            />
+            events.length === 0 ? (
+              <View style={styles.emptyContainer}>
+                <Texto
+                  bold
+                  className="text-[#CAF0F8] text-center tracking-wider mb-5"
+                  style={{
+                    maxWidth: "80%",
+                    alignSelf: "center",
+                  }}
+                  numberOfLines={3}
+                >
+                  Ups… no encontramos resultados de tu búsqueda en tu país :(
+                </Texto>
+              </View>
+            ) : (
+              <EventList
+                events={events}
+                onPressEvent={(id) =>
+                  router.push({
+                    pathname: "/info-evento",
+                    params: { eventoId: String(id) },
+                  })
+                }
+              />
+            )
           ) : (
             <>
               <EventSection
                 title="EVENTOS SEGUIDOS"
-                color="#90E0EF"
                 eventos={seguidosFiltrados}
               />
 
