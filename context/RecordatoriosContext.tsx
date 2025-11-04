@@ -2,8 +2,8 @@ import React, { createContext, useState } from "react";
 import { deleteRecordatorio, postRecordatorio } from "../api/recordatorios";
 
 interface RecordatoriosContextProps {
-  ponerRecordatorio: (eventoId: number) => Promise<any>;
-  sacarRecordatorio: (eventoId: number) => Promise<any>;
+  ponerRecordatorio: (eventoId: number) => Promise<boolean>;
+  sacarRecordatorio: (eventoId: number) => Promise<boolean>;
   loading: boolean;
   error: string | null;
 }
@@ -18,15 +18,27 @@ export const RecordatoriosProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const getAxiosErrorMessage = (err: any) => {
+    return (
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "Error inesperado."
+    );
+  };
+
   const ponerRecordatorio = async (eventoId: number) => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await postRecordatorio(eventoId);
-      return response;
-    } catch (err) {
-      console.error("Error agregando un evento a Recordatorios:", err);
-      setError("No se pudo agregar un evento a Recordatorios.");
+      await postRecordatorio(eventoId);
+      return true; // ✅ éxito explícito
+    } catch (err: any) {
+      const msg = getAxiosErrorMessage(err);
+      console.error("Axios ERROR postRecordatorio:", err);
+      setError(msg);
+      return false; // ❗ importantísimo
     } finally {
       setLoading(false);
     }
@@ -35,12 +47,15 @@ export const RecordatoriosProvider: React.FC<{ children: React.ReactNode }> = ({
   const sacarRecordatorio = async (eventoId: number) => {
     setLoading(true);
     setError(null);
+
     try {
-      const response = await deleteRecordatorio(eventoId);
-      return response;
-    } catch (err) {
-      console.error("Error eliminando un evento de Recordatorios:", err);
-      setError("No se pudo eliminar un evento de Recordatorios.");
+      await deleteRecordatorio(eventoId);
+      return true;
+    } catch (err: any) {
+      const msg = getAxiosErrorMessage(err);
+      console.error("Axios ERROR deleteRecordatorio:", err);
+      setError(msg);
+      return false;
     } finally {
       setLoading(false);
     }

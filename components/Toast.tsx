@@ -34,7 +34,7 @@ export const Toast = () => {
 
       Animated.timing(progress, {
         toValue: 1,
-        duration: 3000,
+        duration: 2000,
         useNativeDriver: false,
       }).start(() => {
         Animated.parallel([

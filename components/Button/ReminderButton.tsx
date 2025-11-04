@@ -16,27 +16,33 @@ export function ReminderButton({ evento }: Props) {
   const [tieneRecordatorio, setRecordatorio] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (evento && tieneRecordatorio === null) {
+    if (evento) {
       setRecordatorio(!!evento.tieneRecordatorio);
     }
-    // eslint-disable-next-line
   }, [evento]);
+
+  console.log("cambio a:", evento.tieneRecordatorio);
 
   const handleErrorToast = (error: string | null) => {
     if (error) showToast("error", "Error", error);
+    console.log(error);
   };
 
   const toggleReminder = async () => {
     if (!evento.id) return;
-    const next = !tieneRecordatorio;
-    setRecordatorio(next);
-    const action = next ? ponerRecordatorio : sacarRecordatorio;
+    const action = tieneRecordatorio ? sacarRecordatorio : ponerRecordatorio;
     const success = await action(evento.id);
-    if (!success) {
-      setRecordatorio(!next);
+    if (success) {
+      setRecordatorio(!tieneRecordatorio);
+      if (!tieneRecordatorio) {
+        showToast(
+          "success",
+          "¡Listo!",
+          "Recordatorio agendado...Revisa tus mails!",
+        );
+      }
+    } else {
       handleErrorToast(error);
-    } else if (next) {
-      showToast("success", "¡Listo!", "Recordatorio agendado");
     }
   };
 
