@@ -31,7 +31,7 @@ export function AgregarComentario({
 
   // Validación en tiempo real
   useEffect(() => {
-    const error = validarComentario({ comentario, calificacion });
+    const error = validarComentario({ comentario });
     if (error) {
       setCanSend(false);
       if (touched) {
@@ -52,7 +52,7 @@ export function AgregarComentario({
       });
 
       setComentario("");
-      setCalificacion(0);
+      setCalificacion(1);
       setCanSend(false);
       setTouched(false);
 

@@ -1,6 +1,7 @@
 import { AuthProvider } from "@/context/AuthContext";
 import { ComentariosProvider } from "@/context/ComentariosContext";
 import { ComprasProvider } from "@/context/ComprasContext";
+import { EstadisticasProvider } from "@/context/EstadisticasContext";
 import { EventosProvider } from "@/context/EventosContext";
 import { FavoritoProvider } from "@/context/FavoritosContext";
 import { ProductoraProvider } from "@/context/ProductoraContext";
@@ -19,11 +20,15 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
             <SeguidoresProvider>
               <ComprasProvider>
                 <ValidadorProvider>
-                  <ComentariosProvider>
-                    <FavoritoProvider>
-                      <RecordatoriosProvider>{children}</RecordatoriosProvider>
-                    </FavoritoProvider>
-                  </ComentariosProvider>
+                  <EstadisticasProvider>
+                    <ComentariosProvider>
+                      <FavoritoProvider>
+                        <RecordatoriosProvider>
+                          {children}
+                        </RecordatoriosProvider>
+                      </FavoritoProvider>
+                    </ComentariosProvider>
+                  </EstadisticasProvider>
                 </ValidadorProvider>
               </ComprasProvider>
             </SeguidoresProvider>

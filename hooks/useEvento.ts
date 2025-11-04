@@ -1,7 +1,8 @@
-import { EstadisticasDto, EventoDto } from "@/api/dto/evento.dto";
-import { getEstadisticas, getEventoById } from "@/api/events";
+import { EventoDto } from "@/api/dto/evento.dto";
+import { getEventoById } from "@/api/events";
 import { useComentarios } from "@/hooks/context/useComentarios";
 import { useEffect, useState } from "react";
+import { useEstadisticas } from "./context/useEstadisticas";
 import { useProductora } from "./context/useProductora";
 
 export const useEvento = (id?: string | number) => {
@@ -9,9 +10,7 @@ export const useEvento = (id?: string | number) => {
   const { comentarios, cargarComentarios } = useComentarios();
   const { getProductora, productora } = useProductora();
   const [evento, setEvento] = useState<EventoDto | null>(null);
-  const [estadisticas, setEstadisticas] = useState<EstadisticasDto | null>(
-    null,
-  );
+  const { estadisticas, cargarEstadisticas } = useEstadisticas();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,8 +29,7 @@ export const useEvento = (id?: string | number) => {
 
         await cargarComentarios(eventoId);
         await getProductora(Number(evt.productora.userId));
-        const estadisticas = await getEstadisticas(eventoId);
-        setEstadisticas(estadisticas);
+        await cargarEstadisticas(eventoId);
       } catch (err) {
         console.error("No se pudo cargar el evento.", err);
         if (!cancelled) setError("No se pudo cargar el evento.");
@@ -47,6 +45,12 @@ export const useEvento = (id?: string | number) => {
     };
     // eslint-disable-next-line
   }, [eventoId]);
+
+  useEffect(() => {
+    if (!eventoId) return;
+    cargarEstadisticas(eventoId);
+    // eslint-disable-next-line
+  }, [comentarios]);
 
   const cuentaBancaria = evento?.cuentaBancaria;
 
