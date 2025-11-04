@@ -2,6 +2,7 @@ import { ComentarioDto } from "@/api/dto/comentario.dto";
 import { ProductoraDto } from "@/api/dto/evento.dto";
 import { useAuth } from "@/hooks/context/useAuth";
 import { recentTime } from "@/utils/utils";
+import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Pressable, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
@@ -39,6 +40,14 @@ export const ComentarioCard: React.FC<ComentarioCardProps> = ({
               <Texto semiBold className="text-[#999] ml-2">
                 Fijado por {productora?.nombre}
               </Texto>
+              <View className="flex-row gap-2 mb-2 ml-2 ">
+                <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
+                  <Texto bold className="text-blue-800 mr-2 text-xs">
+                    ORGANIZADOR
+                  </Texto>
+                  <Entypo name="check" size={10} color="#1E40AF" />
+                </View>
+              </View>
             </View>
           )}
 
@@ -86,6 +95,7 @@ export const ComentarioCard: React.FC<ComentarioCardProps> = ({
       {modalVisible && (
         <MiComentario
           comentarioSeleccionado={comentario}
+          productora={productora?.nombre}
           esMiComentario={esMio}
           modalVisible={modalVisible}
           onClose={() => setModalVisible(false)}

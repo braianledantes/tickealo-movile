@@ -76,7 +76,7 @@ export default function Profile() {
     }
   }, [options]);
 
-  // ✅ Loading para eventos PROXIMOS
+  // Loading para eventos PROXIMOS
   if (loadingProx && filtroActivo === "PROXIMOS") {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
@@ -85,7 +85,7 @@ export default function Profile() {
     );
   }
 
-  // ✅ Loading para eventos FINALIZADOS
+  // Loading para eventos FINALIZADOS
   if (loadingFin && filtroActivo === "FINALIZADOS") {
     return (
       <View className="flex-1 justify-center items-center bg-[#05081b]">
@@ -120,14 +120,6 @@ export default function Profile() {
                 </Texto>
                 <Entypo name="check" size={10} color="#1E40AF" />
               </View>
-              {productora?.isSeguido && (
-                <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
-                  <Texto bold className="text-blue-800 mr-2 text-xs">
-                    Siguiendo
-                  </Texto>
-                  <Entypo name="check" size={10} color="#1E40AF" />
-                </View>
-              )}
             </View>
           </View>
         </View>

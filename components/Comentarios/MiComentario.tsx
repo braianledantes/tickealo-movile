@@ -1,6 +1,7 @@
 import { useComentarios } from "@/hooks/context/useComentarios";
 import { useToast } from "@/hooks/context/useToast";
 import { recentTime } from "@/utils/utils";
+import { Entypo } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, Modal, TextInput, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
@@ -11,6 +12,7 @@ import { Estrellas } from "./Estrellas";
 
 interface PreviewComentarioProps {
   comentarioSeleccionado: any;
+  productora?: string;
   esMiComentario: boolean;
   modalVisible: boolean;
   onClose: () => void;
@@ -18,6 +20,7 @@ interface PreviewComentarioProps {
 
 export function MiComentario({
   comentarioSeleccionado: c,
+  productora,
   esMiComentario,
   modalVisible,
   onClose,
@@ -46,11 +49,28 @@ export function MiComentario({
       <View className="flex-1 justify-center items-center bg-black/70 p-4">
         <View className="bg-[#0c0f2b] rounded-3xl p-6 w-full max-w-md">
           {c.fijado && (
-            <View className="flex-row mb-4">
-              <Fijar />
-              <Texto semiBold className="text-[#999] ml-2">
-                Fijado por {c.nombre}
-              </Texto>
+            <View className="flex-row justify-between items-center mb-4">
+              <View className="flex-row items-center ">
+                <Fijar />
+                <Texto semiBold className="text-[#999] ml-2">
+                  Fijado por {productora}
+                </Texto>
+                <View className="flex-row gap-2 mb-2 ml-2 ">
+                  <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
+                    <Texto bold className="text-blue-800 mr-2 text-xs">
+                      ORGANIZADOR
+                    </Texto>
+                    <Entypo name="check" size={10} color="#1E40AF" />
+                  </View>
+                </View>
+              </View>
+              <IconButton
+                iconName="close"
+                size={24}
+                color="#999"
+                onPress={onClose}
+                style={{ padding: 0 }}
+              />
             </View>
           )}
 
@@ -74,13 +94,15 @@ export function MiComentario({
                 @{c.cliente.user.username}
               </Texto>
             </View>
-
-            <IconButton
-              iconName="close"
-              size={24}
-              color="#999"
-              onPress={onClose}
-            />
+            {!c.fijado && (
+              <IconButton
+                iconName="close"
+                size={24}
+                color="#999"
+                onPress={onClose}
+                style={{ padding: 0 }}
+              />
+            )}
           </View>
 
           {!onEdit ? (
