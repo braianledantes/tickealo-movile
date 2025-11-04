@@ -144,7 +144,7 @@ export default function Profile() {
           </View>
           <View className="items-center">
             <Texto className="text-white text-3xl font-bold tracking-wide">
-              {productora?.calificacion?.toFixed(2)}
+              {productora?.calificacion?.toFixed(1)}
             </Texto>
             <Texto bold className="text-md text-white/70 tracking-wider">
               calificacion
