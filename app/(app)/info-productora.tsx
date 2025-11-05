@@ -96,7 +96,7 @@ export default function Profile() {
 
   return (
     <View className="flex-1">
-      <HeaderBack />
+      <HeaderBack title={productora?.nombre} />
       <ScrollView className="bg-[#05081b]">
         {/* Avatar */}
         <View className="flex-row justify-center px-4">

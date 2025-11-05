@@ -1,3 +1,4 @@
+import { IconButton } from "@/components/Button/IconButton";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
@@ -5,6 +6,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -123,13 +125,14 @@ export default function MiEntrada() {
     minute: "2-digit",
   });
 
+  const { width } = Dimensions.get("window");
+  const height = Math.round(width * (1 / 1));
+
   return (
     <View style={styles.container}>
-      <HeaderBack />
+      <HeaderBack title="Detalle tickets" />
 
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Detalle de la compra</Text>
-
         <View
           style={[
             styles.estadoBox,
@@ -141,9 +144,9 @@ export default function MiEntrada() {
           </Text>
         </View>
 
-        <Text style={styles.updatedText}>
+        <Texto className="tracking-wider" style={styles.updatedText}>
           Última actualización: {fechaActualizacion}
-        </Text>
+        </Texto>
 
         {compraSeleccionada.tickets.map((ticket) => {
           const evento = ticket.entrada.evento;
@@ -179,33 +182,40 @@ export default function MiEntrada() {
                     evento?.portadaUrl ??
                     "https://via.placeholder.com/400x200.png?text=Evento",
                 }}
-                style={styles.image}
+                style={(styles.image, { height: height })}
               />
 
               {/* Información */}
               <View style={styles.info}>
-                <Text style={styles.eventName}>
-                  {evento?.nombre ?? "Evento sin nombre"}
-                </Text>
-
-                <View style={styles.row}>
-                  <Text style={styles.label}>Lugar</Text>
-                  <Text style={styles.value}>{lugarTexto}</Text>
+                <View className="flex-row justify-between items-center mb-1">
+                  <Texto className="tracking-wider" style={styles.eventName}>
+                    {evento?.nombre ?? "Evento sin nombre"}
+                  </Texto>
+                  <IconButton
+                    iconType="Feather"
+                    iconName="send"
+                    color="white"
+                  />
                 </View>
 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Tipo entrada</Text>
-                  <Text style={styles.value}>{ticket.entrada.tipo}</Text>
+                  <Texto style={styles.label}>Lugar</Texto>
+                  <Texto style={styles.value}>{lugarTexto}</Texto>
                 </View>
 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Fecha</Text>
-                  <Text style={styles.value}>{fechaEvento}</Text>
+                  <Texto style={styles.label}>Tipo entrada</Texto>
+                  <Texto style={styles.value}>{ticket.entrada.tipo}</Texto>
                 </View>
 
                 <View style={styles.row}>
-                  <Text style={styles.label}>Hora</Text>
-                  <Text style={styles.value}>{horaEvento} hs</Text>
+                  <Texto style={styles.label}>Fecha</Texto>
+                  <Texto style={styles.value}>{fechaEvento}</Texto>
+                </View>
+
+                <View style={styles.row}>
+                  <Texto style={styles.label}>Hora</Texto>
+                  <Texto style={styles.value}>{horaEvento} hs</Texto>
                 </View>
               </View>
 
@@ -248,7 +258,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   content: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 20,
   },
   title: {
     color: "#90e0ef",
@@ -290,7 +301,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 180,
+    resizeMode: "cover",
   },
   info: {
     padding: 16,
@@ -299,7 +310,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
     fontSize: 18,
-    marginBottom: 8,
     textTransform: "uppercase",
   },
   row: {
@@ -308,12 +318,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    color: "#90e0ef",
+    color: "#CAF0F8",
     fontSize: 13,
   },
   value: {
     color: "#fff",
-    fontSize: 13,
+    fontSize: 12,
   },
   qrSection: {
     backgroundColor: "#07102A",

@@ -5,10 +5,12 @@ import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "../../assets/images/logotipo.png";
+import { Texto } from "../Texto";
 
-export const HeaderBack: React.FC<{ onHeight?: (h: number) => void }> = ({
-  onHeight,
-}) => {
+export const HeaderBack: React.FC<{
+  onHeight?: (h: number) => void;
+  title?: string;
+}> = ({ onHeight, title }) => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -31,10 +33,16 @@ export const HeaderBack: React.FC<{ onHeight?: (h: number) => void }> = ({
       </TouchableOpacity>
 
       {/* Logo en el medio */}
-      <Image
-        source={Logo}
-        style={{ width: 100, height: 40, resizeMode: "contain" }}
-      />
+      {title ? (
+        <Texto semiBold className="text-white mt-1 text-xl tracking-wider">
+          {title}
+        </Texto>
+      ) : (
+        <Image
+          source={Logo}
+          style={{ width: 100, height: 40, resizeMode: "contain" }}
+        />
+      )}
 
       {/* Espaciador para balancear layout */}
       <View style={{ width: 28 }} />

@@ -85,7 +85,7 @@ export default function InfoEvento() {
 
   return (
     <View style={[styles.container]}>
-      <HeaderBack onHeight={setHeaderHeight} />
+      <HeaderBack onHeight={setHeaderHeight} title={evento.nombre} />
 
       {evento.bannerUrl && (
         <Animated.View
