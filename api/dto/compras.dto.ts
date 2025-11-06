@@ -1,3 +1,5 @@
+import { ClienteDto } from "./comentario.dto";
+
 export interface ComprasResponse {
   data: CompraDto[];
   pagination: {
@@ -63,3 +65,13 @@ type EventoDto = {
   bannerUrl?: string;
   portadaUrl?: string;
 };
+
+export interface TransferenciasDto {
+  clienteEmisor: ClienteDto;
+  clienteReceptor: ClienteDto;
+  id: number;
+  status: "pendiente" | string;
+  ticket: TicketDto;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -19,7 +19,7 @@ export type DatosBancarios = {
 export function useCompra() {
   const router = useRouter();
   const { showToast } = useToast();
-  const { terminarCompra } = useCompras();
+  const { terminarCompra, loading, error } = useCompras();
 
   const { compraId, entradaId, eventoId, cantidad, total } =
     useLocalSearchParams<{
@@ -32,8 +32,6 @@ export function useCompra() {
 
   const [comprobanteUri, setComprobanteUri] = useState<string | null>(null);
   const [entrada, setEntrada] = useState<Entrada | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const { evento } = useEvento(eventoId);
   const entradaIdNum = Number(entradaId);
@@ -54,17 +52,9 @@ export function useCompra() {
       (e: any) => Number(e.id) === entradaIdNum,
     );
     setEntrada(entradaSeleccionada ?? null);
-    setLoading(false);
   }, [evento, entradaIdNum]);
 
   const handleComprar = async () => {
-    setErrorMsg(null);
-
-    if (!entrada) {
-      setErrorMsg("No se encontró la entrada seleccionada.");
-      return;
-    }
-
     if (!comprobanteUri) {
       showToast(
         "error",
@@ -95,18 +85,18 @@ export function useCompra() {
       await terminarCompra(compraId as string, formData);
       router.replace("/(app)/compra/mis-compras");
     } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || "Error en la compra.");
+      console.log("Error en la compra:", err.response?.data?.message);
     }
   };
 
   return {
     entrada,
     loading,
+    error,
     totalCalculado,
     cantNum,
     comprobanteUri,
     setComprobanteUri,
-    errorMsg,
     handleComprar,
   };
 }

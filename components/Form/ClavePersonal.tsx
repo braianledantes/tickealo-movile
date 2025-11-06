@@ -76,7 +76,7 @@ export function ClavePersonal({
 
           {/* Botón Finalizar Registro */}
           <Button
-            title="Finalizar Registro"
+            title={isLoading ? "Registrando..." : "Finalizar Registro"}
             onPress={handleSubmit}
             disabled={isLoading}
             className="flex-1 ml-4"

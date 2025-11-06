@@ -8,6 +8,7 @@ import { ProductoraProvider } from "@/context/ProductoraContext";
 import { RecordatoriosProvider } from "@/context/RecordatoriosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { TransferenciaProvider } from "@/context/TransferenciaContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
 import React from "react";
 
@@ -20,15 +21,17 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
             <SeguidoresProvider>
               <ComprasProvider>
                 <ValidadorProvider>
-                  <EstadisticasProvider>
-                    <ComentariosProvider>
-                      <FavoritoProvider>
-                        <RecordatoriosProvider>
-                          {children}
-                        </RecordatoriosProvider>
-                      </FavoritoProvider>
-                    </ComentariosProvider>
-                  </EstadisticasProvider>
+                  <TransferenciaProvider>
+                    <EstadisticasProvider>
+                      <ComentariosProvider>
+                        <FavoritoProvider>
+                          <RecordatoriosProvider>
+                            {children}
+                          </RecordatoriosProvider>
+                        </FavoritoProvider>
+                      </ComentariosProvider>
+                    </EstadisticasProvider>
+                  </TransferenciaProvider>
                 </ValidadorProvider>
               </ComprasProvider>
             </SeguidoresProvider>

@@ -63,22 +63,39 @@ export function formatARS(value: string | number) {
   }
 }
 
-export function formatDate(timestamp: string | number) {
+export function formatDate(
+  timestamp: string | number | undefined,
+  options: {
+    date?: boolean; // incluir fecha
+    time?: boolean; // incluir hora
+  } = { date: true, time: true },
+) {
   const date =
     typeof timestamp === "number" ? new Date(timestamp) : new Date(timestamp);
-  return (
-    date.toLocaleDateString("es-AR", {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }) +
-    " " +
-    date.toLocaleTimeString("es-AR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  );
+
+  const parts: string[] = [];
+
+  if (options.date) {
+    parts.push(
+      date.toLocaleDateString("es-AR", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+    );
+  }
+
+  if (options.time) {
+    parts.push(
+      date.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    );
+  }
+
+  return parts.join(" ");
 }
 
 //Obtener estadisticas en barra  de cada comentario o ventas de validador

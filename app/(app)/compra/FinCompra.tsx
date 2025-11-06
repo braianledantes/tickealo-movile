@@ -14,10 +14,10 @@ export default function Compra() {
   const {
     entrada,
     loading,
+    error,
     totalCalculado,
     cantNum,
     setComprobanteUri,
-    errorMsg,
     handleComprar,
   } = useCompra();
 
@@ -44,7 +44,7 @@ export default function Compra() {
 
   const tiempoAgotado = timeLeft <= 0;
 
-  if (loading || !entrada) {
+  if (!entrada) {
     return (
       <View className="flex-1 items-center justify-center bg-[#010030]">
         <ActivityIndicator size="large" color="#4da6ff" />
@@ -101,16 +101,14 @@ export default function Compra() {
           </Text>
         )}
 
-        {errorMsg && (
-          <Text className="text-center text-red-400 mb-2 text-sm">
-            {errorMsg}
-          </Text>
+        {error && (
+          <Text className="text-center text-red-400 mb-2 text-sm">{error}</Text>
         )}
 
         <Button
-          title="Confirmar compra"
+          title={loading ? "Comprando..." : "Confirmar compra"}
           onPress={handleComprar}
-          disabled={tiempoAgotado}
+          disabled={tiempoAgotado || loading}
         />
       </View>
     </View>

@@ -47,6 +47,7 @@ export type Filtro =
   | "ACEPTADAS"
   | "POR_USAR"
   | "YA_USADAS"
+  | "TRANSFERENCIAS"
   | "RECHAZADAS";
 
 // Metadatos asociados a cada tipo de compra
@@ -74,6 +75,10 @@ export const META_FILTROS: Record<
   },
   YA_USADAS: {
     titulo: "ENTRADAS YA USADAS",
+    colorTexto: "#CAF0F8",
+  },
+  TRANSFERENCIAS: {
+    titulo: "ENTRADAS QUE TE TRANSFIRIERON",
     colorTexto: "#CAF0F8",
   },
   RECHAZADAS: {

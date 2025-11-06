@@ -7,7 +7,7 @@ export function CuentaBancaria({
   p,
   c,
 }: {
-  p: ProductoraDto | undefined;
+  p: ProductoraDto | null;
   c: CuentaBancariaDto | undefined;
 }) {
   if (!p || !c) {

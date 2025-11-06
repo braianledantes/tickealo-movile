@@ -1,6 +1,6 @@
 import { renderIcon } from "@/components/Input/Icons";
 import { Entypo, Feather, Ionicons } from "@expo/vector-icons";
-
+import { useFonts } from "expo-font";
 import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 
@@ -27,15 +27,24 @@ export const IconButton: React.FC<IconButtonProps> = ({
   onPress,
   style,
 }) => {
+  // ✅ Cargar fonts necesarias
+  const [fontsLoaded] = useFonts({
+    ...Entypo.font,
+    ...Ionicons.font,
+    ...Feather.font,
+  });
+
   const finalColor = disabled ? colorDisabled : color;
+
+  const shouldShowSpinner = loading || !fontsLoaded;
 
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled || loading}
+      disabled={disabled || loading || !fontsLoaded}
       style={[styles.button, style]}
     >
-      {loading ? (
+      {shouldShowSpinner ? (
         <ActivityIndicator size={size} color={colorDisabled} />
       ) : iconType === "Entypo" ? (
         <Entypo name={iconName as any} size={size} color={finalColor} />

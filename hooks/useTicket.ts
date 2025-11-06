@@ -17,7 +17,7 @@ export const useTicket = (ticketId: string | undefined) => {
       try {
         const respuesta = await validarTicket(ticketId.trim());
         // mensajesTicket es un diccionario de códigos a mensajes
-        import("@/utils/ticketResponse").then(({ mensajesTicket }) => {
+        import("@/utils/Tickets").then(({ mensajesTicket }) => {
           const texto =
             mensajesTicket[respuesta] || "Ocurrió un error inesperado";
           setValid(respuesta === 200);

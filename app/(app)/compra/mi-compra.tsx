@@ -24,8 +24,7 @@ import {
 
 export default function MiCompra() {
   const { compraId } = useLocalSearchParams<{ compraId: string }>();
-  const { miCompra } = useCompras();
-  const [loading, setLoading] = useState(true);
+  const { miCompra, loading, error } = useCompras();
   const [compra, setCompra] = useState<CompraDto | undefined>(undefined);
   const [showComprobante, setShowComprobante] = useState(false);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -37,18 +36,16 @@ export default function MiCompra() {
 
   useEffect(() => {
     const fetchCompra = async () => {
-      setLoading(true);
       try {
         const data = await miCompra(Number(compraId));
         setCompra(data);
       } catch (error) {
         console.error("Error al obtener compra:", error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchCompra();
-  }, [miCompra, compraId]);
+    // eslint-disable-next-line
+  }, [compraId]);
 
   if (loading) {
     return (
@@ -58,11 +55,11 @@ export default function MiCompra() {
     );
   }
 
-  if (!compra) {
+  if (!compra || error) {
     return (
       <View style={styles.loader}>
         <Text style={styles.textWhite}>
-          No se encontró la compra asociada al usuario
+          No se encontró la compra asociada al usuario, {error}
         </Text>
       </View>
     );

@@ -1,4 +1,4 @@
-import { CompraDto } from "@/api/dto/compras.dto";
+import { CompraDto, TransferenciasDto } from "@/api/dto/compras.dto";
 import {
   Filtro,
   META_FILTROS,
@@ -9,17 +9,24 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { FilterButton, FiltroItem } from "../Button/FilterButton";
 import { Texto } from "../Texto";
 import { EntradaComprada } from "./EntradaComprada";
+
 interface EntradaFiltroProps {
   compras: CompraDto[];
-  onPressCompra?: (compra: CompraDto) => void;
+  transferencias?: TransferenciasDto[];
+  onPressCompra?: (compra: CompraDto | TransferenciasDto) => void;
 }
 
 export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
   compras,
+  transferencias,
   onPressCompra,
 }) => {
   const [filtroActivo, setFiltroActivo] = useState<Filtro>("POR_USAR");
 
+  // Aseguramos que transferencias sea siempre un array
+  const entradasTransferidas: TransferenciasDto[] = transferencias ?? [];
+
+  // Configuramos los filtros con sus conteos
   const filtros: FiltroItem[] = [
     {
       key: "POR_USAR",
@@ -31,9 +38,19 @@ export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
       label: "Tickets ya usados",
       count: obtenerComprasPorFiltro(compras, "YA_USADAS").length,
     },
+    {
+      key: "TRANSFERENCIAS",
+      label: "Tickets transferidos",
+      count: entradasTransferidas.length,
+    },
   ].filter((f) => f.count > 0);
 
-  const comprasFiltradas = obtenerComprasPorFiltro(compras, filtroActivo);
+  // Filtramos entradas según filtro activo
+  const EntradasFiltradas =
+    filtroActivo === "TRANSFERENCIAS"
+      ? entradasTransferidas
+      : obtenerComprasPorFiltro(compras, filtroActivo);
+
   const meta = META_FILTROS[filtroActivo];
 
   return (
@@ -64,17 +81,18 @@ export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
           </Texto>
         )}
 
-        {comprasFiltradas.length === 0 && (
+        {/* Mostrar mensaje solo si el array realmente está vacío */}
+        {(!EntradasFiltradas || EntradasFiltradas.length === 0) && (
           <Texto style={{ color: meta.colorTexto }}>
             No hay entradas para este filtro.
           </Texto>
         )}
 
-        {comprasFiltradas.map((compra) => (
+        {EntradasFiltradas?.map((item) => (
           <EntradaComprada
-            key={compra.id}
-            compra={compra}
-            onPress={() => onPressCompra?.(compra)}
+            key={item.id}
+            compra={item}
+            onPress={() => onPressCompra?.(item)}
           />
         ))}
       </View>

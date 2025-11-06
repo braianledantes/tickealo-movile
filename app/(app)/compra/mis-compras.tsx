@@ -9,16 +9,13 @@ import { ActivityIndicator, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MisEntradas() {
-  const { misCompras } = useCompras();
+  const { misCompras, loading } = useCompras();
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
   const [compras, setCompras] = useState<CompraDto[]>([]);
 
   const cargarCompras = async (pagina: number) => {
     try {
-      if (pagina === 1) setLoading(true);
-
       const data = await misCompras(pagina, 50);
       const nuevasCompras = data?.data ?? [];
 
@@ -27,8 +24,6 @@ export default function MisEntradas() {
       );
     } catch (error) {
       console.error("Error al obtener compras:", error);
-    } finally {
-      setLoading(false);
     }
   };
 

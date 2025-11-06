@@ -1,9 +1,13 @@
+import { TicketDto } from "@/api/dto/compras.dto";
 import { IconButton } from "@/components/Button/IconButton";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
-import { useLocalSearchParams } from "expo-router";
+import { resumenTickets } from "@/utils/Tickets";
+import { formatDate } from "@/utils/utils";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+
 import {
   ActivityIndicator,
   Dimensions,
@@ -15,66 +19,35 @@ import {
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 
-type Lugar = {
-  nombre?: string;
-  direccion?: string;
-  ciudad?: string;
-  provincia?: string;
-};
-
-type Entrada = {
-  id: number;
-  nombre: string;
-  tipo: string;
-  precio: number;
-  evento?: {
-    nombre: string;
-    lugar?: Lugar | string;
-    inicioAt?: string;
-    finAt?: string;
-    hora?: string;
-    portadaUrl?: string;
-  };
-};
-
-type Ticket = {
-  id: number;
-  codigoAlfanumerico: string;
-  estado: string;
-  entrada: Entrada;
-};
-
 type Compra = {
   id: number;
   estado: "PENDIENTE" | "ACEPTADA" | "RECHAZADA";
   monto: string;
-  tickets: Ticket[];
+  tickets: TicketDto[];
   updatedAt: string;
 };
 
 export default function MiEntrada() {
   const { compraId } = useLocalSearchParams<{ compraId: string }>();
-  const { misCompras } = useCompras();
-  const [loading, setLoading] = useState(true);
+  const { misCompras, loading, error } = useCompras();
   const [compras, setCompras] = useState<Compra[]>([]);
   const compraIdNum = compraId ? parseInt(compraId, 10) : undefined;
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCompras = async () => {
-      setLoading(true);
       try {
         const data = await misCompras(1, 5);
         const compras = (data?.data ?? []) as Compra[];
         setCompras(compras);
       } catch (error) {
         console.error("Error al obtener compras:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchCompras();
-  }, [misCompras]);
+    // eslint-disable-next-line
+  }, []);
 
   if (loading) {
     return (
@@ -84,11 +57,11 @@ export default function MiEntrada() {
     );
   }
 
-  if (!compras || compras.length === 0) {
+  if (!compras || compras.length === 0 || error) {
     return (
       <View style={styles.loader}>
         <Text style={styles.textWhite}>
-          No se encontraron compras asociadas a su usuario
+          No se encontraron compras asociadas a su usuario, {error}
         </Text>
       </View>
     );
@@ -104,86 +77,69 @@ export default function MiEntrada() {
     );
   }
 
-  const estadoRaw = compraSeleccionada.estado?.toUpperCase() || "";
-  let estado = { label: "SIN ESTADO", color: "#999", background: "#222" };
-
-  if (estadoRaw.includes("ACEPTADA")) {
-    estado = { label: "ACEPTADA", color: "#00ff9d", background: "#003d1f" }; // 🟢
-  } else if (estadoRaw.includes("PENDIENTE")) {
-    estado = { label: "PENDIENTE", color: "#cccccc", background: "#333333" }; // ⚪
-  } else if (estadoRaw.includes("RECHAZADA")) {
-    estado = { label: "RECHAZADA", color: "#ff4d4d", background: "#3d0000" }; // 🔴
-  }
-
-  const fechaActualizacion = new Date(
-    compraSeleccionada.updatedAt,
-  ).toLocaleString("es-AR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
   const { width } = Dimensions.get("window");
   const height = Math.round(width * (1 / 1));
 
+  const resumen = resumenTickets(compraSeleccionada.tickets);
+
   return (
     <View style={styles.container}>
-      <HeaderBack title="Detalle tickets" />
+      <HeaderBack title="Mis tickets" />
+
+      <Texto
+        className="text-center tracking-wider py-2"
+        style={{
+          color: resumen.color ?? "#7a86b6",
+        }}
+      >
+        {resumen.mensaje}
+      </Texto>
 
       <ScrollView contentContainerStyle={styles.content}>
-        <View
-          style={[
-            styles.estadoBox,
-            { backgroundColor: estado.background, borderColor: estado.color },
-          ]}
-        >
-          <Text style={[styles.estadoText, { color: estado.color }]}>
-            {estado.label}
-          </Text>
-        </View>
-
         <Texto className="tracking-wider" style={styles.updatedText}>
-          Última actualización: {fechaActualizacion}
+          Última actualización:{" "}
+          {formatDate(compraSeleccionada.updatedAt, {
+            date: true,
+            time: true,
+          })}
         </Texto>
 
         {compraSeleccionada.tickets.map((ticket) => {
           const evento = ticket.entrada.evento;
 
-          const lugarTexto =
-            typeof evento?.lugar === "string"
-              ? evento.lugar
-              : (evento?.lugar?.nombre ??
-                evento?.lugar?.direccion ??
-                "No especificado");
-
-          const fechaEvento = evento?.inicioAt
-            ? new Date(evento.inicioAt).toLocaleDateString("es-AR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })
-            : "Próximamente";
-
-          const horaEvento = evento?.inicioAt
-            ? new Date(evento.inicioAt).toLocaleTimeString("es-AR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : "--:--";
-
           return (
             <View key={ticket.id} style={styles.ticket}>
               {/* Imagen del evento */}
-              <Image
-                source={{
-                  uri:
-                    evento?.portadaUrl ??
-                    "https://via.placeholder.com/400x200.png?text=Evento",
-                }}
-                style={(styles.image, { height: height })}
-              />
+              <View style={{ position: "relative" }}>
+                <Image
+                  source={{
+                    uri:
+                      evento?.portadaUrl ??
+                      "https://via.placeholder.com/400x200.png?text=Evento",
+                  }}
+                  style={[styles.image, { height: height }]}
+                />
+
+                <IconButton
+                  iconType="Feather"
+                  iconName="send"
+                  color="white"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/(app)/ticket/clientes",
+                      params: { ticketId: String(ticket.id) },
+                    })
+                  }
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    backgroundColor: "#0c0f2b",
+                    padding: 8,
+                    borderRadius: 50,
+                  }}
+                />
+              </View>
 
               {/* Información */}
               <View style={styles.info}>
@@ -191,36 +147,38 @@ export default function MiEntrada() {
                   <Texto className="tracking-wider" style={styles.eventName}>
                     {evento?.nombre ?? "Evento sin nombre"}
                   </Texto>
-                  <IconButton
-                    iconType="Feather"
-                    iconName="send"
-                    color="white"
-                  />
                 </View>
 
                 <View style={styles.row}>
-                  <Texto style={styles.label}>Lugar</Texto>
-                  <Texto style={styles.value}>{lugarTexto}</Texto>
+                  <Texto style={styles.label}>LUGAR</Texto>
+                </View>
+                <View style={styles.row}>
+                  <Texto style={styles.value}>{evento.lugar.direccion}</Texto>
                 </View>
 
                 <View style={styles.row}>
-                  <Texto style={styles.label}>Tipo entrada</Texto>
+                  <Texto style={styles.label}>TIPO DE ENTRADA</Texto>
                   <Texto style={styles.value}>{ticket.entrada.tipo}</Texto>
                 </View>
 
                 <View style={styles.row}>
-                  <Texto style={styles.label}>Fecha</Texto>
-                  <Texto style={styles.value}>{fechaEvento}</Texto>
+                  <Texto style={styles.label}>FECHA</Texto>
+                  <Texto style={styles.label}>HORA</Texto>
                 </View>
 
                 <View style={styles.row}>
-                  <Texto style={styles.label}>Hora</Texto>
-                  <Texto style={styles.value}>{horaEvento} hs</Texto>
+                  <Texto style={styles.value}>
+                    {formatDate(evento?.inicioAt, { date: true, time: false })}
+                  </Texto>
+                  <Texto style={styles.value}>
+                    {formatDate(evento?.inicioAt, { date: false, time: true })}{" "}
+                    hs
+                  </Texto>
                 </View>
               </View>
 
               {/* QR (solo si está aceptada) */}
-              {estado.label === "ACEPTADA" && (
+              {compraSeleccionada.estado === "ACEPTADA" && (
                 <View style={styles.qrSection}>
                   <Texto bold className="text-[#999] text-xl mb-6 ">
                     {ticket.estado}
@@ -268,20 +226,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "center",
   },
-  estadoBox: {
-    alignSelf: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderWidth: 1.5,
-    borderRadius: 20,
-    marginBottom: 8,
-  },
-  estadoText: {
-    fontWeight: "bold",
-    fontSize: 16,
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
   updatedText: {
     color: "#999",
     textAlign: "center",
@@ -320,6 +264,8 @@ const styles = StyleSheet.create({
   label: {
     color: "#CAF0F8",
     fontSize: 13,
+    fontWeight: "bold",
+    letterSpacing: 1,
   },
   value: {
     color: "#fff",
