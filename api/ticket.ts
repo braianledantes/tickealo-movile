@@ -1,5 +1,10 @@
 import api from "./axiosConfig";
 
+export const getTickets = async () => {
+  const response = await api.get(`/tickets`);
+  return response.data;
+};
+
 // Obtengo una lista de clientes
 export const getClientes = async () => {
   const response = await api.get(`/clientes`);

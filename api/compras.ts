@@ -33,13 +33,24 @@ export const finalizarCompra = async (
   return response.data;
 };
 
-// Obtener las compras realizadas por el usuario
 export const getCompras = async (
   page: number,
   limit: number,
 ): Promise<ComprasResponse> => {
   const response = await api.get(`/compras/mis-compras`, {
     params: { page, limit },
+  });
+  return response.data;
+};
+
+// Obtener las compras realizadas por el usuario
+export const getComprasFiltradas = async (
+  page: number,
+  limit: number,
+  estado: string,
+): Promise<ComprasResponse> => {
+  const response = await api.get(`/compras/mis-compras`, {
+    params: { page, limit, estado },
   });
   return response.data;
 };

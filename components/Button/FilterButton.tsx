@@ -31,11 +31,12 @@ export const FilterButton: React.FC<FiltrosProps> = ({
         <TouchableOpacity
           key={f.key}
           onPress={() => setFiltroActivo(f.key)}
-          className={`mr-2 py-1.5 px-3 rounded-full border ${
-            filtroActivo === f.key
-              ? "bg-[#1E90FF] border-[#1E90FF]"
-              : "border-[#1E90FF]"
-          }`}
+          className={`mr-2 py-1.5 px-3 rounded-full border items-center min-h-[32px] 
+            ${
+              filtroActivo === f.key
+                ? "bg-[#1E90FF] border-[#1E90FF]"
+                : "border-[#1E90FF]"
+            }`}
         >
           <Texto
             className={filtroActivo === f.key ? "text-white" : "text-blue-400"}

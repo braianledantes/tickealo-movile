@@ -2,6 +2,7 @@ import {
   finalizarCompra,
   getCompra,
   getCompras,
+  getComprasFiltradas,
   iniciarCompra,
 } from "@/api/compras";
 import { CompraDto, ComprasResponse } from "@/api/dto/compras.dto";
@@ -20,8 +21,21 @@ interface ComprasContextProps {
     page?: number,
     limit?: number,
   ) => Promise<ComprasResponse | void>;
+  cargarComprasPorEstado: (
+    estado: string,
+    page?: number,
+    limit?: number,
+  ) => Promise<ComprasResponse | void>;
   miCompra: (compraId: number) => Promise<CompraDto | undefined>;
+
   compras: ComprasResponse | undefined;
+
+  comprasPendientesValidacion: ComprasResponse | undefined;
+  comprasValidadas: ComprasResponse | undefined;
+  comprasRechazadas: ComprasResponse | undefined;
+  comprasAceptadas: ComprasResponse | undefined;
+  comprasPendientes: ComprasResponse | undefined;
+
   loading: boolean;
   error: string | null;
 }
@@ -35,14 +49,27 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [compras, setCompras] = useState<ComprasResponse | undefined>(
     undefined,
   );
 
-  const comprar = async (body: {
-    idEntrada: number;
-    cant: number;
-  }): Promise<CompraDto | undefined> => {
+  const [comprasPendientesValidacion, setComprasPendientesValidacion] =
+    useState<ComprasResponse | undefined>(undefined);
+  const [comprasValidadas, setComprasValidadas] = useState<
+    ComprasResponse | undefined
+  >(undefined);
+  const [comprasRechazadas, setComprasRechazadas] = useState<
+    ComprasResponse | undefined
+  >(undefined);
+  const [comprasAceptadas, setComprasAceptadas] = useState<
+    ComprasResponse | undefined
+  >(undefined);
+  const [comprasPendientes, setComprasPendientes] = useState<
+    ComprasResponse | undefined
+  >(undefined);
+
+  const comprar = async (body: { idEntrada: number; cant: number }) => {
     setLoading(true);
     setError(null);
     try {
@@ -59,7 +86,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   const terminarCompra = async (
     compraId: string | number,
     formData: FormData,
-  ): Promise<CompraDto | undefined> => {
+  ) => {
     setLoading(true);
     setError(null);
     try {
@@ -73,16 +100,69 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const misCompras = async (page = 1, limit = 10) => {
+  const misCompras = async (page = 1, limit = 100) => {
     setLoading(true);
     setError(null);
     try {
       const response = await getCompras(page, limit);
-      setCompras(response ?? []);
+      setCompras(response);
       return response;
     } catch (err) {
       setError("No se pudo obtener las compras.");
-      console.error(" Error obteniendo compras del usuario:", err);
+      console.error("Error obteniendo compras del usuario:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cargarComprasPorEstado = async (
+    estado: string,
+    page = 1,
+    limit = 10,
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getComprasFiltradas(page, limit, estado);
+      if (!response) return;
+
+      switch (estado) {
+        case "ACEPTADA":
+          const entradasPorUsar = response.data.filter((compra) =>
+            compra.tickets.some((t) => t.estado === "PENDIENTE_VALIDACION"),
+          );
+
+          const entradasYaUsadas = response.data.filter((compra) =>
+            compra.tickets.every((t) => t.estado === "VALIDADO"),
+          );
+
+          setComprasPendientesValidacion({
+            ...response,
+            data: entradasPorUsar,
+          });
+          setComprasValidadas({ ...response, data: entradasYaUsadas });
+          setComprasAceptadas(response);
+          break;
+
+        case "PENDIENTE":
+          setComprasPendientes(response);
+          break;
+
+        case "RECHAZADA":
+          setComprasRechazadas(response);
+          break;
+
+        default:
+          console.warn(`Estado no manejado: ${estado}`);
+      }
+
+      return response;
+    } catch (err) {
+      setError(`No se pudo obtener las compras con estado ${estado}.`);
+      console.error(
+        `Error obteniendo compras del usuario estado ${estado}:`,
+        err,
+      );
     } finally {
       setLoading(false);
     }
@@ -96,7 +176,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
       return response;
     } catch (err) {
       setError("No se pudo obtener la compra.");
-      console.error(" Error obteniendo compra del usuario:", err);
+      console.error("Error obteniendo compra del usuario:", err);
     } finally {
       setLoading(false);
     }
@@ -108,8 +188,14 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
         comprar,
         terminarCompra,
         misCompras,
+        cargarComprasPorEstado,
         miCompra,
         compras,
+        comprasPendientesValidacion,
+        comprasValidadas,
+        comprasRechazadas,
+        comprasAceptadas,
+        comprasPendientes,
         loading,
         error,
       }}

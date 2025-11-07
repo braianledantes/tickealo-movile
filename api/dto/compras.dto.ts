@@ -1,4 +1,5 @@
 import { ClienteDto } from "./comentario.dto";
+import { EventoDto } from "./evento.dto";
 
 export interface ComprasResponse {
   data: CompraDto[];
@@ -56,17 +57,11 @@ type EntradaDto = {
   evento: EventoDto;
 };
 
-type EventoDto = {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  inicioAt: string;
-  finAt: string;
-  bannerUrl?: string;
-  portadaUrl?: string;
-};
+export interface TransferenciaResponseDto {
+  transferencias: TransferenciaDto[];
+}
 
-export interface TransferenciasDto {
+export interface TransferenciaDto {
   clienteEmisor: ClienteDto;
   clienteReceptor: ClienteDto;
   id: number;

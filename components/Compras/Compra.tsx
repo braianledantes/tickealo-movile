@@ -122,7 +122,7 @@ export const Compra: React.FC<EntradaCompradaProps> = ({
               {totalEntradas}
             </Texto>
             <Texto className="text-xs mt-0.5 text-indigo-300 text-center">
-              Tickets{"\n"}Comprados
+              Entradas{"\n"}Comprados
             </Texto>
           </View>
         </LinearGradient>

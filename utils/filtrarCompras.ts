@@ -19,24 +19,10 @@ export function filtrarCompras(compras: CompraDto[]) {
       c.tickets.some((t) => t.estado === "PENDIENTE_VALIDACION"),
   );
 
-  const entradasPorUsar = compras.filter(
-    (c) =>
-      c.estado === "ACEPTADA" &&
-      c.tickets.some((t) => t.estado === "PENDIENTE_VALIDACION"),
-  );
-
-  const entradasYaUsadas = compras.filter(
-    (c) =>
-      c.estado === "ACEPTADA" &&
-      c.tickets.every((t) => t.estado === "VALIDADO"),
-  );
-
   return {
     compraReciente,
     compraRechazada,
     compraAceptada,
-    entradasPorUsar,
-    entradasYaUsadas,
   };
 }
 
@@ -91,23 +77,14 @@ export const META_FILTROS: Record<
 
 // Función para obtener compras según un filtro específico
 export function obtenerComprasPorFiltro(compras: CompraDto[], filtro: Filtro) {
-  const {
-    compraReciente,
-    compraRechazada,
-    compraAceptada,
-    entradasPorUsar,
-    entradasYaUsadas,
-  } = filtrarCompras(compras);
+  const { compraReciente, compraRechazada, compraAceptada } =
+    filtrarCompras(compras);
 
   switch (filtro) {
     case "RECIENTES":
       return compraReciente;
     case "ACEPTADAS":
       return compraAceptada;
-    case "POR_USAR":
-      return entradasPorUsar;
-    case "YA_USADAS":
-      return entradasYaUsadas;
     case "RECHAZADAS":
       return compraRechazada;
     case "TODAS":

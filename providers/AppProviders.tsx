@@ -7,8 +7,8 @@ import { FavoritoProvider } from "@/context/FavoritosContext";
 import { ProductoraProvider } from "@/context/ProductoraContext";
 import { RecordatoriosProvider } from "@/context/RecordatoriosContext";
 import { SeguidoresProvider } from "@/context/SeguidoresContext";
+import { TicketProvider } from "@/context/TicketContext";
 import { ToastProvider } from "@/context/ToastContext";
-import { TransferenciaProvider } from "@/context/TransferenciaContext";
 import { ValidadorProvider } from "@/context/ValidadorContext";
 import React from "react";
 
@@ -21,7 +21,7 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
             <SeguidoresProvider>
               <ComprasProvider>
                 <ValidadorProvider>
-                  <TransferenciaProvider>
+                  <TicketProvider>
                     <EstadisticasProvider>
                       <ComentariosProvider>
                         <FavoritoProvider>
@@ -31,7 +31,7 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
                         </FavoritoProvider>
                       </ComentariosProvider>
                     </EstadisticasProvider>
-                  </TransferenciaProvider>
+                  </TicketProvider>
                 </ValidadorProvider>
               </ComprasProvider>
             </SeguidoresProvider>

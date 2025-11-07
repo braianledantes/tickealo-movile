@@ -1,11 +1,11 @@
-import { CompraDto, TransferenciasDto } from "@/api/dto/compras.dto";
+import { CompraDto, TransferenciaDto } from "@/api/dto/compras.dto";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Texto } from "../Texto";
 
 interface EntradaCompradaProps {
-  compra: CompraDto | TransferenciasDto;
+  compra: CompraDto | TransferenciaDto;
   onPress: () => void;
   used?: boolean;
 }
@@ -15,73 +15,74 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
   onPress,
   used = false,
 }) => {
-  // Detectamos si es una transferencia
   const esTransferencia = "ticket" in compra;
 
-  // Obtenemos el ticket correcto según el tipo
   const ticket = esTransferencia ? compra.ticket : compra.tickets?.[0];
-  if (!ticket) return null; // No renderiza si no hay ticket
+  if (!ticket) return null;
 
   const evento = ticket.entrada.evento;
 
-  // Cantidad total de entradas
-  const totalEntradas = esTransferencia
-    ? ticket.entrada.cantidad
-    : compra.tickets?.reduce((acc, t) => acc + (t.entrada?.cantidad || 0), 0) ||
-      0;
+  const totalEntradas = esTransferencia ? 1 : compra.tickets.length;
 
   return (
     <TouchableOpacity
-      className="flex-row my-2 bg-[#0b1030] rounded-tr-[30px] rounded-br-[30px] overflow-hidden"
+      style={styles.container}
       onPress={onPress}
       activeOpacity={0.85}
     >
+      {/* Imagen del evento */}
       <Image
         source={{
           uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
         }}
-        className="w-[100px] h-[120px]"
+        style={styles.image}
       />
 
+      {/* Cuerpo */}
       <LinearGradient
         colors={["#0b1030", "#0f1a4a"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        className="flex-1 flex-row items-center p-4 rounded-tr-[30px] rounded-br-[30px] relative"
+        style={styles.content}
       >
-        <View className="flex-1 justify-center">
-          <Texto
-            bold
-            className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6"
-            numberOfLines={1}
-          >
+        {/* Info izquierda */}
+        <View style={styles.info}>
+          <Texto bold style={styles.eventName} numberOfLines={1}>
             {evento.nombre}
           </Texto>
-          <Texto className="text-[#ffffff]">
+
+          <Texto style={styles.date}>
             {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
               day: "2-digit",
               month: "long",
               year: "numeric",
             })}
           </Texto>
-          <Texto
-            bold
-            className="text-[#bbb] text-xs text-[14px] tracking-[0.5px]"
-          >
+
+          <Texto bold style={styles.label}>
             ENTRADA
           </Texto>
-          <Texto bold className="text-md text-[#77c3ff] tracking-wider">
+          <Texto bold style={styles.tipo}>
             {ticket.entrada.tipo}
           </Texto>
         </View>
 
-        <View className="w-[1px] border-l border-dashed border-gray-400 my-2.5 mx-3 self-stretch" />
+        <View style={styles.separatorWrapper}>
+          <View style={styles.cutTop} />
 
-        <View className="w-15 justify-center items-center">
-          <Texto className="text-white font-extrabold text-lg">
-            {totalEntradas}
-          </Texto>
-          <Texto className="text-xs mt-0.5 text-indigo-300">cantidad</Texto>
+          <View style={styles.separatorContainer}>
+            {[...Array(8)].map((_, i) => (
+              <View key={i} style={styles.dot} />
+            ))}
+          </View>
+
+          <View style={styles.cutBottom} />
+        </View>
+
+        {/* Cantidad */}
+        <View style={styles.countBox}>
+          <Texto style={styles.count}>{totalEntradas}</Texto>
+          <Texto style={styles.countLabel}>cantidad</Texto>
         </View>
       </LinearGradient>
 
@@ -91,8 +92,109 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    marginVertical: 8,
+    backgroundColor: "#0b1030",
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+    overflow: "hidden",
+  },
+
+  /** Imagen adaptable */
+  image: {
+    width: "28%",
+    aspectRatio: 1 / 1.25,
+    resizeMode: "cover",
+  },
+
+  /** Cuerpo */
+  content: {
+    flex: 1,
+    flexDirection: "row",
+    padding: 12,
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+    alignItems: "center",
+  },
+  info: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  eventName: {
+    color: "#cfe3ff",
+    fontSize: 16,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
+  date: {
+    color: "#fff",
+    marginBottom: 4,
+    fontSize: 13,
+  },
+  label: {
+    color: "#bbb",
+    fontSize: 11,
+    marginTop: 4,
+  },
+  tipo: {
+    color: "#77c3ff",
+    marginTop: 2,
+    fontSize: 14,
+    letterSpacing: 0.5,
+  },
+  separatorWrapper: {
+    position: "relative",
+  },
+  separatorContainer: {
+    width: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    gap: 6,
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 50,
+    backgroundColor: "rgba(0, 3, 61, 0.99)",
+  },
+
+  countBox: {
+    width: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  count: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  countLabel: {
+    color: "#a7c7ff",
+    fontSize: 11,
+  },
+  cutTop: {
+    position: "absolute",
+    top: -30,
+    right: -5,
+    width: 25,
+    height: 25,
+    borderRadius: 20,
+    backgroundColor: "#05081b",
+  },
+
+  cutBottom: {
+    position: "absolute",
+    bottom: -30,
+    right: -5,
+    width: 25,
+    height: 25,
+    borderRadius: 20,
+    backgroundColor: "#05081b",
+  },
   disabledOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.37)",
+    backgroundColor: "rgba(0,0,0,0.37)",
   },
 });

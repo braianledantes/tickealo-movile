@@ -1,55 +1,46 @@
-import { CompraDto, TransferenciasDto } from "@/api/dto/compras.dto";
-import {
-  Filtro,
-  META_FILTROS,
-  obtenerComprasPorFiltro,
-} from "@/utils/filtrarCompras";
-import React, { useState } from "react";
+import { CompraDto, TransferenciaDto } from "@/api/dto/compras.dto";
+import { Filtro, META_FILTROS } from "@/utils/filtrarCompras";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FilterButton, FiltroItem } from "../Button/FilterButton";
 import { Texto } from "../Texto";
 import { EntradaComprada } from "./EntradaComprada";
 
 interface EntradaFiltroProps {
-  compras: CompraDto[];
-  transferencias?: TransferenciasDto[];
-  onPressCompra?: (compra: CompraDto | TransferenciasDto) => void;
+  porUsar: CompraDto[];
+  usados: CompraDto[];
+  transferidos: TransferenciaDto[];
+  onPressTicket?: (compra: CompraDto | TransferenciaDto) => void;
 }
 
 export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
-  compras,
-  transferencias,
-  onPressCompra,
+  porUsar,
+  usados,
+  transferidos,
+  onPressTicket,
 }) => {
   const [filtroActivo, setFiltroActivo] = useState<Filtro>("POR_USAR");
 
-  // Aseguramos que transferencias sea siempre un array
-  const entradasTransferidas: TransferenciasDto[] = transferencias ?? [];
+  useEffect(() => {
+    if (porUsar.length > 0) setFiltroActivo("POR_USAR");
+    else if (usados.length > 0) setFiltroActivo("YA_USADAS");
+    else if (transferidos.length > 0) setFiltroActivo("TRANSFERENCIAS");
+  }, [porUsar.length, usados.length, transferidos.length]);
 
-  // Configuramos los filtros con sus conteos
   const filtros: FiltroItem[] = [
-    {
-      key: "POR_USAR",
-      label: "Tickets por usar",
-      count: obtenerComprasPorFiltro(compras, "POR_USAR").length,
-    },
-    {
-      key: "YA_USADAS",
-      label: "Tickets ya usados",
-      count: obtenerComprasPorFiltro(compras, "YA_USADAS").length,
-    },
+    { key: "POR_USAR", label: "Tickets por usar", count: porUsar.length },
+    { key: "YA_USADAS", label: "Tickets ya usados", count: usados.length },
     {
       key: "TRANSFERENCIAS",
       label: "Tickets transferidos",
-      count: entradasTransferidas.length,
+      count: transferidos.length,
     },
   ].filter((f) => f.count > 0);
 
-  // Filtramos entradas según filtro activo
-  const EntradasFiltradas =
-    filtroActivo === "TRANSFERENCIAS"
-      ? entradasTransferidas
-      : obtenerComprasPorFiltro(compras, filtroActivo);
+  let EntradasFiltradas: (CompraDto | TransferenciaDto)[] = [];
+  if (filtroActivo === "POR_USAR") EntradasFiltradas = porUsar;
+  else if (filtroActivo === "YA_USADAS") EntradasFiltradas = usados;
+  else if (filtroActivo === "TRANSFERENCIAS") EntradasFiltradas = transferidos;
 
   const meta = META_FILTROS[filtroActivo];
 
@@ -81,18 +72,17 @@ export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
           </Texto>
         )}
 
-        {/* Mostrar mensaje solo si el array realmente está vacío */}
-        {(!EntradasFiltradas || EntradasFiltradas.length === 0) && (
+        {EntradasFiltradas.length === 0 && (
           <Texto style={{ color: meta.colorTexto }}>
             No hay entradas para este filtro.
           </Texto>
         )}
 
-        {EntradasFiltradas?.map((item) => (
+        {EntradasFiltradas.map((item) => (
           <EntradaComprada
             key={item.id}
             compra={item}
-            onPress={() => onPressCompra?.(item)}
+            onPress={() => onPressTicket?.(item)}
           />
         ))}
       </View>
