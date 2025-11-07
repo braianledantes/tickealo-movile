@@ -1,6 +1,9 @@
+import { IconButton } from "@/components/Button/IconButton";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { useTicket } from "@/hooks/context/useTicket";
+import { useToast } from "@/hooks/context/useToast";
 import { formatDate } from "@/utils/utils";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
@@ -17,8 +20,14 @@ import QRCode from "react-native-qrcode-svg";
 
 export default function MiEntrada() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
-  const { ticketsTransferidos, transferidos, loadingTransferidos } =
-    useTicket();
+  const {
+    ticketsTransferidos,
+    transferidos,
+    loadingTransferidos,
+    aceptarTransferencia,
+    loading,
+  } = useTicket();
+  const { showToast } = useToast();
 
   const ticketIdNum = ticketId ? ticketId : undefined;
 
@@ -30,6 +39,17 @@ export default function MiEntrada() {
   const ticketSeleccionado = transferidos.find(
     (t) => t.ticket.id === Number(ticketIdNum),
   );
+
+  const handleAceptarTransferencia = async () => {
+    if (!ticketId) return;
+    const transferenciaId = ticketSeleccionado?.id;
+    const success = await aceptarTransferencia(Number(transferenciaId));
+    if (success) {
+      showToast("success", "¡Listo!", "Transferencia aceptad. A disfrutar!");
+    } else {
+      showToast("error", "Error", "Intentelo mas tarde.");
+    }
+  };
 
   if (loadingTransferidos) {
     return (
@@ -51,14 +71,41 @@ export default function MiEntrada() {
   const height = Math.round(width * (1 / 1));
 
   const evento = ticketSeleccionado.ticket.entrada.evento;
-
   return (
     <View style={styles.container}>
       <HeaderBack title="Mi ticket" />
-
       <ScrollView contentContainerStyle={styles.content}>
+        {ticketSeleccionado.status === "pendiente" && (
+          <View className="flex-row justify-between items-center m-2 bg-[#0c0f2b] p-2 pr-4 rounded-full">
+            <View className="flex-row items-center">
+              <UsuarioPerfil
+                imagenPerfilUrl={
+                  ticketSeleccionado.clienteEmisor.imagenPerfilUrl
+                }
+                username={ticketSeleccionado.clienteEmisor.nombre}
+                icono="w-7 h-7"
+                className="p-0"
+              />
+              <Texto semiBold className="text-white text-sm ml-2 text-center">
+                Transferencia de {ticketSeleccionado.clienteEmisor.nombre}
+                {ticketSeleccionado.clienteEmisor.apellido}
+              </Texto>
+            </View>
+            <IconButton
+              iconType="Feather"
+              iconName="check"
+              size={20}
+              color="#00ff9d"
+              style={{
+                padding: 0,
+              }}
+              disabled={loading}
+              onPress={handleAceptarTransferencia}
+            />
+          </View>
+        )}
         <Texto style={styles.updatedText}>
-          Última actualización:{" "}
+          Fecha de Transferencia:{" "}
           {formatDate(ticketSeleccionado.updatedAt, { date: true, time: true })}
         </Texto>
 
@@ -87,9 +134,7 @@ export default function MiEntrada() {
               <Texto style={styles.label}>LUGAR</Texto>
             </View>
             <View style={styles.row}>
-              <Texto style={styles.value}>
-                {evento?.lugar?.direccion ?? "Sin dirección"}
-              </Texto>
+              <Texto style={styles.value}>Sin dirección</Texto>
             </View>
 
             <View style={styles.row}>

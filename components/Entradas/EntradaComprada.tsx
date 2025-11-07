@@ -38,14 +38,13 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
         style={styles.image}
       />
 
-      {/* Cuerpo */}
+      {/* Cuerpo izquierda */}
       <LinearGradient
         colors={["#0b1030", "#0f1a4a"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        style={styles.content}
+        style={styles.leftGradient}
       >
-        {/* Info izquierda */}
         <View style={styles.info}>
           <Texto bold style={styles.eventName} numberOfLines={1}>
             {evento.nombre}
@@ -66,25 +65,14 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
             {ticket.entrada.tipo}
           </Texto>
         </View>
-
-        <View style={styles.separatorWrapper}>
-          <View style={styles.cutTop} />
-
-          <View style={styles.separatorContainer}>
-            {[...Array(8)].map((_, i) => (
-              <View key={i} style={styles.dot} />
-            ))}
-          </View>
-
-          <View style={styles.cutBottom} />
-        </View>
-
-        {/* Cantidad */}
+      </LinearGradient>
+      {/* Cuerpo derecha */}
+      <View style={styles.rightGradient}>
         <View style={styles.countBox}>
           <Texto style={styles.count}>{totalEntradas}</Texto>
           <Texto style={styles.countLabel}>cantidad</Texto>
         </View>
-      </LinearGradient>
+      </View>
 
       {used && <View style={styles.disabledOverlay} />}
     </TouchableOpacity>
@@ -95,73 +83,63 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     marginVertical: 8,
-    backgroundColor: "#0b1030",
-    borderTopRightRadius: 30,
-    borderBottomRightRadius: 30,
     overflow: "hidden",
   },
 
-  /** Imagen adaptable */
   image: {
     width: "28%",
     aspectRatio: 1 / 1.25,
     resizeMode: "cover",
   },
 
-  /** Cuerpo */
-  content: {
+  /** ⬅️ Gradient izquierdo */
+  leftGradient: {
     flex: 1,
-    flexDirection: "row",
     padding: 12,
-    borderTopRightRadius: 30,
-    borderBottomRightRadius: 30,
-    alignItems: "center",
+    justifyContent: "center",
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 25,
   },
+
+  /** ➡️ Gradient derecho */
+  rightGradient: {
+    width: 80,
+    padding: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 25,
+    backgroundColor: "#0b1030",
+  },
+
   info: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-start",
   },
+
   eventName: {
     color: "#cfe3ff",
     fontSize: 16,
     textTransform: "uppercase",
-    marginBottom: 4,
+    marginBottom: 1,
   },
   date: {
     color: "#fff",
-    marginBottom: 4,
+    marginBottom: 1,
     fontSize: 13,
   },
   label: {
     color: "#bbb",
     fontSize: 11,
-    marginTop: 4,
+    marginTop: 1,
   },
   tipo: {
     color: "#77c3ff",
-    marginTop: 2,
+    marginTop: 1,
     fontSize: 14,
-    letterSpacing: 0.5,
-  },
-  separatorWrapper: {
-    position: "relative",
-  },
-  separatorContainer: {
-    width: 10,
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    gap: 6,
-  },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 50,
-    backgroundColor: "rgba(0, 3, 61, 0.99)",
   },
 
   countBox: {
-    width: 50,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -174,25 +152,7 @@ const styles = StyleSheet.create({
     color: "#a7c7ff",
     fontSize: 11,
   },
-  cutTop: {
-    position: "absolute",
-    top: -30,
-    right: -5,
-    width: 25,
-    height: 25,
-    borderRadius: 20,
-    backgroundColor: "#05081b",
-  },
 
-  cutBottom: {
-    position: "absolute",
-    bottom: -30,
-    right: -5,
-    width: 25,
-    height: 25,
-    borderRadius: 20,
-    backgroundColor: "#05081b",
-  },
   disabledOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.37)",

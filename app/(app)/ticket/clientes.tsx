@@ -3,7 +3,7 @@ import { Input } from "@/components/Input/Input";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
-import { useTransferencia } from "@/hooks/context/useTicket";
+import { useTicket } from "@/hooks/context/useTicket";
 import { useToast } from "@/hooks/context/useToast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect } from "react";
@@ -11,7 +11,7 @@ import { ScrollView, View } from "react-native";
 
 export default function TransferirTicket() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
-  const { listaClientes, clientes, search, setSearch } = useTransferencia();
+  const { listaClientes, clientes, search, setSearch } = useTicket();
   const { showToast } = useToast();
   const router = useRouter();
 

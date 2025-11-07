@@ -4,7 +4,7 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
-import { useTransferencia } from "@/hooks/context/useTicket";
+import { useTicket } from "@/hooks/context/useTicket";
 import { useToast } from "@/hooks/context/useToast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ export default function TransferirTicket() {
     data: string;
   }>();
   const [cliente, setCliente] = useState<ClienteDto>();
-  const { transferir, loading, error } = useTransferencia();
+  const { transferir, loading, error } = useTicket();
   const [success, setSuccess] = useState(false);
   const { showToast } = useToast();
   const router = useRouter();

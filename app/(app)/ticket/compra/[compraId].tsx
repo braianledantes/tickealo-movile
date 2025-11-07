@@ -81,7 +81,7 @@ export default function MiEntrada() {
   const height = Math.round(width * (1 / 1));
 
   const resumen = resumenTickets(compraSeleccionada.tickets);
-
+  console.log(compraSeleccionada.tickets);
   return (
     <View style={styles.container}>
       <HeaderBack title="Mis tickets" />
