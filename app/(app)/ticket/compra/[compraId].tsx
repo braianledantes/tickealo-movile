@@ -1,4 +1,4 @@
-import { TicketDto } from "@/api/dto/compras.dto";
+import { CompraDto, TicketDto } from "@/api/dto/compras.dto";
 import { IconButton } from "@/components/Button/IconButton";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
@@ -19,18 +19,10 @@ import {
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 
-type Compra = {
-  id: number;
-  estado: "PENDIENTE" | "ACEPTADA" | "RECHAZADA";
-  monto: string;
-  tickets: TicketDto[];
-  updatedAt: string;
-};
-
-export default function MiEntrada() {
+export default function MiTicket() {
   const { compraId } = useLocalSearchParams<{ compraId: string }>();
-  const { misCompras, loading, error } = useCompras();
-  const [compras, setCompras] = useState<Compra[]>([]);
+  const { misCompras, loadingMisCompras, error } = useCompras();
+  const [compras, setCompras] = useState<CompraDto[]>([]);
   const compraIdNum = compraId ? parseInt(compraId, 10) : undefined;
   const router = useRouter();
 
@@ -38,7 +30,13 @@ export default function MiEntrada() {
     const fetchCompras = async () => {
       try {
         const data = await misCompras(1, 5);
-        const compras = (data?.data ?? []) as Compra[];
+        const compras = (data?.data ?? []).map((compra: CompraDto) => ({
+          ...compra,
+          tickets: compra.tickets.filter(
+            (t: TicketDto) => t.estado !== "TRANSFERIDO",
+          ),
+        }));
+
         setCompras(compras);
       } catch (error) {
         console.error("Error al obtener compras:", error);
@@ -49,7 +47,7 @@ export default function MiEntrada() {
     // eslint-disable-next-line
   }, []);
 
-  if (loading) {
+  if (loadingMisCompras) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color="#4da6ff" />
@@ -57,7 +55,7 @@ export default function MiEntrada() {
     );
   }
 
-  if (!compras || compras.length === 0 || error) {
+  if (!loadingMisCompras && (!compras || compras.length === 0 || error)) {
     return (
       <View style={styles.loader}>
         <Text style={styles.textWhite}>

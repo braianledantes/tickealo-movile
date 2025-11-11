@@ -31,6 +31,14 @@ export const postTransferenciaAccept = async (transferenciaId: number) => {
   return response;
 };
 
+//Rechazar el ticket que transfirieron
+export const postTransferenciaReject = async (transferenciaId: number) => {
+  const response = await api.post(
+    `/tickets/transferencias/${transferenciaId}/rechazar`,
+  );
+  return response;
+};
+
 //Obtener una lista de tickets transferidos
 export const getTransferencias = async () => {
   const response = await api.get(`/tickets/transferencias/recibidas`);

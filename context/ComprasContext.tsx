@@ -36,6 +36,8 @@ interface ComprasContextProps {
   comprasAceptadas: ComprasResponse | undefined;
   comprasPendientes: ComprasResponse | undefined;
 
+  loadingMiCompra: boolean;
+  loadingMisCompras: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -48,6 +50,8 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [loadingMisCompras, setLoadingMisCompras] = useState(false);
+  const [loadingMiCompra, setLoadingMiCompra] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [compras, setCompras] = useState<ComprasResponse | undefined>(
@@ -101,7 +105,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const misCompras = async (page = 1, limit = 100) => {
-    setLoading(true);
+    setLoadingMisCompras(true);
     setError(null);
     try {
       const response = await getCompras(page, limit);
@@ -111,7 +115,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
       setError("No se pudo obtener las compras.");
       console.error("Error obteniendo compras del usuario:", err);
     } finally {
-      setLoading(false);
+      setLoadingMisCompras(false);
     }
   };
 
@@ -128,9 +132,20 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
 
       switch (estado) {
         case "ACEPTADA":
-          const entradasPorUsar = response.data.filter((compra) =>
-            compra.tickets.some((t) => t.estado === "PENDIENTE_VALIDACION"),
-          );
+          const entradasPorUsar = response.data
+            .map((compra) => {
+              const ticketsPendientes = compra.tickets.filter(
+                (t) => t.estado === "PENDIENTE_VALIDACION",
+              );
+
+              if (ticketsPendientes.length === 0) return;
+
+              return {
+                ...compra,
+                tickets: ticketsPendientes,
+              };
+            })
+            .filter((c): c is CompraDto => Boolean(c));
 
           const entradasYaUsadas = response.data.filter((compra) =>
             compra.tickets.every((t) => t.estado === "VALIDADO"),
@@ -140,6 +155,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
             ...response,
             data: entradasPorUsar,
           });
+
           setComprasValidadas({ ...response, data: entradasYaUsadas });
           setComprasAceptadas(response);
           break;
@@ -169,7 +185,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const miCompra = async (compraId: number) => {
-    setLoading(true);
+    setLoadingMiCompra(true);
     setError(null);
     try {
       const response = await getCompra(compraId);
@@ -178,7 +194,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
       setError("No se pudo obtener la compra.");
       console.error("Error obteniendo compra del usuario:", err);
     } finally {
-      setLoading(false);
+      setLoadingMiCompra(false);
     }
   };
 
@@ -197,6 +213,8 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
         comprasAceptadas,
         comprasPendientes,
         loading,
+        loadingMisCompras,
+        loadingMiCompra,
         error,
       }}
     >

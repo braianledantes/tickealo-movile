@@ -6,6 +6,7 @@ import {
   getTransferencias,
   postTransferencia,
   postTransferenciaAccept,
+  postTransferenciaReject,
 } from "@/api/ticket";
 import { useAuth } from "@/hooks/context/useAuth";
 import React, { createContext, useMemo, useState } from "react";
@@ -18,12 +19,15 @@ interface Props {
   listaClientes: () => Promise<Cliente[]>;
   clientes: Cliente[];
   aceptarTransferencia: (transferenciaId: number) => Promise<any>;
+  rechazarTransferencia: (transferenciaId: number) => Promise<any>;
   transferir: (ticketId: number, receptorMail: string) => Promise<any>;
   loading: boolean;
   loadingClientes: boolean;
   loadingPorUsar: boolean;
   loadingUsados: boolean;
   loadingTransferidos: boolean;
+  loadingAceptado: boolean;
+  loadingRechazo: boolean;
   error: string | null;
   search: string;
   setSearch: (val: string) => void;
@@ -54,6 +58,8 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loadingPorUsar, setLoadingPorUsar] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingClientes, setLoadingClientes] = useState(false);
+  const [loadingAceptado, setLoadingAceptado] = useState(false);
+  const [loadingRechazo, setLoadingRechazo] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [search, setSearch] = useState("");
@@ -142,15 +148,23 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
   const ticketsTransferidos = async () => {
     setLoadingTransferidos(true);
     setError(null);
+
     try {
       const response = await getTransferencias();
-      const trans = response?.transferencias || [];
-      setTransferidos(trans);
-      return trans;
+
+      const filteredTickets =
+        response.transferencias?.filter(
+          (transferencia: any) =>
+            transferencia?.status?.toLowerCase() !== "rechazada",
+        ) ?? [];
+
+      setTransferidos(filteredTickets);
+      return filteredTickets;
     } catch (err) {
-      setTransferidos([]);
-      console.error("Error obteniendo lista de trasnferencias:", err);
+      console.error("Error obteniendo lista de transferencias:", err);
       setError("No se pudo obtener lista de transferencias");
+      setTransferidos([]);
+      return [];
     } finally {
       setLoadingTransferidos(false);
     }
@@ -171,16 +185,41 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const aceptarTransferencia = async (transferenciaId: number) => {
-    setLoading(true);
+    setLoadingAceptado(true);
     setError(null);
     try {
-      const response = await postTransferenciaAccept(transferenciaId);
-      return response;
+      await postTransferenciaAccept(transferenciaId);
+      setTransferidos((prev) =>
+        prev.map((item) =>
+          item.id === transferenciaId ? { ...item, status: "aceptada" } : item,
+        ),
+      );
+      return true;
     } catch (err) {
       console.error("Error aceptando transferencia:", err);
       setError("No se pudo aceptar la transferencia");
     } finally {
-      setLoading(false);
+      setLoadingAceptado(false);
+    }
+  };
+
+  const rechazarTransferencia = async (transferenciaId: number) => {
+    setLoadingRechazo(true);
+    setError(null);
+    try {
+      await postTransferenciaReject(transferenciaId);
+
+      setTransferidos((prev) =>
+        prev.map((item) =>
+          item.id === transferenciaId ? { ...item, status: "rechazada" } : item,
+        ),
+      );
+      return true;
+    } catch (err) {
+      console.error("Error rechazando transferencia:", err);
+      setError("No se pudo rechazar la transferencia");
+    } finally {
+      setLoadingRechazo(false);
     }
   };
 
@@ -218,11 +257,14 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
         transferidos,
         transferir,
         aceptarTransferencia,
+        rechazarTransferencia,
         loading,
         loadingClientes,
         loadingPorUsar,
         loadingTransferidos,
         loadingUsados,
+        loadingAceptado,
+        loadingRechazo,
         error,
         setSearch,
         search,

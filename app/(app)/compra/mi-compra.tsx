@@ -24,7 +24,7 @@ import {
 
 export default function MiCompra() {
   const { compraId } = useLocalSearchParams<{ compraId: string }>();
-  const { miCompra, loading, error } = useCompras();
+  const { miCompra, loadingMiCompra, error } = useCompras();
   const [compra, setCompra] = useState<CompraDto | undefined>(undefined);
   const [showComprobante, setShowComprobante] = useState(false);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -47,7 +47,7 @@ export default function MiCompra() {
     // eslint-disable-next-line
   }, [compraId]);
 
-  if (loading) {
+  if (loadingMiCompra) {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color="#4da6ff" />

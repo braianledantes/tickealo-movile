@@ -1,9 +1,8 @@
-import { IconButton } from "@/components/Button/IconButton";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
-import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
+import { TransferenciaNotificacion } from "@/components/Transferencia/TransferenciaNotificacion";
 import { useTicket } from "@/hooks/context/useTicket";
-import { useToast } from "@/hooks/context/useToast";
+import { resumenTickets } from "@/utils/Tickets";
 import { formatDate } from "@/utils/utils";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
@@ -20,14 +19,8 @@ import QRCode from "react-native-qrcode-svg";
 
 export default function MiEntrada() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
-  const {
-    ticketsTransferidos,
-    transferidos,
-    loadingTransferidos,
-    aceptarTransferencia,
-    loading,
-  } = useTicket();
-  const { showToast } = useToast();
+  const { ticketsTransferidos, transferidos, loadingTransferidos } =
+    useTicket();
 
   const ticketIdNum = ticketId ? ticketId : undefined;
 
@@ -39,18 +32,6 @@ export default function MiEntrada() {
   const ticketSeleccionado = transferidos.find(
     (t) => t.ticket.id === Number(ticketIdNum),
   );
-
-  const handleAceptarTransferencia = async () => {
-    if (!ticketId) return;
-    const transferenciaId = ticketSeleccionado?.id;
-    const success = await aceptarTransferencia(Number(transferenciaId));
-    if (success) {
-      showToast("success", "¡Listo!", "Transferencia aceptad. A disfrutar!");
-    } else {
-      showToast("error", "Error", "Intentelo mas tarde.");
-    }
-  };
-
   if (loadingTransferidos) {
     return (
       <View style={styles.loader}>
@@ -70,45 +51,28 @@ export default function MiEntrada() {
   const { width } = Dimensions.get("window");
   const height = Math.round(width * (1 / 1));
 
+  const resumen = resumenTickets(ticketSeleccionado.ticket);
   const evento = ticketSeleccionado.ticket.entrada.evento;
   return (
     <View style={styles.container}>
       <HeaderBack title="Mi ticket" />
       <ScrollView contentContainerStyle={styles.content}>
-        {ticketSeleccionado.status === "pendiente" && (
-          <View className="flex-row justify-between items-center m-2 bg-[#0c0f2b] p-2 pr-4 rounded-full">
-            <View className="flex-row items-center">
-              <UsuarioPerfil
-                imagenPerfilUrl={
-                  ticketSeleccionado.clienteEmisor.imagenPerfilUrl
-                }
-                username={ticketSeleccionado.clienteEmisor.nombre}
-                icono="w-7 h-7"
-                className="p-0"
-              />
-              <Texto semiBold className="text-white text-sm ml-2 text-center">
-                Transferencia de {ticketSeleccionado.clienteEmisor.nombre}
-                {ticketSeleccionado.clienteEmisor.apellido}
-              </Texto>
-            </View>
-            <IconButton
-              iconType="Feather"
-              iconName="check"
-              size={20}
-              color="#00ff9d"
-              style={{
-                padding: 0,
-              }}
-              disabled={loading}
-              onPress={handleAceptarTransferencia}
-            />
-          </View>
+        <TransferenciaNotificacion ticket={ticketSeleccionado} />
+
+        {ticketSeleccionado.status !== "pendiente" && (
+          <Texto
+            className="text-center tracking-wider py-2"
+            style={{
+              color: resumen.color ?? "#7a86b6",
+            }}
+          >
+            {resumen.mensaje}
+          </Texto>
         )}
         <Texto style={styles.updatedText}>
           Fecha de Transferencia:{" "}
           {formatDate(ticketSeleccionado.updatedAt, { date: true, time: true })}
         </Texto>
-
         <View style={styles.ticket}>
           {/* Imagen del evento */}
           <View style={{ position: "relative" }}>
@@ -160,22 +124,32 @@ export default function MiEntrada() {
           </View>
 
           {/* QR (solo si está aceptada) */}
-          <View style={styles.qrSection}>
-            <Texto bold className="text-[#999] text-xl mb-6 ">
-              {ticketSeleccionado.ticket.estado}
-            </Texto>
-            <QRCode
-              key={ticketSeleccionado.ticket.codigoAlfanumerico}
-              value={ticketSeleccionado.ticket.codigoAlfanumerico}
-              size={130}
-              backgroundColor="#0b1530"
-              color="#fff"
-            />
-            <Text style={styles.qrCode}>
-              {ticketSeleccionado.ticket.codigoAlfanumerico}
-            </Text>
-          </View>
+          {ticketSeleccionado.status !== "pendiente" && (
+            <View style={styles.qrSection}>
+              <Texto bold className="text-[#999] text-xl mb-6 ">
+                {ticketSeleccionado.ticket.estado}
+              </Texto>
+              <QRCode
+                key={ticketSeleccionado.ticket.codigoAlfanumerico}
+                value={ticketSeleccionado.ticket.codigoAlfanumerico}
+                size={130}
+                backgroundColor="#0b1530"
+                color="#fff"
+              />
+              <Text style={styles.qrCode}>
+                {ticketSeleccionado.ticket.codigoAlfanumerico}
+              </Text>
+            </View>
+          )}
+          {ticketSeleccionado.status === "pendiente" && (
+            <View style={styles.disabledOverlay} />
+          )}
         </View>
+        {ticketSeleccionado.status !== "pendiente" && (
+          <Texto className="text-[#999]/50 tracking-wider text-center px-4 pb-10">
+            Este ticket no puede volver a transferirse.
+          </Texto>
+        )}
       </ScrollView>
     </View>
   );
@@ -236,5 +210,9 @@ const styles = StyleSheet.create({
   value: {
     color: "#fff",
     fontSize: 12,
+  },
+  disabledOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.37)",
   },
 });
