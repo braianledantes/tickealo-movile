@@ -103,9 +103,10 @@ export default function InfoEvento() {
             <LinearGradient
               colors={[
                 "rgba(5, 8, 27, 0)",
-                "rgba(5, 8, 27, 0.3)",
-                "rgba(5, 8, 27, 0.6)",
-                "rgba(5, 8, 27, 0.85)",
+                "rgba(5, 8, 27, 0.15)",
+                "rgba(5, 8, 27, 0.35)",
+                "rgba(5, 8, 27, 0.55)",
+                "rgba(5, 8, 27, 0.75)",
                 "#05081b",
               ]}
               style={styles.gradient}
