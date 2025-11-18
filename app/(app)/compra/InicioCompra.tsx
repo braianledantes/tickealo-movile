@@ -2,6 +2,7 @@ import { Button } from "@/components/Button/Button";
 import { EntradaContador } from "@/components/Entradas/EntradaContador";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
+import { useAuth } from "@/hooks/context/useAuth";
 import { useCantEntradas } from "@/hooks/useCantEntradas";
 import React from "react";
 import { Image, ScrollView, View } from "react-native";
@@ -19,6 +20,7 @@ export default function InfoEntrada() {
     error,
     disabled,
   } = useCantEntradas();
+  const { user } = useAuth();
 
   const banner =
     params.portadaUrl && params.portadaUrl.trim() !== ""
@@ -53,6 +55,15 @@ export default function InfoEntrada() {
             </Texto>
           </View>
         )}
+
+        <View className="flex-row justify-between items-center px-4 my-4">
+          <Texto semiBold className="text-white tracking-wider">
+            Tus puntos
+          </Texto>
+          <Texto bold className="text-white">
+            {user?.puntosAcumulados}
+          </Texto>
+        </View>
 
         {/* Botón de compra */}
         <View className="px-4 mt-3 mb-6">

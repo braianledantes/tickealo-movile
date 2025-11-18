@@ -12,6 +12,7 @@ interface ComprasContextProps {
   comprar: (body: {
     idEntrada: number;
     cant: number;
+    cantPuntos: number;
   }) => Promise<CompraDto | undefined>;
   terminarCompra: (
     compraId: string | number,
@@ -73,7 +74,11 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
     ComprasResponse | undefined
   >(undefined);
 
-  const comprar = async (body: { idEntrada: number; cant: number }) => {
+  const comprar = async (body: {
+    idEntrada: number;
+    cant: number;
+    cantPuntos: number;
+  }) => {
     setLoading(true);
     setError(null);
     try {

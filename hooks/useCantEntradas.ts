@@ -12,6 +12,7 @@ export function useCantEntradas() {
     portadaUrl?: string;
     eventoId?: string;
     cantEntradas?: string;
+    cantPuntos?: string;
   }>();
 
   const { comprar } = useCompras();
@@ -66,6 +67,7 @@ export function useCantEntradas() {
       const payload = {
         idEntrada: Number(params.entradaId ?? 0),
         cant: qty,
+        cantPuntos: Number(params.cantPuntos ?? 0),
       };
 
       const response = await comprar(payload);

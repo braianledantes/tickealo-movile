@@ -5,6 +5,7 @@ import { CompraDto, ComprasResponse } from "./dto/compras.dto";
 export const iniciarCompra = async (body: {
   idEntrada: number;
   cant: number;
+  cantPuntos: number;
 }): Promise<CompraDto> => {
   const response = await api.post<CompraDto>(
     "/compras/iniciar-compra-entrada",

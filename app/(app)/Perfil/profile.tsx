@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button/Button";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
+import ProgressPuntosAcumulados from "@/components/Puntos/ProgressPuntosAcumulados";
 import { Texto } from "@/components/Texto";
 import { useAuth } from "@/hooks/context/useAuth";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -15,7 +16,7 @@ export default function Profile() {
   return (
     <View className="flex-1">
       <HeaderBack />
-      <ScrollView className="bg-[#05081b] p-5">
+      <ScrollView className="bg-[#05081b] p-5 ">
         {/* Avatar */}
         <View className="flex-row justify-center">
           <UsuarioPerfil
@@ -32,9 +33,6 @@ export default function Profile() {
               </Texto>{" "}
               !
             </Texto>
-            <Texto className="text-white/50 mt-1 ">
-              Puntos Acumulados: {user?.puntosAcumulados}
-            </Texto>
             {user?.user?.roles?.some((r) => r.name === "validador") && (
               <View className="flex-row justify-center p-1 mt-2 border border-2 border-[#1ED760] text-center text-white rounded-full">
                 <Texto bold className="text-[#1ED760] mr-2 ">
@@ -45,6 +43,11 @@ export default function Profile() {
             )}
           </View>
         </View>
+
+        <View></View>
+        <ProgressPuntosAcumulados
+          puntosAcumulados={user?.puntosAcumulados ?? 0}
+        />
         <View className="mt-6">
           <Texto
             bold
@@ -114,7 +117,7 @@ export default function Profile() {
             </TouchableOpacity>
           </View>
         </View>
-        <View className="mt-6">
+        <View className="mt-6 mb-20">
           <Button
             title="Editar Perfil"
             onPress={() => router.push("/(app)/Perfil/edit-profile")}

@@ -65,7 +65,7 @@ export default function ProgressTicket({
     <View className="mt-6 px-4">
       {/* Progreso total del evento */}
       <View style={styles.card}>
-        <Texto className="text-[#7a86b6] text-lg font-bold mb-2">
+        <Texto className="text-white text-lg font-bold  tracking-wider mb-2">
           Progreso total del evento
         </Texto>
 
@@ -73,7 +73,7 @@ export default function ProgressTicket({
           <Texto className="text-[#ddd] text-sm">
             {ticketsValidadosTotales.length} / {totalCapacidad} tickets
           </Texto>
-          <Texto className="text-[#4da6ff] font-bold text-sm">
+          <Texto className="text-white font-bold text-sm">
             {porcentajeEvento}%
           </Texto>
         </View>
