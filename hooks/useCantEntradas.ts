@@ -13,6 +13,7 @@ export function useCantEntradas() {
     eventoId?: string;
     cantEntradas?: string;
     cantPuntos?: string;
+    totalFinal?: string;
   }>();
 
   const { comprar } = useCompras();
@@ -26,7 +27,10 @@ export function useCantEntradas() {
 
   const disabled = Boolean(error);
 
+  //total sin el descuento del 25% por usar puntos
   const total = useMemo(() => precioUnit * qty, [precioUnit, qty]);
+  //total con el 25
+  const totalFinal = total;
 
   const onMinus = () => {
     setError(null);
@@ -41,7 +45,7 @@ export function useCantEntradas() {
         setError(
           stock === 1
             ? "Solo queda 1 entrada disponible"
-            : "Ya llegaste al máximo de entradas disponibles",
+            : `Solo quedan ${stock} entradas disponibles`
         );
         return q;
       }
@@ -49,7 +53,7 @@ export function useCantEntradas() {
     });
   };
 
-  const onCheckout = async () => {
+  const onCheckout = async (usarPuntos: boolean, totalFinal: number) => {
     setLoading(true);
     setError(null);
 
@@ -58,16 +62,17 @@ export function useCantEntradas() {
         setError(
           stock === 1
             ? "Solo queda 1 entrada disponible"
-            : `Solo quedan ${stock} entradas disponibles`,
+            : `Solo quedan ${stock} entradas disponibles`
         );
         setLoading(false);
         return;
       }
+      const cantPuntosSafe = params.cantPuntos ? Number(params.cantPuntos) : 0;
 
       const payload = {
         idEntrada: Number(params.entradaId ?? 0),
         cant: qty,
-        cantPuntos: Number(params.cantPuntos ?? 0),
+        cantPuntos: cantPuntosSafe,
       };
 
       const response = await comprar(payload);
@@ -83,11 +88,10 @@ export function useCantEntradas() {
           nombre: String(params.nombre ?? ""),
           precio: String(precioUnit),
           cantidad: String(qty),
-          total: String(total),
+          total: String(totalFinal),
         },
       });
     } catch (err: any) {
-      console.error("Error en checkout:", err);
       setError(err.message ?? "Error desconocido al procesar la compra");
     } finally {
       setLoading(false);
@@ -97,6 +101,7 @@ export function useCantEntradas() {
   return {
     qty,
     total,
+    totalFinal,
     precioUnit,
     stock,
     onMinus,

@@ -7,14 +7,20 @@ export type ButtonProps = PressableProps & {
   title: string;
   onPress: () => void;
   disabled?: boolean;
+  variant?: "primary" | "secondary";
 };
 
 export function Button({
   title,
   onPress,
   disabled = false,
+  variant = "primary",
   ...rest
 }: ButtonProps) {
+  const gradientColors =
+    variant === "primary"
+      ? (["#010030", "#03045E", "#0077B6", "#CAF0F8"] as const)
+      : (["#2A2E45", "#1F2337", "#161A2A"] as const);
   return (
     <Pressable
       className={cn(rest.className)}
@@ -23,7 +29,7 @@ export function Button({
       {...rest}
     >
       <LinearGradient
-        colors={["#010030", "#03045E", "#0077B6", "#CAF0F8"]}
+        colors={gradientColors}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{ padding: 16, borderRadius: 100, alignItems: "center" }}

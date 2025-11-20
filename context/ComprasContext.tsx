@@ -16,16 +16,16 @@ interface ComprasContextProps {
   }) => Promise<CompraDto | undefined>;
   terminarCompra: (
     compraId: string | number,
-    formData: FormData,
+    formData: FormData
   ) => Promise<CompraDto | undefined>;
   misCompras: (
     page?: number,
-    limit?: number,
+    limit?: number
   ) => Promise<ComprasResponse | void>;
   cargarComprasPorEstado: (
     estado: string,
     page?: number,
-    limit?: number,
+    limit?: number
   ) => Promise<ComprasResponse | void>;
   miCompra: (compraId: number) => Promise<CompraDto | undefined>;
 
@@ -44,7 +44,7 @@ interface ComprasContextProps {
 }
 
 export const ComprasContext = createContext<ComprasContextProps | undefined>(
-  undefined,
+  undefined
 );
 
 export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -56,7 +56,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   const [error, setError] = useState<string | null>(null);
 
   const [compras, setCompras] = useState<ComprasResponse | undefined>(
-    undefined,
+    undefined
   );
 
   const [comprasPendientesValidacion, setComprasPendientesValidacion] =
@@ -84,9 +84,9 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response: CompraDto = await iniciarCompra(body);
       return response;
-    } catch (err) {
-      setError("No se pudo reservar cupo de entrada.");
-      console.error("Error realizando la compra:", err);
+    } catch (err: any) {
+      console.error("Error realizando la compra:", err.response?.data ?? err);
+      throw err.response?.data ?? err;
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const terminarCompra = async (
     compraId: string | number,
-    formData: FormData,
+    formData: FormData
   ) => {
     setLoading(true);
     setError(null);
@@ -127,7 +127,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
   const cargarComprasPorEstado = async (
     estado: string,
     page = 1,
-    limit = 10,
+    limit = 10
   ) => {
     setLoading(true);
     setError(null);
@@ -140,7 +140,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
           const entradasPorUsar = response.data
             .map((compra) => {
               const ticketsPendientes = compra.tickets.filter(
-                (t) => t.estado === "PENDIENTE_VALIDACION",
+                (t) => t.estado === "PENDIENTE_VALIDACION"
               );
 
               if (ticketsPendientes.length === 0) return;
@@ -153,7 +153,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
             .filter((c): c is CompraDto => Boolean(c));
 
           const entradasYaUsadas = response.data.filter((compra) =>
-            compra.tickets.every((t) => t.estado === "VALIDADO"),
+            compra.tickets.every((t) => t.estado === "VALIDADO")
           );
 
           setComprasPendientesValidacion({
@@ -182,7 +182,7 @@ export const ComprasProvider: React.FC<{ children: React.ReactNode }> = ({
       setError(`No se pudo obtener las compras con estado ${estado}.`);
       console.error(
         `Error obteniendo compras del usuario estado ${estado}:`,
-        err,
+        err
       );
     } finally {
       setLoading(false);
