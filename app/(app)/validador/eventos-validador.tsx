@@ -4,7 +4,13 @@ import { ProductoraPerfil } from "@/components/Productora/ProductoraPerfil";
 import { Texto } from "@/components/Texto";
 import { useValidador } from "@/hooks/context/useValidador";
 import { useRouter } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ValidadorEventos() {
@@ -16,6 +22,21 @@ export default function ValidadorEventos() {
     loadingProductoras,
     loadingEventos,
   } = useValidador();
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await Promise.all([
+        //agregar recarga de eventos y productoras
+      ]);
+    } catch (error) {
+      console.error("Error al refrescar:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
@@ -38,7 +59,17 @@ export default function ValidadorEventos() {
         )}
       </View>
 
-      <View className="flex-1">
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#4da6ff"
+            colors={["#4da6ff"]}
+          />
+        }
+      >
         {loadingEventos ? (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" color="#4da6ff" />
@@ -54,7 +85,7 @@ export default function ValidadorEventos() {
             }
           />
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

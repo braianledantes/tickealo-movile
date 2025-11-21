@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Animated,
   Easing,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -60,6 +61,24 @@ export default function Index() {
     proximos.length === 0 &&
     seguidos.length === 0 &&
     eventosFinalizados.length === 0;
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await Promise.all([
+        fetchEventos(),
+        fetchFinalizados(),
+        fetchProximos(),
+        fetchSeguidos(),
+      ]);
+    } catch (err) {
+      console.log("Error refrescando:", err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   // Filtrar por provincia
   const filterByProvince = (array: any[]) => {
@@ -134,6 +153,14 @@ export default function Index() {
       <ScrollView
         contentContainerClassName="pb-10"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#4da6ff" // iOS spinner color
+            colors={["#4da6ff"]} // Android spinner color
+          />
+        }
       >
         <ProvinciaPicker2
           visible={pickerOpen}
