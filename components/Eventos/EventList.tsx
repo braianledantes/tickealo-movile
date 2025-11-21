@@ -36,6 +36,7 @@ export function EventList({
             year: "numeric",
           })}
           location={`${event.lugar?.direccion ?? ""} ${event.lugar?.provincia ?? ""}`}
+          agotado={event.stockEntradas <= 0}
           onPress={() =>
             onPressEvent
               ? onPressEvent(event.id)

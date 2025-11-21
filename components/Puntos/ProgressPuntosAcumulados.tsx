@@ -1,48 +1,84 @@
 import { Texto } from "@/components/Texto";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 interface Props {
   puntosAcumulados?: number;
 }
 
-export default function ProgressPuntosAcumulados({
+export default function ProgressPuntosAcumuladosGlow({
   puntosAcumulados = 0,
 }: Props) {
-  if (puntosAcumulados === undefined || puntosAcumulados === null) {
-    return (
-      <Texto className="text-[#aaa]">Cargando puntos del usuario...</Texto>
-    );
-  }
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
 
-  const porcentajePunto =
-    puntosAcumulados > 0 ? Math.round((puntosAcumulados / 1000) * 100) : 0;
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(shimmerAnim, {
+        toValue: 1,
+        duration: 2200,
+        useNativeDriver: false,
+      })
+    ).start();
+  }, []);
+
+  // ANCHO DINÁMICO
+  const getBarWidth = () => {
+    if (puntosAcumulados < 1000) return "30%";
+    if (puntosAcumulados < 2000) return "50%";
+    if (puntosAcumulados < 5000) return "70%";
+    return "90%";
+  };
+
+  const barWidth = getBarWidth();
+
+  // Movimiento del glow
+  const translateX = shimmerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-25%", "400%"],
+  });
 
   return (
     <View className="mt-6">
-      {/* Progreso total de puntos acumulados */}
       <View style={styles.card}>
         <Texto bold className="text-white text-lg tracking-wider mb-2">
           Puntos acumulados
         </Texto>
 
-        <View className="flex-row items-center justify-between mb-4">
-          <Texto className="text-[#ddd] text-sm">
-            {puntosAcumulados} / 1000 puntos
-          </Texto>
-          <Texto className="text-white font-bold text-sm">
-            {porcentajePunto}%
-          </Texto>
-        </View>
+        <Texto className="text-[#ddd] text-base mb-4">
+          {puntosAcumulados} pts
+        </Texto>
 
         <View style={styles.barraFondo}>
-          <LinearGradient
-            colors={["#90E0EF", "#CAF0F8"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={[styles.barraProgreso, { width: `${porcentajePunto}%` }]}
-          />
+          {/* BARRA BASE */}
+          <View style={[styles.barraProgreso, { width: barWidth }]}>
+            <LinearGradient
+              colors={["#00b4d8", "#48cae4"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            />
+
+            <Animated.View
+              style={[
+                styles.glow,
+                {
+                  transform: [{ translateX }],
+                },
+              ]}
+            >
+              <LinearGradient
+                colors={[
+                  "rgba(255,255,255,0)",
+                  "rgba(255,255,255,0.5)",
+                  "rgba(255,255,255,0)",
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.glowGradient}
+              />
+            </Animated.View>
+          </View>
         </View>
       </View>
     </View>
@@ -54,21 +90,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#1b1b40",
     padding: 20,
     borderRadius: 30,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 3,
   },
   barraFondo: {
     width: "100%",
-    height: 16,
+    height: 18,
     backgroundColor: "#0b1030",
-    borderRadius: 8,
+    borderRadius: 10,
     overflow: "hidden",
   },
   barraProgreso: {
     height: "100%",
-    borderRadius: 8,
+    borderRadius: 10,
+    overflow: "hidden",
+    position: "relative",
+  },
+  glow: {
+    position: "absolute",
+    height: "100%",
+    width: "25%",
+    top: 0,
+  },
+  glowGradient: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 10,
   },
 });

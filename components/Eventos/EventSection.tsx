@@ -43,6 +43,7 @@ export function EventSection({ title, color, eventos }: Props) {
             year: "numeric",
           })}
           location={`${evento.lugar?.direccion || ""}, ${evento.lugar?.provincia || ""}`}
+          agotado={evento.stockEntradas <= 0}
           onPress={() =>
             router.push({
               pathname: "/info-evento",

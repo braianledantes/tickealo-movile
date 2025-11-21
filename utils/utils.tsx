@@ -5,23 +5,35 @@ import React, { useState } from "react";
 import { Pressable } from "react-native";
 
 // Fila individual que se puede copiar
-export function BankRow({ label, value }: { label: string; value?: string }) {
+export function BankRow({
+  label,
+  value,
+  copiable = false,
+}: {
+  label: string;
+  value?: string;
+  copiable?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
+
   if (!value) return null;
 
   const copy = async () => {
+    if (!copiable) return;
     await ClipBoard.setStringAsync(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <Pressable onLongPress={copy} className="">
+    <Pressable onLongPress={copiable ? copy : undefined}>
       <Texto semiBold className="text-slate-300 text-base">
         {label}:{" "}
         <Texto bold className="text-white mr-5">
           {value}{" "}
-          {copied && <Texto className="text-[#999] text-sm">Copiado</Texto>}
+          {copiable && copied && (
+            <Texto className="text-[#999] text-sm">Copiado con éxito</Texto>
+          )}
         </Texto>
       </Texto>
     </Pressable>
@@ -44,7 +56,7 @@ export function CopyAll({ text }: { text: string }) {
     <Pressable onPress={handleCopy} className="flex-row items-center space-x-2">
       <Copy />
       {copied && (
-        <Texto className="text-[#999] text-sm ml-1">Copiado exitosamente</Texto>
+        <Texto className="text-[#999] text-sm ml-1">CBU Copiado</Texto>
       )}
     </Pressable>
   );
@@ -68,7 +80,7 @@ export function formatDate(
   options: {
     date?: boolean; // incluir fecha
     time?: boolean; // incluir hora
-  } = { date: true, time: true },
+  } = { date: true, time: true }
 ) {
   const date =
     typeof timestamp === "number" ? new Date(timestamp) : new Date(timestamp);
@@ -82,7 +94,7 @@ export function formatDate(
         day: "2-digit",
         month: "short",
         year: "numeric",
-      }),
+      })
     );
   }
 
@@ -91,7 +103,7 @@ export function formatDate(
       date.toLocaleTimeString("es-AR", {
         hour: "2-digit",
         minute: "2-digit",
-      }),
+      })
     );
   }
 

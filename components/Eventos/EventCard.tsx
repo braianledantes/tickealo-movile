@@ -10,17 +10,37 @@ type Props = {
   date: string;
   location: string;
   onPress: () => void;
+  agotado?: boolean;
 };
 
-export function EventCard({ image, title, date, location, onPress }: Props) {
+export function EventCard({
+  image,
+  title,
+  date,
+  location,
+  agotado,
+  onPress,
+}: Props) {
   return (
     <TouchableOpacity
       style={styles.card}
       onPress={onPress}
       activeOpacity={0.85}
     >
-      <Image source={{ uri: image }} style={styles.image} />
+      {/* Imagen del evento */}
+      <View style={{ position: "relative" }}>
+        <Image source={{ uri: image }} style={styles.image} />
 
+        {agotado && (
+          <View style={styles.agotadoBadge}>
+            <Texto bold className="text-white text-xs tracking-widest">
+              AGOTADO
+            </Texto>
+          </View>
+        )}
+      </View>
+
+      {/* Información */}
       <LinearGradient
         colors={["#0b1030", "#0f1a4a"]}
         start={{ x: 0, y: 0 }}
@@ -29,7 +49,7 @@ export function EventCard({ image, title, date, location, onPress }: Props) {
       >
         <Texto
           bold
-          className="text-[#cfe3ff] text-lg uppercase tracking-wide mb-2 mr-6 "
+          className="text-[#cfe3ff] text-lg uppercase tracking-wide mb-2 mr-6"
           numberOfLines={1}
         >
           {title}
@@ -47,8 +67,9 @@ export function EventCard({ image, title, date, location, onPress }: Props) {
             {location}
           </Texto>
         </View>
+
         <Texto bold className="text-[#ffffff]">
-          Ver mas info
+          Ver mas +
         </Texto>
       </LinearGradient>
     </TouchableOpacity>
@@ -64,10 +85,30 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
     overflow: "hidden",
   },
+
   image: {
     width: 140,
     height: 160,
   },
+
+  agotadoBadge: {
+    position: "absolute",
+    top: 12,
+    left: -25,
+    backgroundColor: "red",
+    paddingVertical: 4,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 12,
+    transform: [{ rotate: "-45deg" }],
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 20,
+    pointerEvents: "none",
+  },
+
   info: {
     flex: 1,
     padding: 16,

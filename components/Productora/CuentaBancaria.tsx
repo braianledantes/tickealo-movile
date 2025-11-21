@@ -20,7 +20,7 @@ export function CuentaBancaria({
     );
   }
 
-  const allText = `${c.nombreTitular}\n ${p.cuit}\n  ${c.cbu}\n ${c.alias}\n Banco ${c.nombreBanco}`;
+  //const allText = `${c.nombreTitular}\n ${p.cuit}\n  ${c.cbu}\n ${c.alias}\n Banco ${c.nombreBanco}`;
 
   return (
     <View className="bg-[#0c0f2b] rounded-3xl mb-4 border border-[#1b1e5e] p-4">
@@ -28,7 +28,7 @@ export function CuentaBancaria({
         <Texto bold className="text-[#cfe3ff] text-xl">
           TRANSFERENCIA A
         </Texto>
-        <CopyAll text={allText} />
+        <CopyAll text={c.cbu} />
       </View>
 
       <View className="flex-row items-center">
@@ -46,8 +46,8 @@ export function CuentaBancaria({
         </View>
       </View>
       <View className="gap-2">
-        <BankRow label="CBU" value={c.cbu} />
-        <BankRow label="Alias" value={c.alias} />
+        <BankRow label="CBU" value={c.cbu} copiable />
+        <BankRow label="Alias" value={c.alias} copiable />
         <BankRow label="Banco" value={c.nombreBanco} />
       </View>
 

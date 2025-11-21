@@ -51,7 +51,13 @@ export default function InfoEntrada() {
       {/* Header */}
       <HeaderBack />
 
-      <ScrollView className="flex-1">
+      <ScrollView
+        //para que funcione bien en IOS
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 120 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         {/* Banner */}
         <Image
           source={banner}
@@ -78,7 +84,10 @@ export default function InfoEntrada() {
 
         {/* Cartel de descuento*/}
         {usarPuntos && (
-          <View className="px-4 mt-3 flex-row items-center justify-center">
+          <View
+            pointerEvents="none"
+            className="px-4 mt-3 flex-row items-center justify-center"
+          >
             <View className="flex-row items-center gap-2 bg-[#1e3d20]/40 border border-[#38d39f]/40 px-4 py-2 rounded-xl">
               <Percent size={18} color="#38d39f" />
               <Texto bold className="text-[#38d39f] tracking-wider">
@@ -120,9 +129,11 @@ export default function InfoEntrada() {
 
         {/* Botón usar piuntos */}
         {(user?.puntosAcumulados ?? 0) >= 250 && (
-          <View className="px-4 mb-4 mb-6">
+          <View className="px-4 mb-6">
             <Button
-              title={usarPuntos ? "No usar puntos" : "Usar 250 puntos"}
+              title={
+                usarPuntos ? "No usar puntos" : "Usar 250 puntos = 25% OFF"
+              }
               onPress={aplicarPuntos}
               variant={usarPuntos ? "secondary" : "primary"}
             />

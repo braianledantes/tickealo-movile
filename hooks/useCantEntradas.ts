@@ -53,7 +53,7 @@ export function useCantEntradas() {
     });
   };
 
-  const onCheckout = async (usarPuntos: boolean, totalFinal: number) => {
+  const onCheckout = async (usarPuntos: boolean, totalFinalParam: number) => {
     setLoading(true);
     setError(null);
 
@@ -67,12 +67,19 @@ export function useCantEntradas() {
         setLoading(false);
         return;
       }
-      const cantPuntosSafe = params.cantPuntos ? Number(params.cantPuntos) : 0;
+
+      const subtotal = precioUnit * qty;
+      //usuario
+      const descuentoVisual = usarPuntos ? subtotal * 0.25 : 0;
+      const totalFinalVisual = subtotal - descuentoVisual;
+
+      const puntosUsados = usarPuntos ? 25 : 0;
+      const puntosGanados = Math.floor(totalFinalVisual / 1000);
 
       const payload = {
         idEntrada: Number(params.entradaId ?? 0),
         cant: qty,
-        cantPuntos: cantPuntosSafe,
+        cantPuntos: puntosUsados,
       };
 
       const response = await comprar(payload);
@@ -88,7 +95,15 @@ export function useCantEntradas() {
           nombre: String(params.nombre ?? ""),
           precio: String(precioUnit),
           cantidad: String(qty),
-          total: String(totalFinal),
+
+          subtotal: String(subtotal),
+          descuento: String(descuentoVisual),
+          totalFinal: String(totalFinalVisual),
+
+          puntosUsados: String(puntosUsados),
+          puntosGanados: String(puntosGanados),
+
+          usarPuntos: usarPuntos ? "1" : "0",
         },
       });
     } catch (err: any) {
