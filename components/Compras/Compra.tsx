@@ -59,7 +59,6 @@ export const Compra: React.FC<EntradaCompradaProps> = ({
     }
     // eslint-disable-next-line
   }, [nuevaCompra]);
-
   const ticketRef = compra.tickets[0];
   const evento = ticketRef.entrada.evento;
 

@@ -57,16 +57,18 @@ export function EventCard({
 
         <Texto className="text-[#ffffff] mb-2">{date}</Texto>
 
-        <View className="flex-row items-center mb-2">
-          <Ionicons name="location-outline" size={12} color="#20347F" />
-          <Texto
-            semiBold
-            className="color-[#20347F] ml-1 mr-2"
-            numberOfLines={1}
-          >
-            {location}
-          </Texto>
-        </View>
+        {location?.trim() !== "" && (
+          <View className="flex-row items-center mb-2">
+            <Ionicons name="location-outline" size={12} color="#20347F" />
+            <Texto
+              semiBold
+              className="color-[#20347F] ml-1 mr-2"
+              numberOfLines={1}
+            >
+              {location}
+            </Texto>
+          </View>
+        )}
 
         <Texto bold className="text-[#ffffff]">
           Ver mas +

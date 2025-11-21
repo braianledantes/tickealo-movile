@@ -18,8 +18,9 @@ export default function ProgressPuntosAcumuladosGlow({
         toValue: 1,
         duration: 2200,
         useNativeDriver: false,
-      })
+      }),
     ).start();
+    // eslint-disable-next-line
   }, []);
 
   // ANCHO DINÁMICO
@@ -53,7 +54,7 @@ export default function ProgressPuntosAcumuladosGlow({
           {/* BARRA BASE */}
           <View style={[styles.barraProgreso, { width: barWidth }]}>
             <LinearGradient
-              colors={["#00b4d8", "#48cae4"]}
+              colors={["#90E0EF", "#CAF0F8"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={{ flex: 1 }}

@@ -33,7 +33,7 @@ export default function HistorialTicket({
       </View>
       <ScrollView className="">
         {totalValidadosUsuario === 0 ? (
-          <Texto className="text-[#aaa] italic px-4">
+          <Texto className="text-[#aaa] italic px-4 tracking-wider">
             No has validado tickets aún.
           </Texto>
         ) : (

@@ -1,15 +1,8 @@
-import {
-  EventoValidadorDto,
-  ProductoraValidadorDto,
-} from "@/api/dto/eventos-validador.dto";
+import { EventoDto } from "@/api/dto/evento.dto";
+import { ProductoraValidadorDto } from "@/api/dto/eventos-validador.dto";
 import { useAuth } from "@/hooks/context/useAuth";
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useProductora } from "@/hooks/context/useProductora";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import {
   getEventosProductora,
   getProductora,
@@ -17,14 +10,17 @@ import {
   ticketsValidadosTotales,
   validarTicketApi,
 } from "../api/validador";
-import { EventosContext } from "./EventosContext";
 
 interface ValidadorContextProps {
   productoras: ProductoraValidadorDto[];
-  eventos: EventoValidadorDto[];
+  allEvents: EventoDto[];
+  eventos: EventoDto[];
   loadingProductoras: boolean;
   loadingEventos: boolean;
+  loading: boolean;
+  error: string | null;
   productoraSeleccionada: number | null;
+  getAllEvents: () => Promise<EventoDto[] | undefined>;
   setProductoraSeleccionada: (id: number | null) => void;
   validarTicket: (idTicket: string) => Promise<number>;
   ticketsValidadosEvento: (idEvento: number) => Promise<any[]>;
@@ -38,26 +34,29 @@ export const ValidadorContext = createContext<
 export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { getEventosByProductora: getEventosById } =
-    useContext(EventosContext)!;
   const { user, isLoading: authLoading } = useAuth();
+  const { getEventosByProductora } = useProductora();
 
   const [productoras, setProductoras] = useState<ProductoraValidadorDto[]>([]);
   const [productoraSeleccionada, setProductoraSeleccionadaState] = useState<
     number | null
   >(null);
-  const [eventos, setEventos] = useState<EventoValidadorDto[]>([]);
+  const [allEvents, setAllEvents] = useState<EventoDto[]>([]);
+  const [eventos, setEventos] = useState<EventoDto[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [loadingProductoras, setLoadingProductoras] = useState(true);
   const [loadingEventos, setLoadingEventos] = useState(false);
 
-  // Verificar si el usuario tiene rol de validador
   const isValidador = !!user?.user?.roles?.some(
     (role) => role.name === "validador",
   );
 
-  // Cargar productoras
+  /* -------------------------------------------------------
+       CARGAR PRODUCTORAS
+  -------------------------------------------------------- */
   const loadProductoras = useCallback(async () => {
-    if (!isValidador) return; // solo validadores
+    if (!isValidador) return;
     setLoadingProductoras(true);
     try {
       const response = await getProductora();
@@ -68,18 +67,37 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
         : [];
       setProductoras(arr as ProductoraValidadorDto[]);
     } catch (err: any) {
-      if (err.response?.status === 403) {
-        console.warn("Usuario no autorizado para cargar productoras");
-      } else {
-        console.error("Error cargando productoras:", err);
-      }
+      console.error("Error cargando productoras:", err);
       setProductoras([]);
     } finally {
       setLoadingProductoras(false);
     }
   }, [isValidador]);
 
-  // Cargar eventos
+  /* -------------------------------------------------------
+       OBTENER TODOS LOS EVENTOS (sin filtrar)
+  -------------------------------------------------------- */
+  const getAllEvents = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getEventosProductora();
+      const arr = Array.isArray(data) ? data : [data];
+      setAllEvents(arr);
+      return arr;
+    } catch (err: any) {
+      console.error("Error obteniendo eventos de productora:", err);
+      setError("No se pudieron cargar los eventos de la productora.");
+      setAllEvents([]);
+      return undefined;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* -------------------------------------------------------
+       CARGAR EVENTOS (por productora o todos)
+  -------------------------------------------------------- */
   const loadEventos = useCallback(
     async (productoraId: number | null = null) => {
       if (!isValidador) {
@@ -89,12 +107,13 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setLoadingEventos(true);
       try {
-        let arr: EventoValidadorDto[] = [];
+        let arr: EventoDto[] = [];
 
-        if (productoraId) {
-          const response = await getEventosById(productoraId);
-          arr = response ?? [];
+        if (productoraId !== null) {
+          // Eventos filtrados por productora
+          arr = (await getEventosByProductora(productoraId)) ?? [];
         } else {
+          // Todos los eventos
           const response = await getEventosProductora();
           arr = response
             ? Array.isArray(response)
@@ -105,24 +124,26 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
 
         setEventos(arr);
       } catch (err: any) {
-        if (err.response?.status === 403) {
-          console.warn("Usuario no autorizado para cargar eventos");
-        } else {
-          console.error("Error cargando eventos:", err);
-        }
+        console.error("Error cargando eventos:", err);
         setEventos([]);
       } finally {
         setLoadingEventos(false);
       }
     },
-    [getEventosById, isValidador],
+    [getEventosByProductora, isValidador],
   );
 
+  /* -------------------------------------------------------
+       SELECCIONAR PRODUCTORA
+  -------------------------------------------------------- */
   const setProductoraSeleccionada = (id: number | null) => {
     setProductoraSeleccionadaState(id);
-    loadEventos(id);
+    loadEventos(id); // si es null carga todos
   };
 
+  /* -------------------------------------------------------
+       VALIDAR TICKET
+  -------------------------------------------------------- */
   const validarTicket = useCallback(
     async (idTicket: string): Promise<number> => {
       try {
@@ -158,24 +179,15 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
     [],
   );
 
-  // Efectos
+  /* -------------------------------------------------------
+       EFECTO INICIAL
+  -------------------------------------------------------- */
   useEffect(() => {
-    if (!authLoading) {
-      if (isValidador) {
-        loadProductoras();
-      } else {
-        // limpiar estados si no es validador
-        setProductoras([]);
-        setEventos([]);
-      }
+    if (!authLoading && isValidador) {
+      loadProductoras();
+      getAllEvents(); // 🔥 al iniciar carga todos los eventos
     }
   }, [authLoading, isValidador, loadProductoras]);
-
-  useEffect(() => {
-    if (productoras.length > 0 && isValidador) {
-      loadEventos(productoraSeleccionada);
-    }
-  }, [loadEventos, productoras, productoraSeleccionada, isValidador]);
 
   return (
     <ValidadorContext.Provider
@@ -189,6 +201,10 @@ export const ValidadorProvider: React.FC<{ children: React.ReactNode }> = ({
         validarTicket,
         ticketsValidadosEvento,
         ticketsValidadosEventoTotales,
+        getAllEvents,
+        allEvents,
+        loading,
+        error,
       }}
     >
       {children}

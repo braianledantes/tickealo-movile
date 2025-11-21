@@ -49,6 +49,7 @@ export function CuentaBancaria({
         <BankRow label="CBU" value={c.cbu} copiable />
         <BankRow label="Alias" value={c.alias} copiable />
         <BankRow label="Banco" value={c.nombreBanco} />
+        <BankRow label="Teléfono" value={p.telefono} />
       </View>
 
       {c.instrucciones && (
@@ -63,48 +64,4 @@ export function CuentaBancaria({
       )}
     </View>
   );
-}
-
-{
-  /* <View className="my-2 border-b border-white/20 pb-5">
-          <Texto bold className="text-[#cfe3ff] text-xl">
-            TRANSFERENCIA A
-          </Texto>
-
-          <View className="flex-row items-center">
-            <UsuarioPerfil
-              username={productora?.nombre}
-              imagenPerfilUrl={productora?.imagenUrl}
-              icono="w-20 h-20"
-              disabled={true}
-            />
-            <View className="ml-4">
-              <Texto bold className="text-white tracking-wide ">
-                {productora?.nombre}
-              </Texto>
-              <Texto className="text-white">CUIT: {productora?.cuit}</Texto>
-              <Texto className="text-white">
-                Contacto: {productora?.telefono}
-              </Texto>
-            </View>
-            {!cuentaBancaria ? (
-              <Texto className="text-white">
-                No hay datos bancarios disponibles.
-              </Texto>
-            ) : (
-              <View>
-                <Texto className="text-white">
-                  Banco: {cuentaBancaria.nombreBanco}
-                </Texto>
-                <Texto className="text-white">
-                  Alias: {cuentaBancaria.alias}
-                </Texto>
-                <Texto className="text-white">CBU: {cuentaBancaria}</Texto>
-                <Texto className="text-white">
-                  Titular: {datosBancarios.titular}
-                </Texto>
-              </View>
-            )}
-          </View>
-        </View> */
 }

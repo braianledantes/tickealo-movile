@@ -1,19 +1,31 @@
 import { EventoDto } from "@/api/dto/evento.dto";
-import { TicketDto } from "@/api/dto/ticket-validador";
+import { TicketValidadorDto } from "@/api/dto/ticket-validador";
 import { Texto } from "@/components/Texto";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, View } from "react-native";
 
 interface Props {
   evento?: EventoDto | null;
-  ticketsTotalesEvento?: TicketDto[];
+  ticketsTotalesEvento?: TicketValidadorDto[];
 }
 
 export default function ProgressTicket({
   evento,
   ticketsTotalesEvento = [],
 }: Props) {
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(shimmerAnim, {
+        toValue: 1,
+        duration: 2200,
+        useNativeDriver: false,
+      }),
+    ).start();
+  }, [shimmerAnim]);
+
   if (!evento) {
     return (
       <Texto className="text-[#aaa]">Cargando información del evento...</Texto>
@@ -22,7 +34,6 @@ export default function ProgressTicket({
 
   const entradas = evento.entradas ?? [];
   const totalCapacidad = evento.capacidad ?? 0;
-  const stockRestante = evento.stockEntradas ?? 0;
 
   if (entradas.length === 0) {
     return (
@@ -43,29 +54,22 @@ export default function ProgressTicket({
     (t) => t.estado === "VALIDADO",
   );
 
-  // Total vendidos
-  const totalVendidos = totalCapacidad - stockRestante;
-
-  // Entradas por tipo con cantidad vendida y stock
-  const entradasPorTipo: {
-    [tipo: string]: { vendidos: number; stock: number };
-  } = {};
-  entradas.forEach((e) => {
-    const stock = e.cantidad ?? 0; // cantidad total de entradas
-    const vendidos = stock - (e.stock ?? 0); // entradas vendidas
-    entradasPorTipo[e.tipo] = { vendidos, stock };
-  });
-
   const porcentajeEvento =
     totalCapacidad > 0
       ? Math.round((ticketsValidadosTotales.length / totalCapacidad) * 100)
       : 0;
 
+  // Animación glow
+  const translateX = shimmerAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-25%", "400%"],
+  });
+
   return (
     <View className="mt-6 px-4">
       {/* Progreso total del evento */}
       <View style={styles.card}>
-        <Texto className="text-white text-lg font-bold  tracking-wider mb-2">
+        <Texto className="text-white text-lg font-bold tracking-wider mb-2">
           Progreso total del evento
         </Texto>
 
@@ -79,12 +83,32 @@ export default function ProgressTicket({
         </View>
 
         <View style={styles.barraFondo}>
-          <LinearGradient
-            colors={["#03055F", "#00B4D8", "#90E0EF", "#CAF0F8"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
+          <View
             style={[styles.barraProgreso, { width: `${porcentajeEvento}%` }]}
-          />
+          >
+            <LinearGradient
+              colors={["#90E0EF", "#CAF0F8"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            />
+
+            {/* Glow animado */}
+            <Animated.View
+              style={[styles.glow, { transform: [{ translateX }] }]}
+            >
+              <LinearGradient
+                colors={[
+                  "rgba(255,255,255,0)",
+                  "rgba(255,255,255,0.5)",
+                  "rgba(255,255,255,0)",
+                ]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.glowGradient}
+              />
+            </Animated.View>
+          </View>
         </View>
       </View>
 
@@ -92,7 +116,7 @@ export default function ProgressTicket({
       <View className="mt-4 gap-2 px-4">
         {/* Tickets Pendientes */}
         <View className="flex-row justify-between">
-          <Texto bold className="text-[#999] text-md ">
+          <Texto semiBold className="text-[#999] text-md tracking-wider">
             Pendientes
           </Texto>
           <Texto bold className="text-[#999] text-md">
@@ -102,7 +126,7 @@ export default function ProgressTicket({
 
         {/* Tickets Rechazados */}
         <View className="flex-row justify-between">
-          <Texto bold className="text-[#999] text-md">
+          <Texto semiBold className="text-[#999] text-md tracking-wider">
             Rechazados
           </Texto>
           <Texto bold className="text-[#999] text-md">
@@ -110,25 +134,30 @@ export default function ProgressTicket({
           </Texto>
         </View>
 
-        {/* Tickets por tipo (tipo | vendidos / stock) */}
-        {Object.entries(entradasPorTipo).map(([tipo, { vendidos, stock }]) => (
-          <View key={tipo} className="flex-row justify-between mb-1">
-            <Texto bold className="text-[#ddd] text-md ">
-              {tipo}
-            </Texto>
-            <Texto bold className="text-[#4da6ff] text-md">
-              {vendidos} / {stock}
-            </Texto>
-          </View>
-        ))}
+        {/* Tickets validados por tipo */}
+        {entradas.map((entrada) => {
+          const cantValidados = ticketsValidadosTotales.filter(
+            (t) => t.entrada?.tipo === entrada.tipo,
+          ).length;
+          return (
+            <View key={entrada.tipo} className="flex-row justify-between mb-1">
+              <Texto bold className="text-[#ddd] text-md">
+                {entrada.tipo}
+              </Texto>
+              <Texto bold className="text-[#4da6ff] text-md">
+                {cantValidados} / {entrada.cantidad ?? 0}
+              </Texto>
+            </View>
+          );
+        })}
 
-        {/* Total vendidos */}
+        {/* Total tickets validados */}
         <View className="flex-row justify-between">
           <Texto bold className="text-[#7a86b6] text-md">
-            Total vendidos
+            Total validados
           </Texto>
           <Texto bold className="text-[#7a86b6] text-md">
-            {totalVendidos}
+            {ticketsValidadosTotales.length}
           </Texto>
         </View>
       </View>
@@ -155,6 +184,19 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   barraProgreso: {
+    height: "100%",
+    borderRadius: 8,
+    overflow: "hidden",
+    position: "relative",
+  },
+  glow: {
+    position: "absolute",
+    height: "100%",
+    width: "25%",
+    top: 0,
+  },
+  glowGradient: {
+    width: "100%",
     height: "100%",
     borderRadius: 8,
   },

@@ -1,11 +1,9 @@
 import api from "./axiosConfig";
-import {
-  EventoValidadorDto,
-  ProductoraValidadorDto,
-} from "./dto/eventos-validador.dto";
+import { EventoDto } from "./dto/evento.dto";
+import { ProductoraValidadorDto } from "./dto/eventos-validador.dto";
 
 //Obtener los eventos de la productora a la cual es miembro
-export const getEventosProductora = async (): Promise<EventoValidadorDto> => {
+export const getEventosProductora = async (): Promise<EventoDto> => {
   const response = await api.get("/validador/eventos");
   return response.data;
 };

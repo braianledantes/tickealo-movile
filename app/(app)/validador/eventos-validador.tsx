@@ -17,10 +17,12 @@ export default function ValidadorEventos() {
   const router = useRouter();
   const {
     productoras,
+    productoraSeleccionada,
     setProductoraSeleccionada,
     eventos,
     loadingProductoras,
     loadingEventos,
+    allEvents,
   } = useValidador();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -76,7 +78,7 @@ export default function ValidadorEventos() {
           </View>
         ) : (
           <EventList
-            events={eventos}
+            events={!productoraSeleccionada ? allEvents : eventos}
             onPressEvent={(id) =>
               router.push({
                 pathname: "/(app)/validador/info-evento-validador",

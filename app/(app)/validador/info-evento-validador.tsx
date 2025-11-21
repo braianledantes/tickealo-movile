@@ -1,12 +1,11 @@
 import { HeaderBack } from "@/components/Layout/HeaderBack";
-import { Texto } from "@/components/Texto";
 import ProgressTicket from "@/components/Validador/ProgressTicket";
 import { useEvento } from "@/hooks/useEvento";
 import { useTicketValidador } from "@/hooks/useTicketValidador";
-import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import { EventInfo } from "@/components/Eventos/EventInfo";
 import HistorialTicket from "@/components/Validador/HistorialTicket";
 import {
   ActivityIndicator,
@@ -54,58 +53,18 @@ export default function InfoEventoValidador() {
     evento.bannerUrl && evento.bannerUrl.trim() !== ""
       ? { uri: evento.bannerUrl }
       : defaultEvent;
-  console.log(evento);
   return (
     <View className="flex-1 bg-[#05081b]">
       <HeaderBack />
 
-      <ScrollView className="flex flex-1">
+      <ScrollView className="flex flex-1 pb-20">
         {/* Imagen portada */}
         <Image
           source={banner}
           style={{ width: "100%", height, resizeMode: "cover" }}
         />
 
-        {/* Descripción del evento */}
-        <View className="px-4 mt-4">
-          <Texto bold className="text-[#CAF0F8] text-3xl mb-4 tracking-wide">
-            {evento.nombre}
-          </Texto>
-
-          {/* Lugar */}
-          <View className="flex-row items-center mb-4">
-            <Ionicons name="location-outline" size={18} color="#4da6ff" />
-            <Texto semiBold className="text-md ml-2 text-[#4da6ff]">
-              {evento.lugar?.direccion
-                ? `${evento.lugar.direccion}, ${evento.lugar.ciudad ?? ""}`
-                : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
-            </Texto>
-          </View>
-
-          <Texto className="text-[#ddd] text-md">{evento.descripcion}</Texto>
-        </View>
-
-        {/* Fecha */}
-        <View className="mt-6 px-4 border-t border-[#1b1b40] pt-3">
-          <Texto bold className="text-[#A5A6AD] tracking-wide text-xl">
-            {(() => {
-              const date = new Date(evento.inicioAt);
-              const fecha = date
-                .toLocaleDateString("es-AR", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })
-                .toUpperCase();
-
-              const hora = date.getHours().toString().padStart(2, "0");
-              const minutos = date.getMinutes().toString().padStart(2, "0");
-
-              return `${fecha} • ${hora}:${minutos} HS`;
-            })()}
-          </Texto>
-        </View>
+        <EventInfo evento={evento} type="v" />
 
         {/* Progreso por tipo de entrada */}
         {evento.entradas && evento.entradas.length > 0 && (

@@ -7,13 +7,15 @@ import { TouchableOpacity, View } from "react-native";
 import { FavoriteButton } from "../Button/FavoriteButton";
 import { IconButton } from "../Button/IconButton";
 import { ReminderButton } from "../Button/ReminderButton";
+import { ExpandableText } from "../ExpandableText";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
 
 type Props = {
   evento: EventoDto;
+  type?: "default" | "v";
 };
 
-export function EventInfo({ evento }: Props) {
+export function EventInfo({ evento, type = "default" }: Props) {
   const router = useRouter();
   return (
     <View>
@@ -23,10 +25,12 @@ export function EventInfo({ evento }: Props) {
           <Texto className="text-[#cfe3ff] text-2xl font-bold tracking-wide">
             {evento.nombre}
           </Texto>
-          <View className="flex-row">
-            <ReminderButton evento={evento} />
-            <FavoriteButton evento={evento} />
-          </View>
+          {type === "default" && (
+            <View className="flex-row">
+              <ReminderButton evento={evento} />
+              <FavoriteButton evento={evento} />
+            </View>
+          )}
         </View>
         <TouchableOpacity
           className="flex-row justify-start items-center mb-2"
@@ -46,39 +50,43 @@ export function EventInfo({ evento }: Props) {
               : (evento.lugar?.ciudad ?? "Ubicación no disponible")}
           </Texto>
         </TouchableOpacity>
-        <Texto className="text-[#ddd] text-md leading-5">
-          {evento.descripcion}
-        </Texto>
-        <TouchableOpacity
-          className="flex-row justify-between items-center mt-2 bg-[#0c0f2b] p-2 rounded-full"
-          onPress={() =>
-            router.push({
-              pathname: "/(app)/info-productora",
-              params: { productoraId: String(evento.productora.userId) },
-            })
-          }
-        >
-          <View className="flex-row">
-            <UsuarioPerfil
-              imagenPerfilUrl={evento.productora.imagenUrl}
-              username={evento.productora.nombre}
-              icono="w-7 h-7"
-              className="p-0"
+        <ExpandableText descripcion={evento.descripcion} />
+
+        {type === "default" && (
+          <TouchableOpacity
+            className="flex-row justify-between items-center mt-2 bg-[#0c0f2b] p-2 rounded-full"
+            onPress={() =>
+              router.push({
+                pathname: "/(app)/info-productora",
+                params: { productoraId: String(evento.productora.userId) },
+              })
+            }
+          >
+            <View className="flex-row">
+              <UsuarioPerfil
+                imagenPerfilUrl={evento.productora.imagenUrl}
+                username={evento.productora.nombre}
+                icono="w-7 h-7"
+                className="p-0"
+              />
+              <Texto
+                semiBold
+                className="text-[#20347F] text-lg ml-2 text-center"
+              >
+                Organizado por {evento.productora.nombre}
+              </Texto>
+            </View>
+            <IconButton
+              iconType="Feather"
+              iconName="chevron-right"
+              size={20}
+              color="#20347F"
+              style={{
+                padding: 0,
+              }}
             />
-            <Texto semiBold className="text-[#20347F] text-lg ml-2 text-center">
-              Organizado por {evento.productora.nombre}
-            </Texto>
-          </View>
-          <IconButton
-            iconType="Feather"
-            iconName="chevron-right"
-            size={20}
-            color="#20347F"
-            style={{
-              padding: 0,
-            }}
-          />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* Fecha */}
