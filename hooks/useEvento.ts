@@ -3,12 +3,10 @@ import { getEventoById } from "@/api/events";
 import { useComentarios } from "@/hooks/context/useComentarios";
 import { useEffect, useState } from "react";
 import { useEstadisticas } from "./context/useEstadisticas";
-import { useProductora } from "./context/useProductora";
 
 export const useEvento = (id?: string | number) => {
   const eventoId = Number(id);
   const { comentarios, cargarComentarios } = useComentarios();
-  const { getProductora, productora } = useProductora();
   const [evento, setEvento] = useState<EventoDto | null>(null);
   const { estadisticas, cargarEstadisticas } = useEstadisticas();
   const [loading, setLoading] = useState(true);
@@ -28,7 +26,6 @@ export const useEvento = (id?: string | number) => {
         if (!cancelled) setEvento(evt);
 
         await cargarComentarios(eventoId);
-        await getProductora(Number(evt.productora.userId));
         await cargarEstadisticas(eventoId);
       } catch (err) {
         console.error("No se pudo cargar el evento.", err);
@@ -60,7 +57,6 @@ export const useEvento = (id?: string | number) => {
     estadisticas,
     loading,
     error,
-    productora,
     cuentaBancaria,
   };
 };

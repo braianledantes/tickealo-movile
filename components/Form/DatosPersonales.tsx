@@ -90,12 +90,14 @@ export function DatosPersonales({
         value={email}
         onChangeValue={setEmail}
       />
-      <Input
-        type="text"
-        placeholder="Nombre de usuario"
-        value={username}
-        onChangeValue={setUsername}
-      />
+      {format !== "edit" && (
+        <Input
+          type="text"
+          placeholder="Nombre de usuario"
+          value={username}
+          onChangeValue={setUsername}
+        />
+      )}
 
       {format === "edit" ? (
         <Button

@@ -8,7 +8,7 @@ import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -25,9 +25,8 @@ export default function InfoEvento() {
   const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
   const scrollY = useRef(new Animated.Value(0)).current;
   const [headerHeight, setHeaderHeight] = useState(0);
-  const router = useRouter();
 
-  const { evento, comentarios, estadisticas, productora, loading, error } =
+  const { evento, comentarios, estadisticas, loading, error } =
     useEvento(eventoId);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputOffset = useRef(new Animated.Value(0)).current;
@@ -130,7 +129,7 @@ export default function InfoEvento() {
         keyboardShouldPersistTaps="handled"
         style={{ flex: 1 }}
       >
-        <EventInfo evento={evento} productora={productora} />
+        <EventInfo evento={evento} />
 
         <EntradaList evento={evento} />
 
@@ -155,7 +154,7 @@ export default function InfoEvento() {
           <ComentarioCard
             key={item.id}
             comentario={item}
-            productora={productora}
+            productora={evento.productora}
           />
         ))}
       </Animated.ScrollView>

@@ -1,4 +1,4 @@
-import { EventoDto, ProductoraDto } from "@/api/dto/evento.dto";
+import { EventoDto } from "@/api/dto/evento.dto";
 import { Texto } from "@/components/Texto";
 import { abrirEnMaps } from "@/utils/abrirMaps";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,10 +11,9 @@ import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
 
 type Props = {
   evento: EventoDto;
-  productora?: ProductoraDto | null;
 };
 
-export function EventInfo({ evento, productora }: Props) {
+export function EventInfo({ evento }: Props) {
   const router = useRouter();
   return (
     <View>
@@ -55,7 +54,7 @@ export function EventInfo({ evento, productora }: Props) {
           onPress={() =>
             router.push({
               pathname: "/(app)/info-productora",
-              params: { data: JSON.stringify(productora) },
+              params: { productoraId: String(evento.productora.userId) },
             })
           }
         >

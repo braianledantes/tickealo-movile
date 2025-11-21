@@ -1,24 +1,23 @@
-import { EventoDto } from "@/api/dto/evento.dto";
+import { ProductoraDto } from "@/api/dto/evento.dto";
 import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { useSeguidores } from "@/hooks/context/useSeguidores";
 import { useEffect, useState } from "react";
 
 type Props = {
-  evento: EventoDto;
-  productoraId?: number | null;
+  productora: ProductoraDto;
 };
 
-export function FollowButton({ evento, productoraId }: Props) {
+export function FollowButton({ productora }: Props) {
   const { seguir, dejarSeguir, loading: loadingSeguimiento } = useSeguidores();
 
   const [estaSiguiendo, setEstaSiguiendo] = useState<boolean | null>(null);
 
   useEffect(() => {
-    if (evento) {
-      setEstaSiguiendo(!!evento.productora?.isSeguido);
+    if (productora) {
+      setEstaSiguiendo(!!productora?.isSeguido);
     }
-  }, [evento]);
+  }, [productora]);
 
   return (
     <>
@@ -26,8 +25,8 @@ export function FollowButton({ evento, productoraId }: Props) {
         <SecondaryButton
           title="Siguiendo"
           onPress={async () => {
-            if (!productoraId) return;
-            await dejarSeguir(productoraId);
+            if (!productora) return;
+            await dejarSeguir(productora.userId);
             setEstaSiguiendo(false);
           }}
           className="flex-1"
@@ -37,8 +36,8 @@ export function FollowButton({ evento, productoraId }: Props) {
         <Button
           title="Seguir Productora"
           onPress={async () => {
-            if (!productoraId) return;
-            await seguir(productoraId);
+            if (!productora) return;
+            await seguir(productora.userId);
             setEstaSiguiendo(true);
           }}
           className="flex-1"

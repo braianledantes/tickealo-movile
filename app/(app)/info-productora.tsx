@@ -1,11 +1,11 @@
-import { EventoDto, ProductoraDto } from "@/api/dto/evento.dto";
+import { EventoDto } from "@/api/dto/evento.dto";
 import { FilterButton, FiltroItem } from "@/components/Button/FilterButton";
+import { FollowButton } from "@/components/Button/FollowButton";
 import { EventSection } from "@/components/Eventos/EventSection";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { useProductora } from "@/hooks/context/useProductora";
-import { useToast } from "@/hooks/context/useToast";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useLocalSearchParams } from "expo-router";
@@ -15,14 +15,14 @@ import { ActivityIndicator, ScrollView, View } from "react-native";
 type Filtro = "PROXIMOS" | "FINALIZADOS";
 
 export default function Profile() {
-  const { data } = useLocalSearchParams();
-  const [productora, setProductora] = useState<ProductoraDto | null>(null);
-  const { showToast } = useToast();
+  const { productoraId } = useLocalSearchParams<{ productoraId: string }>();
   const {
     getEventosFinalizadosByProductora,
     getEventosProximosByProductora,
     loadingFin,
     loadingProx,
+    getProductora,
+    productora,
   } = useProductora();
 
   const [eventosProximos, setEventosProximos] = useState<EventoDto[]>([]);
@@ -30,21 +30,15 @@ export default function Profile() {
   const [filtroActivo, setFiltroActivo] = useState<Filtro>("PROXIMOS");
 
   useEffect(() => {
-    const dataString = Array.isArray(data) ? data[0] : data;
-
-    if (dataString) {
-      const parsed = JSON.parse(dataString);
-      setProductora(parsed);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (!productora?.userId) return;
+    if (!productoraId) return;
 
     const fetchEventos = async () => {
-      const proximos = await getEventosProximosByProductora(productora.userId);
+      await getProductora(Number(productoraId));
+      const proximos = await getEventosProximosByProductora(
+        Number(productoraId),
+      );
       const finalizados = await getEventosFinalizadosByProductora(
-        productora.userId,
+        Number(productoraId),
       );
 
       setEventosProximos(proximos || []);
@@ -52,7 +46,8 @@ export default function Profile() {
     };
 
     fetchEventos();
-  }, [productora]);
+    // eslint-disable-next-line
+  }, [productoraId]);
 
   const options: FiltroItem[] = useMemo(() => {
     const f: FiltroItem[] = [
@@ -74,6 +69,7 @@ export default function Profile() {
     if (options.length && !options.find((o) => o.key === filtroActivo)) {
       setFiltroActivo(options[0].key as Filtro);
     }
+    // eslint-disable-next-line
   }, [options]);
 
   // Loading para eventos PROXIMOS
@@ -110,7 +106,7 @@ export default function Profile() {
             <Texto className="text-white text-3xl font-bold tracking-wide mr-4">
               {productora?.nombre}
             </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
+            <Texto semiBold className="text-md text-white/70 tracking-wider">
               @{productora?.user.username}
             </Texto>
             <View className="flex-row justify-start gap-2">
@@ -130,7 +126,7 @@ export default function Profile() {
             <Texto className="text-white text-3xl font-bold tracking-wide">
               {eventosFinalizados.length + eventosProximos.length}
             </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
+            <Texto semiBold className="text-md text-white tracking-wider">
               eventos
             </Texto>
           </View>
@@ -138,7 +134,7 @@ export default function Profile() {
             <Texto className="text-white text-3xl font-bold tracking-wide">
               {productora?.cantSeguidores}
             </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
+            <Texto semiBold className="text-md text-white tracking-wider">
               seguidores
             </Texto>
           </View>
@@ -146,7 +142,7 @@ export default function Profile() {
             <Texto className="text-white text-3xl font-bold tracking-wide">
               {productora?.calificacion?.toFixed(1)}
             </Texto>
-            <Texto bold className="text-md text-white/70 tracking-wider">
+            <Texto semiBold className="text-md text-white tracking-wider">
               calificacion
             </Texto>
           </View>
@@ -156,16 +152,22 @@ export default function Profile() {
         <View className="flex-row justify-center my-2 mb-4 px-4">
           <View className="flex-row items-center">
             <Ionicons name="mail-outline" size={14} color="#999" />
-            <Texto semiBold className="text-[#999] ml-1.5">
+            <Texto className="text-white/70 ml-1.5">
               {productora?.user.email}
             </Texto>
           </View>
           <View className="flex-row items-center ml-2">
-            <Feather name="map-pin" size={14} color="#999" />
-            <Texto semiBold className="text-[#999] ml-1">
-              {productora?.pais}
-            </Texto>
+            <Feather name="map-pin" size={12} color="#999" />
+            <Texto className="text-white/70 ml-1">{productora?.pais}</Texto>
           </View>
+        </View>
+
+        <View className="flex-row justify-center items-center p-4">
+          {productora ? (
+            <FollowButton productora={productora} />
+          ) : (
+            <View className="h-10 flex-1 bg-gray-800 rounded" />
+          )}
         </View>
 
         {/* Filtros */}

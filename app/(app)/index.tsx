@@ -87,7 +87,7 @@ export default function Index() {
     return array.filter((e) => {
       const eventoProvinciaRaw = e.lugar?.provincia || "";
       const eventoProvincia = normalizarNombreProvincia(
-        eventoProvinciaRaw.toLowerCase()
+        eventoProvinciaRaw.toLowerCase(),
       );
       return eventoProvincia.includes(selectedProvincia);
     });
@@ -142,9 +142,10 @@ export default function Index() {
             easing: Easing.in(Easing.quad),
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     }
+    // eslint-disable-next-line
   }, [noHayEventos, noHayEventosProvincia]);
 
   return (
