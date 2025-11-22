@@ -1,11 +1,12 @@
 import { Button } from "@/components/Button/Button";
 import { EntradaContador } from "@/components/Entradas/EntradaContador";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
+import { CuponDescuento } from "@/components/Puntos/CuponDescuento";
+import { ResumenDescuento } from "@/components/Puntos/ResumenDescuento";
 import { Texto } from "@/components/Texto";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useCantEntradas } from "@/hooks/useCantEntradas";
 import { useRouter } from "expo-router";
-import { Percent } from "lucide-react-native";
 import React, { useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import defaultEvent from "../../../assets/images/defaultEvent.jpg";
@@ -33,13 +34,13 @@ export default function InfoEntrada() {
       ? { uri: params.portadaUrl }
       : defaultEvent;
 
-  const totalFinal = usarPuntos ? total * 0.9 : total;
+  const totalFinal = usarPuntos ? total * 0.75 : total;
   const puntosGanados = Math.floor(totalFinal / 1000);
 
   const aplicarPuntos = () => {
     router.setParams({
       ...params,
-      cantPuntos: usarPuntos ? "0" : "1",
+      cantPuntos: usarPuntos ? "0" : "250",
       totalFinal: totalFinal.toString(),
     });
 
@@ -48,11 +49,9 @@ export default function InfoEntrada() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      {/* Header */}
       <HeaderBack />
 
       <ScrollView
-        //para que funcione bien en IOS
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 120 }}
         keyboardShouldPersistTaps="handled"
@@ -65,15 +64,15 @@ export default function InfoEntrada() {
         />
 
         {/* Entrada + Contador */}
-
         <EntradaContador
           tipo={params.nombre ?? "General"}
           precioUnit={precioUnit}
           qty={qty}
-          total={totalFinal}
+          total={total}
           onMinus={onMinus}
           onPlus={onPlus}
         />
+
         {error && (
           <View className="px-4 mt-2">
             <Texto className="text-center tracking-wider text-[#BD4C4C]">
@@ -82,22 +81,18 @@ export default function InfoEntrada() {
           </View>
         )}
 
-        {/* Cartel de descuento*/}
+        <CuponDescuento
+          usarPuntos={usarPuntos}
+          puntosDisponibles={user?.puntosAcumulados ?? 0}
+          onToggle={aplicarPuntos}
+        />
+
         {usarPuntos && (
-          <View
-            pointerEvents="none"
-            className="px-4 mt-3 flex-row items-center justify-center"
-          >
-            <View className="flex-row items-center gap-2 bg-[#1e3d20]/40 border border-[#38d39f]/40 px-4 py-2 rounded-xl">
-              <Percent size={18} color="#38d39f" />
-              <Texto bold className="text-[#38d39f] tracking-wider">
-                10% OFF APLICADO
-              </Texto>
-            </View>
-          </View>
+          <ResumenDescuento total={total} totalFinal={totalFinal} />
         )}
 
-        <View className="px-4 mt-6 mb-8">
+        {/* Puntos actuales*/}
+        <View className="px-4 mt-8">
           <View className="flex-row justify-between items-center">
             <Texto
               semiBold
@@ -106,12 +101,13 @@ export default function InfoEntrada() {
               Tus puntos
             </Texto>
 
-            <Texto bold className="text-[#7ee5ff] tracking-wide">
+            <Texto bold className="text-[#CAF0F8] tracking-wide">
               {user?.puntosAcumulados ?? 0} pts
             </Texto>
           </View>
         </View>
 
+        {/* Puntos ganados*/}
         <View className="px-4 mt-6 mb-8">
           <View className="flex-row justify-between items-center">
             <Texto
@@ -121,31 +117,16 @@ export default function InfoEntrada() {
               Con esta compra vas a ganar
             </Texto>
 
-            <Texto bold className="text-[#4da6ff] tracking-wide">
+            <Texto bold className="text-[#00B4D8] tracking-wide">
               {puntosGanados} pts
             </Texto>
           </View>
         </View>
 
-        {/* Botón usar piuntos */}
-        {(user?.puntosAcumulados ?? 0) >= 1 && (
-          <View className="px-4 mb-6">
-            <Button
-              title={
-                usarPuntos
-                  ? "Cancelar uso del punto"
-                  : `Usar 1 punto (${user?.puntosAcumulados} disp.) = 10% OFF`
-              }
-              onPress={aplicarPuntos}
-              variant={usarPuntos ? "secondary" : "primary"}
-            />
-          </View>
-        )}
-
         {/* Botón compra */}
         <View className="px-4 mt-3 mb-6">
           <Button
-            title="Ir a la compra"
+            title="Ir al pago"
             onPress={() => onCheckout(usarPuntos, totalFinal)}
             disabled={disabled}
           />

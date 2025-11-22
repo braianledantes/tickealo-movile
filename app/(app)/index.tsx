@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { ButtonScroll } from "@/components/Button/ButtonScroll";
 import { EventList } from "@/components/Eventos/EventList";
 import { EventSection } from "@/components/Eventos/EventSection";
 import { Busqueda } from "@/components/Input/Busqueda";
@@ -47,6 +48,17 @@ export default function Index() {
     fetchSeguidos,
   } = useEventos();
   const { user } = useAuth();
+
+  const scrollRef = useRef<ScrollView>(null);
+  const [showButtonScroll, setShowButtonScroll] = useState(true);
+  const handleScroll = (e: any) => {
+    const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
+
+    const isBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 40;
+
+    setShowButtonScroll(!isBottom);
+  };
 
   const [pickerOpen, setPickerOpen] = useState(false);
   const bounceAnim = useRef(new Animated.Value(0)).current;
@@ -87,7 +99,7 @@ export default function Index() {
     return array.filter((e) => {
       const eventoProvinciaRaw = e.lugar?.provincia || "";
       const eventoProvincia = normalizarNombreProvincia(
-        eventoProvinciaRaw.toLowerCase(),
+        eventoProvinciaRaw.toLowerCase()
       );
       return eventoProvincia.includes(selectedProvincia);
     });
@@ -142,16 +154,19 @@ export default function Index() {
             easing: Easing.in(Easing.quad),
             useNativeDriver: true,
           }),
-        ]),
+        ])
       ).start();
     }
     // eslint-disable-next-line
   }, [noHayEventos, noHayEventosProvincia]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#05081b]">
+    <SafeAreaView className="flex-1 bg-[#05081b]" pointerEvents="box-none">
       <Header />
       <ScrollView
+        ref={scrollRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         contentContainerClassName="pb-10"
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -246,6 +261,10 @@ export default function Index() {
           )}
         </View>
       </ScrollView>
+      <ButtonScroll
+        visible={showButtonScroll}
+        onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
+      />
     </SafeAreaView>
   );
 }

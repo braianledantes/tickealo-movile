@@ -34,7 +34,7 @@ export default function Profile() {
               !
             </Texto>
             {user?.user?.roles?.some((r) => r.name === "validador") && (
-              <View className="flex-row justify-center p-1 mt-2 border border-2 border-[#1ED760] text-center text-white rounded-full">
+              <View className="flex-row justify-center px-3 py-1 mt-2 border-2 border-[#1ED760] text-center text-white rounded-full items-center">
                 <Texto bold className="text-[#1ED760] mr-2 ">
                   VALIDADOR
                 </Texto>
@@ -55,11 +55,11 @@ export default function Profile() {
           >
             Datos de Contacto
           </Texto>
-          <View className="border border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
+          <View className="border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
             <Texto className="text-[#7a86b6] mb-2">Correo Electronico</Texto>
             <Texto className="text-white text-xl">{user?.user.email}</Texto>
           </View>
-          <View className="border border-2 border-[#1b1e5e] p-6 rounded-bl-2xl rounded-br-2xl">
+          <View className="border-2 border-[#1b1e5e] p-6 rounded-bl-2xl rounded-br-2xl">
             <View className="flex-row">
               <View className="flex-1">
                 <Texto className="text-[#7a86b6] mb-2">Telofono</Texto>

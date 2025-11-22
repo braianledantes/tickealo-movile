@@ -79,10 +79,10 @@ export function useCantEntradas() {
 
       const subtotal = precioUnit * qty;
       //usuario
-      const descuentoVisual = usarPuntos ? subtotal * 0.1 : 0;
+      const descuentoVisual = usarPuntos ? subtotal * 0.25 : 0;
       const totalFinalVisual = subtotal - descuentoVisual;
 
-      const puntosUsados = usarPuntos ? 1 : 0;
+      const puntosUsados = usarPuntos ? 250 : 0;
       const puntosGanados = Math.floor(totalFinalVisual / 1000);
 
       const payload = {

@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button/Button";
+import { ButtonScroll } from "@/components/Button/ButtonScroll";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
@@ -6,7 +7,7 @@ import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { useCompra } from "@/hooks/useCompra";
 import { useEvento } from "@/hooks/useEvento";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function Compra() {
@@ -37,6 +38,17 @@ export default function Compra() {
   }>();
 
   const { productora, cuentaBancaria } = useEvento(eventoId);
+
+  const scrollRef = useRef<ScrollView>(null);
+  const [showButtonScroll, setShowButtonScroll] = useState(true);
+  const handleScroll = (e: any) => {
+    const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
+
+    const isBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 40;
+
+    setShowButtonScroll(!isBottom);
+  };
 
   // ✅ TIMER: 1 hora = 3600 segundos
   const [timeLeft, setTimeLeft] = useState(3600);
@@ -75,13 +87,17 @@ export default function Compra() {
   );
 
   return (
-    <View className="flex-1 bg-[#05081b]">
+    <View pointerEvents="box-none" className="flex-1 bg-[#05081b]">
       <HeaderBack />
       <ScrollView
+        ref={scrollRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 140 }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        pointerEvents="box-none"
       >
         <View className="mt-4 mb-5 px-4 gap-8">
           <EntradaCard
@@ -95,8 +111,8 @@ export default function Compra() {
           />
 
           {/* RESUMEN DE LA COMPRA */}
-          <View className="bg-[#0b1030] border border-[#1b1e5e] rounded-2xl p-4 mt-2">
-            <Text className="text-[#7ee5ff] font-bold text-lg mb-3 tracking-wide">
+          <View className="bg-[#0b1030] border border-[#1b1e5e] rounded-2xl p-4 mt-1">
+            <Text className="text-[#90E0EF] font-bold text-lg mb-3 tracking-wide">
               RESUMEN DE LA COMPRA
             </Text>
 
@@ -105,9 +121,10 @@ export default function Compra() {
               <Text className="text-white font-semibold">${subtotal}</Text>
             </View>
 
+            {/*Descuento si uso puntos */}
             {usarPuntos === "1" && (
               <View className="flex-row justify-between mb-2">
-                <Text className="text-[#38d39f]">Descuento (10%)</Text>
+                <Text className="text-[#38d39f]">Descuento (25%)</Text>
                 <Text className="text-[#38d39f] font-semibold">
                   - ${descuento}
                 </Text>
@@ -117,31 +134,33 @@ export default function Compra() {
             <View className="h-[1px] bg-[#1b1e5e] my-2" />
 
             <View className="flex-row justify-between mb-2">
-              <Text className="text-gray-300">Total final</Text>
-              <Text className="text-[#4da6ff] font-bold">${totalFinal}</Text>
+              <Text className="text-[#00B4D8] font-extrabold text-lg">
+                TOTAL FINAL
+              </Text>
+              <Text className="text-[#00B4D8] font-extrabold text-lg">
+                ${totalFinal}
+              </Text>
             </View>
 
+            <View className="h-[1px] bg-[#1b1e5e] my-2" />
+            <Text className="text-[#90E0EF] font-bold text-base mb-1">
+              PUNTOS
+            </Text>
+
+            {/*Si uso canje de puntos, muestro la diferencia */}
             {usarPuntos === "1" && (
-              <>
-                <View className="h-[1px] bg-[#1b1e5e] my-2" />
-
-                <Text className="text-[#7ee5ff] font-bold text-base mb-1">
-                  Puntos
-                </Text>
-
-                <View className="flex-row justify-between mb-1">
-                  <Text className="text-gray-300">Puntos usados</Text>
-                  <Text className="text-white font-semibold">-1</Text>
-                </View>
-
-                <View className="flex-row justify-between mb-1">
-                  <Text className="text-gray-300">Puntos ganados</Text>
-                  <Text className="text-white font-semibold">
-                    +{puntosGanados}
-                  </Text>
-                </View>
-              </>
+              <View className="flex-row justify-between mb-1">
+                <Text className="text-gray-300">Puntos usados</Text>
+                <Text className="text-white font-semibold">-250</Text>
+              </View>
             )}
+
+            <View className="flex-row justify-between mb-1">
+              <Text className="text-gray-300">
+                Puntos ganados en esta compra
+              </Text>
+              <Text className="text-white font-semibold">+{puntosGanados}</Text>
+            </View>
           </View>
 
           <CuentaBancaria p={productora} c={cuentaBancaria} />
@@ -180,6 +199,10 @@ export default function Compra() {
           />
         </View>
       </ScrollView>
+      <ButtonScroll
+        visible={showButtonScroll}
+        onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
+      />
     </View>
   );
 }
