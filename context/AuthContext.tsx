@@ -25,6 +25,7 @@ export const AuthContext = createContext<{
   user?: Me | null;
   isLoading: boolean;
   actualizarPerfilCliente: (data: FormData) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }>({
   login: () => null,
   registerCliente: () => null,
@@ -33,6 +34,7 @@ export const AuthContext = createContext<{
   user: null,
   isLoading: false,
   actualizarPerfilCliente: async () => {},
+  refreshUser: async () => {},
 });
 
 export function AuthProvider({ children }: PropsWithChildren) {
@@ -80,6 +82,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
         logout: () => {
           setAccessToken(null);
           setUser(null);
+        },
+        refreshUser: async () => {
+          try {
+            const updated = await currentUser();
+            setUser(updated);
+          } catch (err) {
+            console.log("Error al refrescar usuario:", err);
+          }
         },
         accessToken,
         user,

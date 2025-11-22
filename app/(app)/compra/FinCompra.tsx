@@ -107,7 +107,7 @@ export default function Compra() {
 
             {usarPuntos === "1" && (
               <View className="flex-row justify-between mb-2">
-                <Text className="text-[#38d39f]">Descuento (25%)</Text>
+                <Text className="text-[#38d39f]">Descuento (10%)</Text>
                 <Text className="text-[#38d39f] font-semibold">
                   - ${descuento}
                 </Text>
@@ -131,7 +131,7 @@ export default function Compra() {
 
                 <View className="flex-row justify-between mb-1">
                   <Text className="text-gray-300">Puntos usados</Text>
-                  <Text className="text-white font-semibold">-250</Text>
+                  <Text className="text-white font-semibold">-1</Text>
                 </View>
 
                 <View className="flex-row justify-between mb-1">

@@ -33,13 +33,13 @@ export default function InfoEntrada() {
       ? { uri: params.portadaUrl }
       : defaultEvent;
 
-  const totalFinal = usarPuntos ? total * 0.75 : total;
+  const totalFinal = usarPuntos ? total * 0.9 : total;
   const puntosGanados = Math.floor(totalFinal / 1000);
 
   const aplicarPuntos = () => {
     router.setParams({
       ...params,
-      cantPuntos: usarPuntos ? "0" : "25",
+      cantPuntos: usarPuntos ? "0" : "1",
       totalFinal: totalFinal.toString(),
     });
 
@@ -91,7 +91,7 @@ export default function InfoEntrada() {
             <View className="flex-row items-center gap-2 bg-[#1e3d20]/40 border border-[#38d39f]/40 px-4 py-2 rounded-xl">
               <Percent size={18} color="#38d39f" />
               <Texto bold className="text-[#38d39f] tracking-wider">
-                25% OFF APLICADO
+                10% OFF APLICADO
               </Texto>
             </View>
           </View>
@@ -128,11 +128,13 @@ export default function InfoEntrada() {
         </View>
 
         {/* Botón usar piuntos */}
-        {(user?.puntosAcumulados ?? 0) >= 250 && (
+        {(user?.puntosAcumulados ?? 0) >= 1 && (
           <View className="px-4 mb-6">
             <Button
               title={
-                usarPuntos ? "No usar puntos" : "Usar 250 puntos = 25% OFF"
+                usarPuntos
+                  ? "Cancelar uso del punto"
+                  : `Usar 1 punto (${user?.puntosAcumulados} disp.) = 10% OFF`
               }
               onPress={aplicarPuntos}
               variant={usarPuntos ? "secondary" : "primary"}

@@ -42,11 +42,12 @@ export function useCantEntradas() {
 
     setQty((q) => {
       if (q + 1 > stock) {
-        setError(
+        const mensaje =
           stock === 1
             ? "Solo queda 1 entrada disponible"
-            : `Solo quedan ${stock} entradas disponibles`
-        );
+            : `Solo quedan ${stock} entradas disponibles`;
+
+        setError(mensaje);
         return q;
       }
       return q + 1;
@@ -59,21 +60,29 @@ export function useCantEntradas() {
 
     try {
       if (qty > stock) {
-        setError(
+        const mensaje =
           stock === 1
             ? "Solo queda 1 entrada disponible"
-            : `Solo quedan ${stock} entradas disponibles`
-        );
+            : `Solo quedan ${stock} entradas disponibles`;
+
+        setError(mensaje);
+        /**
+         *  setError(
+      stock === 1
+        ? "Solo queda 1 entrada disponible"
+        : `Solo quedan ${stock} entradas disponibles`
+      );
+         */
         setLoading(false);
         return;
       }
 
       const subtotal = precioUnit * qty;
       //usuario
-      const descuentoVisual = usarPuntos ? subtotal * 0.25 : 0;
+      const descuentoVisual = usarPuntos ? subtotal * 0.1 : 0;
       const totalFinalVisual = subtotal - descuentoVisual;
 
-      const puntosUsados = usarPuntos ? 25 : 0;
+      const puntosUsados = usarPuntos ? 1 : 0;
       const puntosGanados = Math.floor(totalFinalVisual / 1000);
 
       const payload = {

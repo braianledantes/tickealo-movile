@@ -27,6 +27,8 @@ export default function ProgressPuntosAcumulados({
 
   // ANCHO DINÁMICO
   const getBarWidth = () => {
+    if (puntosAcumulados === 0) return "0%";
+    if (puntosAcumulados < 100) return "10%";
     if (puntosAcumulados < 1000) return "30%";
     if (puntosAcumulados < 2000) return "50%";
     if (puntosAcumulados < 5000) return "70%";

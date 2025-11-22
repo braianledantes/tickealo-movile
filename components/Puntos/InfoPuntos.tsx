@@ -50,7 +50,7 @@ export function InfoPuntos({ visible, onClose, puntos }: Props) {
             ¿Para qué sirven?
           </Texto>
           <Texto className="text-[#bcd4ff] mb-3">
-            Podés canjear 250 puntos y obtener un 25% de descuento en tu próxima
+            Podés canjear 1 punto y obtener un 10% de descuento en tu próxima
             compra.
           </Texto>
 
