@@ -35,15 +35,20 @@ export function AgregarComentario({
     if (error) {
       setCanSend(false);
       if (touched) {
-        showToast("error", "Error", error);
+        //showToast("error", "Error", error);
       }
     } else {
       setCanSend(true);
     }
     // eslint-disable-next-line
-  }, [comentario, calificacion]);
+  }, [comentario]);
 
   const handleEnviar = async () => {
+    const error = validarComentario({ comentario });
+    if (error) {
+      showToast("error", "Error", error);
+      return;
+    }
     setLoading(true);
     try {
       const nuevoComentario = await comentar(evento, {
