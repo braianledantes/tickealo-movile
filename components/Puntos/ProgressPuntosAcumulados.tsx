@@ -1,16 +1,18 @@
 import { Texto } from "@/components/Texto";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useEffect, useRef } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
+import { InfoPuntos } from "./InfoPuntos";
 
 interface Props {
   puntosAcumulados?: number;
 }
 
-export default function ProgressPuntosAcumuladosGlow({
+export default function ProgressPuntosAcumulados({
   puntosAcumulados = 0,
 }: Props) {
   const shimmerAnim = useRef(new Animated.Value(0)).current;
+  const [openInfo, setOpenInfo] = useState(false);
 
   useEffect(() => {
     Animated.loop(
@@ -18,7 +20,7 @@ export default function ProgressPuntosAcumuladosGlow({
         toValue: 1,
         duration: 2200,
         useNativeDriver: false,
-      }),
+      })
     ).start();
     // eslint-disable-next-line
   }, []);
@@ -33,7 +35,7 @@ export default function ProgressPuntosAcumuladosGlow({
 
   const barWidth = getBarWidth();
 
-  // Movimiento del glow
+  //luz que se mueve
   const translateX = shimmerAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ["-25%", "400%"],
@@ -41,47 +43,54 @@ export default function ProgressPuntosAcumuladosGlow({
 
   return (
     <View className="mt-6">
-      <View style={styles.card}>
-        <Texto bold className="text-white text-lg tracking-wider mb-2">
-          Puntos acumulados
-        </Texto>
+      <TouchableOpacity activeOpacity={0.9} onPress={() => setOpenInfo(true)}>
+        <View style={styles.card}>
+          <Texto bold className="text-white text-lg tracking-wider mb-2">
+            Puntos acumulados
+          </Texto>
 
-        <Texto className="text-[#ddd] text-base mb-4">
-          {puntosAcumulados} pts
-        </Texto>
+          <Texto className="text-[#ddd] text-base mb-4">
+            {puntosAcumulados} pts
+          </Texto>
 
-        <View style={styles.barraFondo}>
-          {/* BARRA BASE */}
-          <View style={[styles.barraProgreso, { width: barWidth }]}>
-            <LinearGradient
-              colors={["#90E0EF", "#CAF0F8"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ flex: 1 }}
-            />
-
-            <Animated.View
-              style={[
-                styles.glow,
-                {
-                  transform: [{ translateX }],
-                },
-              ]}
-            >
+          <View style={styles.barraFondo}>
+            {/* BARRA BASE */}
+            <View style={[styles.barraProgreso, { width: barWidth }]}>
               <LinearGradient
-                colors={[
-                  "rgba(255,255,255,0)",
-                  "rgba(255,255,255,0.5)",
-                  "rgba(255,255,255,0)",
-                ]}
+                colors={["#90E0EF", "#CAF0F8"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={styles.glowGradient}
+                style={{ flex: 1 }}
               />
-            </Animated.View>
+
+              <Animated.View
+                style={[
+                  styles.glow,
+                  {
+                    transform: [{ translateX }],
+                  },
+                ]}
+              >
+                <LinearGradient
+                  colors={[
+                    "rgba(255,255,255,0)",
+                    "rgba(255,255,255,0.5)",
+                    "rgba(255,255,255,0)",
+                  ]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.glowGradient}
+                />
+              </Animated.View>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
+      <InfoPuntos
+        visible={openInfo}
+        onClose={() => setOpenInfo(false)}
+        puntos={puntosAcumulados}
+      />
     </View>
   );
 }
