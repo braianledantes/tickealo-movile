@@ -26,20 +26,25 @@ export const FilterButton: React.FC<FiltrosProps> = ({
       horizontal
       showsHorizontalScrollIndicator={false}
       className="flex-row mb-4"
+      contentContainerStyle={{ paddingVertical: 4 }}
     >
       {filtros.map((f) => (
         <TouchableOpacity
           key={f.key}
           onPress={() => setFiltroActivo(f.key)}
-          className={`mr-2 py-1.5 px-3 rounded-full border items-center min-h-[32px] 
+          className={`mr-2 px-4 rounded-xl border items-center justify-center 
             ${
               filtroActivo === f.key
                 ? "bg-[#1E90FF] border-[#1E90FF]"
                 : "border-[#1E90FF]"
             }`}
+          style={{
+            height: 34,
+          }}
         >
           <Texto
             className={filtroActivo === f.key ? "text-white" : "text-blue-400"}
+            style={{ fontSize: 14 }}
           >
             {f.label}
           </Texto>

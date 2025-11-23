@@ -24,10 +24,15 @@ export const ComprasFiltro: React.FC<ComprasFiltroProps> = ({
     const f: FiltroItem[] = [
       {
         key: "RECIENTES",
-        label: "Mis compras",
+        label: "Recientes",
         count: obtenerComprasPorFiltro(compras, "RECIENTES").length,
       },
       { key: "TODAS", label: "Todas", count: compras.length },
+      {
+        key: "PENDIENTES",
+        label: "Pendientes",
+        count: obtenerComprasPorFiltro(compras, "PENDIENTES").length,
+      },
       {
         key: "ACEPTADAS",
         label: "Aceptadas",
@@ -44,7 +49,7 @@ export const ComprasFiltro: React.FC<ComprasFiltroProps> = ({
 
   // Inicializamos filtroActivo en el primer filtro que tenga contenido
   const [filtroActivo, setFiltroActivo] = useState<Filtro>(
-    filtrosConContenido[0]?.key as Filtro,
+    filtrosConContenido[0]?.key as Filtro
   );
 
   const comprasFiltradas = obtenerComprasPorFiltro(compras, filtroActivo);

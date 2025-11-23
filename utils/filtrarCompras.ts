@@ -2,27 +2,28 @@ import { CompraDto } from "@/api/dto/compras.dto";
 
 // Función principal que filtra todas las secciones
 export function filtrarCompras(compras: CompraDto[]) {
-  const hoy = new Date();
-  const hoyISO = hoy.toISOString().split("T")[0]; // formato YYYY-MM-DD
+  const hoyISO = new Date().toISOString().split("T")[0];
 
+  // Compras hechas hoy
   const compraReciente = compras.filter((c) => {
-    if (!c.createdAt) return false;
-    const fechaCompra = new Date(c.createdAt).toISOString().split("T")[0];
-    return fechaCompra === hoyISO; // compras hechas hoy
+    const fecha = new Date(c.createdAt).toISOString().split("T")[0];
+    return fecha === hoyISO;
   });
 
-  const compraRechazada = compras.filter((c) => c.estado === "RECHAZADA");
+  //Compras pendientes (productora aún no validó el comprobante)
+  const compraPendiente = compras.filter((c) => c.estado === "PENDIENTE");
 
-  const compraAceptada = compras.filter(
-    (c) =>
-      c.estado === "ACEPTADA" &&
-      c.tickets.some((t) => t.estado === "PENDIENTE_VALIDACION"),
-  );
+  // Compras aceptadas (productora aprobó el comprobante)
+  const compraAceptada = compras.filter((c) => c.estado === "ACEPTADA");
+
+  // Compras rechazadas (productora no aceptó)
+  const compraRechazada = compras.filter((c) => c.estado === "RECHAZADA");
 
   return {
     compraReciente,
-    compraRechazada,
+    compraPendiente,
     compraAceptada,
+    compraRechazada,
   };
 }
 
@@ -30,10 +31,8 @@ export function filtrarCompras(compras: CompraDto[]) {
 export type Filtro =
   | "TODAS"
   | "RECIENTES"
+  | "PENDIENTES"
   | "ACEPTADAS"
-  | "POR_USAR"
-  | "YA_USADAS"
-  | "TRANSFERENCIAS"
   | "RECHAZADAS";
 
 // Metadatos asociados a cada tipo de compra
@@ -49,23 +48,15 @@ export const META_FILTROS: Record<
     titulo: "MIS COMPRAS RECIENTES",
     colorTexto: "#CAF0F8",
   },
+  PENDIENTES: {
+    titulo: "COMPRAS PENDIENTES",
+    colorTexto: "#CAF0F8",
+  },
   ACEPTADAS: {
     titulo: "COMPRAS ACEPTADAS",
     colorTexto: "#CAF0F8",
     mensaje:
       "¡Todo listo! Dirigite a la sección 'Mis tickets' y muestra el QR al ingresar al evento.",
-  },
-  POR_USAR: {
-    titulo: "ENTRADAS POR USAR",
-    colorTexto: "#CAF0F8",
-  },
-  YA_USADAS: {
-    titulo: "ENTRADAS YA USADAS",
-    colorTexto: "#CAF0F8",
-  },
-  TRANSFERENCIAS: {
-    titulo: "ENTRADAS QUE TE TRANSFIRIERON",
-    colorTexto: "#CAF0F8",
   },
   RECHAZADAS: {
     titulo: "COMPRAS RECHAZADAS",
@@ -77,17 +68,20 @@ export const META_FILTROS: Record<
 
 // Función para obtener compras según un filtro específico
 export function obtenerComprasPorFiltro(compras: CompraDto[], filtro: Filtro) {
-  const { compraReciente, compraRechazada, compraAceptada } =
+  const { compraReciente, compraPendiente, compraAceptada, compraRechazada } =
     filtrarCompras(compras);
 
   switch (filtro) {
     case "RECIENTES":
       return compraReciente;
+    case "PENDIENTES":
+      return compraPendiente;
     case "ACEPTADAS":
       return compraAceptada;
     case "RECHAZADAS":
       return compraRechazada;
     case "TODAS":
+      return compras;
     default:
       return compras;
   }
@@ -97,6 +91,9 @@ export function obtenerComprasPorFiltro(compras: CompraDto[], filtro: Filtro) {
 export function getEstadoVisual(estadoRaw?: string) {
   const estado = estadoRaw?.toUpperCase() || "";
 
+  if (estado.includes("RECIENTES")) {
+    return { label: "RECIENTES", color: "#00b4ff", bg: "#001f2e" };
+  }
   if (estado.includes("ACEPTADA")) {
     return { label: "ACEPTADA", color: "#00ff9d", bg: "#003d1f" };
   }

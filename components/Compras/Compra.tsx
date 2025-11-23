@@ -59,13 +59,31 @@ export const Compra: React.FC<EntradaCompradaProps> = ({
     }
     // eslint-disable-next-line
   }, [nuevaCompra]);
-  const ticketRef = compra.tickets[0];
+  /*const ticketRef = compra.tickets[0];
   const evento = ticketRef.entrada.evento;
 
   const totalEntradas = compra.tickets.reduce(
     (acc, ticket) => acc + (ticket.entrada ? 1 : 0),
-    0,
+    0
   );
+  */
+
+  // Si la compra no tiene tickets, o vienen incompletos, evitamos error
+  if (!compra.tickets || compra.tickets.length === 0) {
+    return null;
+  }
+
+  const ticketRef = compra.tickets.find((t) => t.entrada && t.entrada.evento);
+
+  // Si ningún ticket tiene entrada → devolvemos null para evitar error
+  if (!ticketRef) {
+    return null;
+  }
+
+  const evento = ticketRef.entrada.evento;
+
+  // Contar solo tickets que sí tengan entrada
+  const totalEntradas = compra.tickets.filter((t) => t.entrada).length;
 
   if (!compra.tickets || compra.tickets.length === 0) return null;
 
