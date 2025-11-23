@@ -1,4 +1,5 @@
-import { Alert, Linking } from "react-native";
+import { useToast } from "@/hooks/context/useToast";
+import { Linking } from "react-native";
 
 /**
  * Abre Google Maps en una ubicación usando latitud y longitud.
@@ -7,15 +8,20 @@ import { Alert, Linking } from "react-native";
  */
 export async function abrirEnMaps(latitud: number, longitud: number) {
   const url = `https://www.google.com/maps?q=${latitud},${longitud}`;
+  const { showToast } = useToast();
 
   try {
     const supported = await Linking.canOpenURL(url);
     if (supported) {
       await Linking.openURL(url);
     } else {
-      Alert.alert("Error", "No se pudo abrir Google Maps");
+      showToast("error", "Error", "No se pudo abrir Google Maps");
     }
   } catch (error) {
-    Alert.alert("Error", "Ocurrió un problema al intentar abrir el mapa");
+    showToast(
+      "error",
+      "Error",
+      "Ocurrió un problema al intentar abrir el mapa"
+    );
   }
 }

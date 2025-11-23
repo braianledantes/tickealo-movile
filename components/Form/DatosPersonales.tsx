@@ -24,10 +24,17 @@ export function DatosPersonales({
   const [username, setUsername] = useState(initialValues.username || "");
   const { showToast } = useToast();
   const [image, setImage] = useState<string | null>(
-    initialValues.imagenPerfilUrl || null,
+    initialValues.imagenPerfilUrl || null
   );
   const canProceed = nombre && apellido && email && username && image;
 
+  const [errors, setErrors] = useState({
+    nombre: "El campo nombre es obligatorio",
+    apellido: "El campo apellido es obligatorio",
+    email: "El campo email es obligatorio",
+    username: "El campo username es obligatorio",
+    image: "La foto es obligatoria",
+  });
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -68,7 +75,7 @@ export function DatosPersonales({
             </Texto>
           </View>
         )}
-        <Texto className="text-blue-400">Poner foto</Texto>
+        <Texto className="text-blue-400">Subir foto</Texto>
       </TouchableOpacity>
 
       {/* Campos de datos */}

@@ -1,13 +1,15 @@
 import { useAuth } from "@/hooks/context/useAuth";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
+import { useToast } from "./context/useToast";
 
 export const useRegister = () => {
   const { registerCliente } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [formData, setFormData] = useState<any>({});
+  const { showToast } = useToast();
 
   /** Paso 1 → guardar datos personales */
   const handleNext = (data: any) => {
@@ -62,7 +64,7 @@ export const useRegister = () => {
       const backendMsg =
         err.response?.data?.message ||
         "No se pudo registrar. Intente nuevamente.";
-      Alert.alert("Error", backendMsg.toString());
+      showToast("error", "Error", backendMsg.toString());
     } finally {
       setIsLoading(false);
     }

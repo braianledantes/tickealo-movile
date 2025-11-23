@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/context/useAuth";
 import { useToast } from "@/hooks/context/useToast";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Platform, ScrollView, View } from "react-native";
+import { Platform, ScrollView, View } from "react-native";
 
 export default function EditProfile() {
   const { actualizarPerfilCliente, user } = useAuth();
@@ -51,7 +51,7 @@ export default function EditProfile() {
       const backendMsg =
         err.response?.data?.message ||
         "No se pudo actualizar. Intente nuevamente.";
-      Alert.alert("Error", backendMsg.toString());
+      showToast("error", "Error", backendMsg.toString());
     } finally {
       setIsLoading(false);
     }

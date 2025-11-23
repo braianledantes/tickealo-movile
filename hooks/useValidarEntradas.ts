@@ -1,7 +1,7 @@
+import { useToast } from "@/hooks/context/useToast";
 import { useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert } from "react-native";
 
 export const useValidarEntradas = () => {
   const [permission, requestPermission] = useCameraPermissions();
@@ -9,6 +9,7 @@ export const useValidarEntradas = () => {
   const [manualCode, setManualCode] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!permission?.granted) requestPermission();
@@ -25,7 +26,7 @@ export const useValidarEntradas = () => {
 
   const handleManualValidation = () => {
     if (!manualCode.trim()) {
-      Alert.alert("Campo vacío", "Por favor ingresa un código válido.");
+      showToast("error", "Campo vacío", "Por favor ingresa un código válido.");
       return;
     }
     router.push({

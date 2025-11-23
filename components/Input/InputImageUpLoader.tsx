@@ -1,6 +1,7 @@
+import { useToast } from "@/hooks/context/useToast";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { IconButton } from "../Button/IconButton";
 import { Texto } from "../Texto";
 
@@ -22,14 +23,16 @@ export function InputImageUpLoader({
   const [image, setImage] = useState<string | null>(value);
   const [fileName, setFileName] = useState<string | null>(null);
 
+  const { showToast } = useToast();
   const pickImage = async () => {
     if (readOnly) return;
 
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      Alert.alert(
+      showToast(
+        "error",
         "Permiso denegado",
-        "Necesitamos acceso a la galería para seleccionar una imagen.",
+        "Se necesitan permisos para acceder a las imágenes."
       );
       return;
     }

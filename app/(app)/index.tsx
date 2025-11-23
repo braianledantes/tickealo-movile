@@ -129,7 +129,7 @@ export default function Index() {
           fetchSeguidos(),
         ]);
       } catch (err) {
-        console.log("Error obteniendo los eventos:", err);
+        //console.log("Error obteniendo los eventos:", err);
         showToast("error", "Error", "Error obteniendo eventos");
       }
     };

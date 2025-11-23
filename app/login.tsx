@@ -4,13 +4,15 @@ import { Input } from "@/components/Input/Input";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/context/useAuth";
+import { useToast } from "@/hooks/context/useToast";
 import { Screen } from "@/screens/main";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 
 export default function Login() {
   const { login } = useAuth();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -22,7 +24,11 @@ export default function Login() {
       await login({ email, password });
       router.replace("/");
     } catch {
-      Alert.alert("Error", "No se pudo iniciar sesión. Verifica tus datos.");
+      showToast(
+        "error",
+        "Error",
+        "No se pudo iniciar sesión. Verifica tus datos"
+      );
     } finally {
       setIsLoading(false);
     }
