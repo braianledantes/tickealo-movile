@@ -29,7 +29,7 @@ export function ButtonScroll({ visible, onPress }: Props) {
   }, [visible]);
 
   return (
-    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
+    <View style={[StyleSheet.absoluteFill, { pointerEvents: "box-none" }]}>
       <Animated.View
         style={[
           styles.container,

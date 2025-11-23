@@ -161,113 +161,112 @@ export default function Index() {
   }, [noHayEventos, noHayEventosProvincia]);
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-[#05081b]"
-      style={{ pointerEvents: "box-none" }}
-    >
-      <Header />
-      <ScrollView
-        ref={scrollRef}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        contentContainerClassName="pb-10"
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor="#4da6ff" // iOS spinner color
-            colors={["#4da6ff"]} // Android spinner color
+    <SafeAreaView className="flex-1 bg-[#05081b]">
+      <View style={{ pointerEvents: "box-none", flex: 1 }}>
+        <Header />
+        <ScrollView
+          ref={scrollRef}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          contentContainerClassName="pb-10"
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#4da6ff" // iOS spinner color
+              colors={["#4da6ff"]} // Android spinner color
+            />
+          }
+        >
+          <ProvinciaPicker2
+            visible={pickerOpen}
+            onClose={() => setPickerOpen(false)}
+            onSelectProvince={(provincia) => setProvince(provincia)}
           />
-        }
-      >
-        <ProvinciaPicker2
-          visible={pickerOpen}
-          onClose={() => setPickerOpen(false)}
-          onSelectProvince={(provincia) => setProvince(provincia)}
-        />
 
-        <Busqueda
-          location={province ?? "Seleccionar provincia"}
-          onPress={() => setPickerOpen(true)}
-          search={search}
-          setSearch={setSearch}
-          onClearLocation={clearLocation}
-        />
+          <Busqueda
+            location={province ?? "Seleccionar provincia"}
+            onPress={() => setPickerOpen(true)}
+            search={search}
+            setSearch={setSearch}
+            onClearLocation={clearLocation}
+          />
 
-        <View className="flex-1">
-          {anyLoading ? (
-            <View className="justify-center items-center py-5">
-              <ActivityIndicator size="large" color="#4da6ff" />
-            </View>
-          ) : error ? (
-            <Text className="text-[#A5A6AD] text-center mt-5 text-base font-poppins-400">
-              {error}
-            </Text>
-          ) : noHayEventos || noHayEventosProvincia ? (
-            <View style={styles.emptyContainer}>
-              <Texto
-                bold
-                className="text-[#CAF0F8] text-center tracking-wider mb-5"
-              >
-                Ups… ¡ningún evento por aquí todavía!
-              </Texto>
-              <Animated.View
-                style={{ transform: [{ translateY: bounceAnim }] }}
-              >
-                <Ionicons name="calendar-outline" size={50} color="#CAF0F8" />
-              </Animated.View>
-            </View>
-          ) : search ? (
-            events.length === 0 ? (
+          <View className="flex-1">
+            {anyLoading ? (
+              <View className="justify-center items-center py-5">
+                <ActivityIndicator size="large" color="#4da6ff" />
+              </View>
+            ) : error ? (
+              <Text className="text-[#A5A6AD] text-center mt-5 text-base font-poppins-400">
+                {error}
+              </Text>
+            ) : noHayEventos || noHayEventosProvincia ? (
               <View style={styles.emptyContainer}>
                 <Texto
                   bold
                   className="text-[#CAF0F8] text-center tracking-wider mb-5"
-                  style={{
-                    maxWidth: "80%",
-                    alignSelf: "center",
-                  }}
-                  numberOfLines={3}
                 >
-                  Ups… no encontramos resultados de tu búsqueda en tu país :(
+                  Ups… ¡ningún evento por aquí todavía!
                 </Texto>
+                <Animated.View
+                  style={{ transform: [{ translateY: bounceAnim }] }}
+                >
+                  <Ionicons name="calendar-outline" size={50} color="#CAF0F8" />
+                </Animated.View>
               </View>
+            ) : search ? (
+              events.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                  <Texto
+                    bold
+                    className="text-[#CAF0F8] text-center tracking-wider mb-5"
+                    style={{
+                      maxWidth: "80%",
+                      alignSelf: "center",
+                    }}
+                    numberOfLines={3}
+                  >
+                    Ups… no encontramos resultados de tu búsqueda en tu país :(
+                  </Texto>
+                </View>
+              ) : (
+                <EventList
+                  events={events}
+                  onPressEvent={(id) =>
+                    router.push({
+                      pathname: "/info-evento",
+                      params: { eventoId: String(id) },
+                    })
+                  }
+                />
+              )
             ) : (
-              <EventList
-                events={events}
-                onPressEvent={(id) =>
-                  router.push({
-                    pathname: "/info-evento",
-                    params: { eventoId: String(id) },
-                  })
-                }
-              />
-            )
-          ) : (
-            <>
-              <EventSection
-                title="EVENTOS SEGUIDOS"
-                eventos={seguidosFiltrados}
-              />
+              <>
+                <EventSection
+                  title="EVENTOS SEGUIDOS"
+                  eventos={seguidosFiltrados}
+                />
 
-              <EventSection
-                title="PROXIMOS EVENTOS"
-                eventos={proximosFiltrados}
-              />
+                <EventSection
+                  title="PROXIMOS EVENTOS"
+                  eventos={proximosFiltrados}
+                />
 
-              <EventSection
-                title="EVENTOS FINALIZADOS"
-                eventos={finalizadosFiltrados}
-              />
-            </>
-          )}
-        </View>
-      </ScrollView>
-      <ButtonScroll
-        visible={showButtonScroll}
-        onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
-      />
+                <EventSection
+                  title="EVENTOS FINALIZADOS"
+                  eventos={finalizadosFiltrados}
+                />
+              </>
+            )}
+          </View>
+        </ScrollView>
+        <ButtonScroll
+          visible={showButtonScroll}
+          onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
+        />
+      </View>
     </SafeAreaView>
   );
 }

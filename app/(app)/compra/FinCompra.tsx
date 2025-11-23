@@ -97,7 +97,7 @@ export default function Compra() {
         contentContainerStyle={{ paddingBottom: 140 }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        pointerEvents="box-none"
+        style={{ pointerEvents: "box-none" }}
       >
         <View className="mt-4 mb-5 px-4 gap-8">
           <EntradaCard
