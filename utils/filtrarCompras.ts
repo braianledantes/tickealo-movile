@@ -33,13 +33,18 @@ export type Filtro =
   | "RECIENTES"
   | "PENDIENTES"
   | "ACEPTADAS"
-  | "RECHAZADAS";
+  | "RECHAZADAS"
+  //ENTRADAS
+  | "POR_USAR"
+  | "YA_USADAS"
+  | "TRANSFERENCIAS";
 
 // Metadatos asociados a cada tipo de compra
 export const META_FILTROS: Record<
   Filtro,
   { titulo: string; mensaje?: string; colorTexto: string }
 > = {
+  //COMPRAS
   TODAS: {
     titulo: "TODAS MIS COMPRAS",
     colorTexto: "#CAF0F8",
@@ -63,6 +68,19 @@ export const META_FILTROS: Record<
     mensaje:
       "Tu compra fue rechazada debido a una verificación no válida. Si creés que es un error, contactá a la productora.",
     colorTexto: "#FF002E",
+  },
+  //ENTRADAS
+  POR_USAR: {
+    titulo: "ENTRADAS POR USAR",
+    colorTexto: "#CAF0F8",
+  },
+  YA_USADAS: {
+    titulo: "ENTRADAS YA USADAS",
+    colorTexto: "#CAF0F8",
+  },
+  TRANSFERENCIAS: {
+    titulo: "TRANSFERENCIAS",
+    colorTexto: "#CAF0F8",
   },
 };
 

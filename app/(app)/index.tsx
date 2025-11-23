@@ -161,7 +161,10 @@ export default function Index() {
   }, [noHayEventos, noHayEventosProvincia]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#05081b]" pointerEvents="box-none">
+    <SafeAreaView
+      className="flex-1 bg-[#05081b]"
+      style={{ pointerEvents: "box-none" }}
+    >
       <Header />
       <ScrollView
         ref={scrollRef}

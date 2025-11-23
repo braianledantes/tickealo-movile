@@ -87,7 +87,7 @@ export default function Compra() {
   );
 
   return (
-    <View pointerEvents="box-none" className="flex-1 bg-[#05081b]">
+    <View style={{ pointerEvents: "box-none" }} className="flex-1 bg-[#05081b]">
       <HeaderBack />
       <ScrollView
         ref={scrollRef}

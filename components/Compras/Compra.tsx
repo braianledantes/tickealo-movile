@@ -88,66 +88,112 @@ export const Compra: React.FC<EntradaCompradaProps> = ({
   if (!compra.tickets || compra.tickets.length === 0) return null;
 
   return (
-    <Animated.View
-      style={[
-        nuevaCompra && {
-          opacity: opacityAnim,
-          transform: [{ scale: scaleAnim }],
-        },
-      ]}
-    >
-      <TouchableOpacity
-        className="flex-row my-2 bg-[#0b1030] rounded-tr-[30px] rounded-br-[30px] overflow-hidden"
-        onPress={onPress}
-        activeOpacity={0.85}
+    <View style={{ marginBottom: 14 }}>
+      <Animated.View
+        style={[
+          {
+            borderTopRightRadius: 30,
+            borderBottomRightRadius: 30,
+            backgroundColor: "#0b1030",
+            marginBottom: 14,
+          },
+          nuevaCompra && {
+            opacity: opacityAnim,
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
       >
-        <Image
-          source={{
-            uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.85}
+          style={{
+            flexDirection: "row",
+            borderTopRightRadius: 30,
+            borderBottomRightRadius: 30,
+            overflow: "visible",
           }}
-          className="w-[100px] h-[120px]"
-        />
-
-        <LinearGradient
-          colors={["#0b1030", "#0f1a4a"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          className="flex-1 flex-row items-center p-4 rounded-tr-[30px] rounded-br-[30px] relative"
         >
-          <View className="flex-1 justify-center">
-            <Texto
-              bold
-              className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6"
-              numberOfLines={1}
+          <Image
+            source={{
+              uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
+            }}
+            style={{
+              width: 100,
+              height: 120,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+            }}
+          />
+
+          {/* Wrapper para evitar bugs de iOS */}
+          <View
+            style={{
+              flex: 1,
+              borderTopRightRadius: 30,
+              borderBottomRightRadius: 30,
+              overflow: "hidden",
+            }}
+          >
+            <LinearGradient
+              colors={["#0b1030", "#0f1a4a"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                padding: 16,
+                borderTopRightRadius: 30,
+                borderBottomRightRadius: 30,
+              }}
             >
-              {evento.nombre}
-            </Texto>
-            <Texto className="text-[#ffffff]">
-              {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-              })}
-            </Texto>
-            <CompraEstado compraEstado={compra.estado} />
+              <View style={{ flex: 1, justifyContent: "center" }}>
+                <Texto
+                  bold
+                  className="text-[#cfe3ff] text-lg uppercase tracking-wide mr-6"
+                  numberOfLines={1}
+                >
+                  {evento.nombre}
+                </Texto>
+
+                <Texto className="text-[#ffffff]">
+                  {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </Texto>
+
+                <CompraEstado compraEstado={compra.estado} />
+              </View>
+
+              <View
+                style={{
+                  width: 1,
+                  borderLeftWidth: 2,
+                  borderStyle: "dashed",
+                  borderColor: "#6B7280",
+                  opacity: 0.6,
+                  marginRight: 16,
+                  alignSelf: "stretch",
+                }}
+              />
+
+              <View style={{ width: 60, alignItems: "center" }}>
+                <Texto className="text-white font-extrabold text-lg">
+                  {totalEntradas}
+                </Texto>
+                <Texto className="text-[9px] mt-0.5 text-indigo-300 text-center">
+                  Entradas{"\n"}Compradas
+                </Texto>
+              </View>
+            </LinearGradient>
+
+            {used && <View style={styles.disabledOverlay} />}
+            {nuevaCompra && <View style={styles.nuevaCompra} />}
           </View>
-
-          <View className="w-[1px] border-l border-dashed border-gray-400 my-2.5 mr-4 self-stretch" />
-
-          <View className="w-15 justify-center items-center">
-            <Texto className="text-white font-extrabold text-lg">
-              {totalEntradas}
-            </Texto>
-            <Texto className="text-xs mt-0.5 text-indigo-300 text-center">
-              Entradas{"\n"}Comprados
-            </Texto>
-          </View>
-        </LinearGradient>
-
-        {used && <View style={styles.disabledOverlay} />}
-        {nuevaCompra && <View style={styles.nuevaCompra} />}
-      </TouchableOpacity>
-    </Animated.View>
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
   );
 };
 
@@ -159,8 +205,7 @@ const styles = StyleSheet.create({
   nuevaCompra: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(26, 43, 111, 0.37)",
-    borderTopEndRadius: 30,
-    borderBottomRightRadius: 30,
+    borderRadius: 30,
     shadowColor: "#1a2b6f",
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,

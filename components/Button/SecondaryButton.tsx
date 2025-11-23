@@ -36,7 +36,7 @@ export function SecondaryButton({
             {title}
           </Texto>
           {disabled && (
-            <View style={styles.disabledOverlay} pointerEvents="none" />
+            <View style={[styles.disabledOverlay, { pointerEvents: "none" }]} />
           )}
         </View>
       </LinearGradient>

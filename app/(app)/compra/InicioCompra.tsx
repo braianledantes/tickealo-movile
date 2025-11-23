@@ -13,6 +13,7 @@ import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 export default function InfoEntrada() {
   const {
+    loading,
     qty,
     total,
     precioUnit,
@@ -28,6 +29,8 @@ export default function InfoEntrada() {
   const router = useRouter();
 
   const [usarPuntos, setUsarPuntos] = useState(false);
+
+  const [botonCargando, setBotonCargando] = useState(false);
 
   const banner =
     params.portadaUrl && params.portadaUrl.trim() !== ""
@@ -45,6 +48,16 @@ export default function InfoEntrada() {
     });
 
     setUsarPuntos((prev) => !prev);
+  };
+
+  const handleCheckout = () => {
+    if (botonCargando) return;
+
+    setBotonCargando(true);
+
+    onCheckout(usarPuntos, totalFinal).finally(() => {
+      setBotonCargando(false);
+    });
   };
 
   return (
@@ -126,9 +139,9 @@ export default function InfoEntrada() {
         {/* Botón compra */}
         <View className="px-4 mt-3 mb-6">
           <Button
-            title="Ir al pago"
-            onPress={() => onCheckout(usarPuntos, totalFinal)}
-            disabled={disabled}
+            title={botonCargando || loading ? "Cargando..." : "Ir al pago"}
+            onPress={handleCheckout}
+            disabled={botonCargando || loading || disabled}
           />
         </View>
       </ScrollView>

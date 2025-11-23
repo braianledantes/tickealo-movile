@@ -84,12 +84,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginVertical: 8,
     overflow: "hidden",
+    borderColor: "#4da6ff",
   },
 
   image: {
     width: "28%",
     aspectRatio: 1 / 1.25,
     resizeMode: "cover",
+    borderTopLeftRadius: 26,
+    borderBottomLeftRadius: 26,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#0077B6",
   },
 
   /** ⬅️ Gradient izquierdo */
@@ -99,6 +105,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#0077B6",
   },
 
   /** ➡️ Gradient derecho */
@@ -109,6 +118,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 25,
     backgroundColor: "#0b1030",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#0077B6",
   },
 
   info: {

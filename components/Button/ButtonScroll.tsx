@@ -31,13 +31,13 @@ export function ButtonScroll({ visible, onPress }: Props) {
   return (
     <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
       <Animated.View
-        pointerEvents={visible ? "auto" : "none"} // ← ÚNICO pointerEvents REAL
         style={[
           styles.container,
           {
             opacity: fadeAnim,
             transform: [{ translateY: translateAnim }],
           },
+          { pointerEvents: visible ? "auto" : "none" },
         ]}
       >
         <Pressable

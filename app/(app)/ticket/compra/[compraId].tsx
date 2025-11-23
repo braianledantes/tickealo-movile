@@ -33,7 +33,7 @@ export default function MiTicket() {
         const compras = (data?.data ?? []).map((compra: CompraDto) => ({
           ...compra,
           tickets: compra.tickets.filter(
-            (t: TicketDto) => t.estado !== "TRANSFERIDO",
+            (t: TicketDto) => t.estado !== "TRANSFERIDO"
           ),
         }));
 
@@ -69,8 +69,11 @@ export default function MiTicket() {
 
   if (!compraSeleccionada) {
     return (
-      <View style={styles.loader}>
-        <Text style={styles.textWhite}>Compra no encontrada</Text>
+      <View style={styles.container}>
+        <HeaderBack title="Mis tickets" />
+        <View style={styles.loader}>
+          <Text style={styles.textWhite}>Compra no encontrada</Text>
+        </View>
       </View>
     );
   }
@@ -260,7 +263,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: {
-    color: "#CAF0F8",
+    color: "#90e0ef",
     fontSize: 13,
     fontWeight: "bold",
     letterSpacing: 1,
