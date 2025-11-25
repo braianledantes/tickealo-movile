@@ -17,7 +17,7 @@ export function CuponDescuento({
 
   return (
     <View
-      className="mx-4 mt-6 flex-row items-center justify-between bg-[#0b1030] border rounded-2xl px-4 py-3"
+      className="mx-4 mt-6 flex-row items-center justify-between bg-[#0b1030] border rounded-3xl px-4 py-3"
       style={{
         borderColor: usarPuntos ? "#38d39f" : "#1b1e5e",
       }}
@@ -33,7 +33,7 @@ export function CuponDescuento({
       {/* Botón aplicar/quitar */}
       <TouchableOpacity
         onPress={onToggle}
-        className={`flex-row items-center px-4 py-1.5 rounded-xl ${
+        className={`flex-row items-center px-4 py-1.5 rounded-3xl ${
           usarPuntos ? "bg-[#38d39f]" : "bg-[#4da6ff]"
         }`}
       >

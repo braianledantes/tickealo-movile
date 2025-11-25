@@ -1,5 +1,4 @@
 import { Button } from "@/components/Button/Button";
-import { ButtonScroll } from "@/components/Button/ButtonScroll";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
 import { HeaderBack } from "@/components/Layout/HeaderBack";
@@ -40,16 +39,6 @@ export default function Compra() {
   const { productora, cuentaBancaria } = useEvento(eventoId);
 
   const scrollRef = useRef<ScrollView>(null);
-  const [showButtonScroll, setShowButtonScroll] = useState(true);
-  const handleScroll = (e: any) => {
-    const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
-
-    const isBottom =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 40;
-
-    setShowButtonScroll(!isBottom);
-  };
-
   // ✅ TIMER: 1 hora = 3600 segundos
   const [timeLeft, setTimeLeft] = useState(3600);
 
@@ -87,17 +76,15 @@ export default function Compra() {
   );
 
   return (
-    <View style={{ pointerEvents: "box-none" }} className="flex-1 bg-[#05081b]">
+    <View className="flex-1 bg-[#05081b]">
       <HeaderBack />
       <ScrollView
         ref={scrollRef}
-        onScroll={handleScroll}
         scrollEventThrottle={16}
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 140 }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        pointerEvents="box-none"
+        contentContainerClassName="pb-10"
       >
         <View className="mt-4 mb-5 px-4 gap-8">
           <EntradaCard
@@ -199,10 +186,6 @@ export default function Compra() {
           />
         </View>
       </ScrollView>
-      <ButtonScroll
-        visible={showButtonScroll}
-        onPress={() => scrollRef.current?.scrollToEnd({ animated: true })}
-      />
     </View>
   );
 }

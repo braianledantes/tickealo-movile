@@ -1,6 +1,7 @@
 import { TransferenciaDto } from "@/api/dto/compras.dto";
 import { useTicket } from "@/hooks/context/useTicket";
 import { useToast } from "@/hooks/context/useToast";
+import { useRouter } from "expo-router";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { UsuarioPerfil } from "../Layout/UsuarioPerfil";
@@ -18,6 +19,7 @@ export const TransferenciaNotificacion: React.FC<Props> = ({ ticket }) => {
     loadingRechazo,
   } = useTicket();
   const { showToast } = useToast();
+  const router = useRouter();
 
   const handleAceptarTransferencia = async () => {
     if (!ticket) return;
@@ -36,6 +38,7 @@ export const TransferenciaNotificacion: React.FC<Props> = ({ ticket }) => {
     const success = await rechazarTransferencia(Number(transferenciaId));
     if (success) {
       showToast("success", "¡Listo!", "Transferencia rechazada.");
+      router.replace("/");
     } else {
       showToast("error", "Error", "Intentelo más tarde.");
     }
