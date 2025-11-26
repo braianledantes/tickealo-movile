@@ -86,6 +86,7 @@ export function useCompra() {
       formData.append("comprobanteTransferencia", file);
       await terminarCompra(compraId as string, formData);
       await refreshUser();
+      router.dismissAll();
       router.replace("/(app)/(drawer)/mis-compras");
     } catch (err: any) {
       console.log("Error en la compra:", err.response?.data?.message);
