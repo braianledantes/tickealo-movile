@@ -1,6 +1,6 @@
+import { Image } from "expo-image";
 import React from "react";
 import {
-  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -52,7 +52,7 @@ export function ComprobanteView({
             <Image
               source={{ uri: comprobante }}
               style={{ width: 420, height: 600 }}
-              resizeMode="contain"
+              contentFit="contain"
             />
           ) : (
             <View className="items-center justify-center py-10">

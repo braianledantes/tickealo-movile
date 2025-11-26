@@ -3,12 +3,12 @@ import { TransferenciaNotificacion } from "@/components/Transferencia/Transferen
 import { useTicket } from "@/hooks/context/useTicket";
 import { resumenTickets } from "@/utils/Tickets";
 import { formatDate } from "@/utils/utils";
+import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -81,6 +81,7 @@ export default function MiEntrada() {
                   "https://via.placeholder.com/400x200.png?text=Evento",
               }}
               style={[styles.image, { height }]}
+              contentFit="cover"
             />
           </View>
 
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 24,
   },
-  image: { width: "100%", resizeMode: "cover" },
+  image: { width: "100%" },
   info: { padding: 16 },
   eventName: {
     color: "#fff",

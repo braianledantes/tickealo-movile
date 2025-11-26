@@ -1,7 +1,8 @@
 import { CompraDto, TransferenciaDto } from "@/api/dto/compras.dto";
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Texto } from "../Texto";
 
 interface EntradaCompradaProps {
@@ -36,6 +37,7 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
           uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
         }}
         style={styles.image}
+        contentFit="cover"
       />
 
       {/* Cuerpo izquierda */}
@@ -90,7 +92,6 @@ const styles = StyleSheet.create({
   image: {
     width: "28%",
     aspectRatio: 1 / 1.25,
-    resizeMode: "cover",
     borderTopLeftRadius: 26,
     borderBottomLeftRadius: 26,
     borderWidth: 1,

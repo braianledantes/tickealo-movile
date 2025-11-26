@@ -7,10 +7,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import defaultEvent from "@/assets/images/defaultEvent.jpg";
 import { EventInfo } from "@/components/Eventos/EventInfo";
 import HistorialTicket from "@/components/Validador/HistorialTicket";
+import { Image } from "expo-image";
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -58,7 +58,8 @@ export default function InfoEventoValidador() {
         {/* Imagen portada */}
         <Image
           source={banner}
-          style={{ width: "100%", height, resizeMode: "cover" }}
+          style={{ width: "100%", height }}
+          contentFit="cover"
         />
 
         <EventInfo evento={evento} type="v" />

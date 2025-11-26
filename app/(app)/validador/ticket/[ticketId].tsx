@@ -84,7 +84,7 @@ export default function TicketScreen() {
             style={{
               width: 220,
               height: 220,
-              resizeMode: "contain",
+              objectFit: "contain",
               marginBottom: 80,
               opacity: opacityAnim,
               transform: [{ scale: scaleAnim }],

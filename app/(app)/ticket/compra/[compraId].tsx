@@ -4,13 +4,13 @@ import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
 import { resumenTickets } from "@/utils/Tickets";
 import { formatDate } from "@/utils/utils";
+import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -115,6 +115,7 @@ export default function MiTicket() {
                       "https://via.placeholder.com/400x200.png?text=Evento",
                   }}
                   style={[styles.image, { height: height }]}
+                  contentFit="cover"
                 />
 
                 <IconButton
@@ -242,7 +243,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    resizeMode: "cover",
   },
   info: {
     padding: 16,

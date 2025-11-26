@@ -58,7 +58,7 @@ export default function MisEventosFavoritos() {
             events={favoritos}
             onPressEvent={(id) =>
               router.push({
-                pathname: "/(app)/info-evento",
+                pathname: "/info-evento",
                 params: { eventoId: id },
               })
             }

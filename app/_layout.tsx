@@ -48,7 +48,8 @@ function RootNavigator() {
     headerTitle: () => (
       <Image
         source={Logo}
-        style={{ width: 100, height: 40, resizeMode: "contain" }}
+        style={{ width: 100, height: 40 }}
+        contentFit="contain"
       />
     ),
     headerTitleAlign: "center",
