@@ -85,6 +85,10 @@ function RootNavigator() {
             options={{ ...screenOptions, title: "Información del Evento" }}
           />
           <Stack.Screen
+            name="(app)/info-productora"
+            options={{ ...screenOptions, title: "Perfil Productora" }}
+          />
+          <Stack.Screen
             name="(app)/compra/InicioCompra"
             options={{ ...screenOptions, title: "Inicio Compra" }}
           />

@@ -51,7 +51,7 @@ export function useCompra() {
     if (!evento) return;
 
     const entradaSeleccionada = evento.entradas?.find(
-      (e: any) => Number(e.id) === entradaIdNum
+      (e: any) => Number(e.id) === entradaIdNum,
     );
     setEntrada(entradaSeleccionada ?? null);
   }, [evento, entradaIdNum]);
@@ -61,7 +61,7 @@ export function useCompra() {
       showToast(
         "error",
         "Error",
-        "Debes subir el comprobante de pago antes de continuar."
+        "Debes subir el comprobante de pago antes de continuar.",
       );
       return;
     }
@@ -86,7 +86,7 @@ export function useCompra() {
       formData.append("comprobanteTransferencia", file);
       await terminarCompra(compraId as string, formData);
       await refreshUser();
-      router.replace("/(app)/compra/mis-compras");
+      router.replace("/(app)/(drawer)/mis-compras");
     } catch (err: any) {
       console.log("Error en la compra:", err.response?.data?.message);
     }
