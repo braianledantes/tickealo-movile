@@ -108,7 +108,7 @@ export default function Profile() {
               @{productora?.user.username}
             </Texto>
             <View className="flex-row justify-start gap-2">
-              <View className="flex-row justify-center p-1 mt-1 border border-2 border-blue-800 text-center text-white rounded-full">
+              <View className="flex-row justify-center p-1 mt-1 border-2 border-blue-800 text-center text-white rounded-full">
                 <Texto bold className="text-blue-800 mr-2 text-xs">
                   ORGANIZADOR
                 </Texto>

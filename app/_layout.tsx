@@ -123,6 +123,10 @@ function RootNavigator() {
             name="(app)/validador/info-evento-validador"
             options={{ ...screenOptions, title: "Información del Evento" }}
           />
+          <Stack.Screen
+            name="(app)/validador/validar-entrada"
+            options={{ ...screenOptions, title: "Validar Entrada" }}
+          />
         </Stack.Protected>
 
         <Stack.Protected guard={!accessToken}>

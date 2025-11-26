@@ -78,7 +78,7 @@ export default function InfoEventoValidador() {
 
       {/* Botón SCANNER */}
       <TouchableOpacity
-        onPress={() => router.push("/(app)/(drawer)/validar-entrada")}
+        onPress={() => router.push("/(app)/validador/validar-entrada")}
         activeOpacity={0.8}
         style={{
           position: "absolute",

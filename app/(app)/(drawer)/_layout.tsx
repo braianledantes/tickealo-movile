@@ -51,7 +51,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
       key: "validar-entrada",
       label: "Validar Entrada",
       icon: "qr-code-outline",
-      route: "/validar-entrada",
+      route: "/validador/validar-entrada",
     },
   ];
 
@@ -123,7 +123,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 <TouchableOpacity
                   key={key}
                   style={[styles.itemRow, isActive && styles.itemActive]}
-                  onPress={() => router.replace(route as any)}
+                  onPress={() => router.push(route as any)}
                 >
                   <Ionicons name={icon as any} style={styles.icon} />
                   <Text style={styles.item}>{label}</Text>
