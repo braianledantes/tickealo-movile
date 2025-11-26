@@ -1,7 +1,6 @@
 import { Button } from "@/components/Button/Button";
 import { EntradaCard } from "@/components/Entradas/EntradaCard";
 import { InputImageUpLoader } from "@/components/Input/InputImageUpLoader";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { useCompra } from "@/hooks/useCompra";
 import { useEvento } from "@/hooks/useEvento";
@@ -77,7 +76,6 @@ export default function Compra() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
       <ScrollView
         ref={scrollRef}
         scrollEventThrottle={16}

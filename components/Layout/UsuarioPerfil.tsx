@@ -27,7 +27,7 @@ export const UsuarioPerfil: React.FC<UsuarioPerfilProps> = ({
     if (onPress) {
       onPress();
     } else {
-      router.push("/(app)/Perfil/profile");
+      router.push("/perfil");
     }
   };
 

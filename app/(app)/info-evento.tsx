@@ -4,7 +4,6 @@ import { EntradaList } from "@/components/Entradas/EntradasList";
 import { Estadisticas } from "@/components/Eventos/Estadisticas";
 import { EventInfo } from "@/components/Eventos/EventInfo";
 import { EventTimer } from "@/components/Eventos/EventTimer";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useEvento } from "@/hooks/useEvento";
 import { LinearGradient } from "expo-linear-gradient";
@@ -84,8 +83,6 @@ export default function InfoEvento() {
 
   return (
     <View style={[styles.container]}>
-      <HeaderBack onHeight={setHeaderHeight} title={evento.nombre} />
-
       {evento.bannerUrl && (
         <Animated.View
           style={[

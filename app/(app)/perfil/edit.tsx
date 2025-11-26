@@ -1,5 +1,4 @@
 import { DatosPersonales } from "@/components/Form/DatosPersonales";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useToast } from "@/hooks/context/useToast";
@@ -58,7 +57,6 @@ export default function EditProfile() {
   };
   return (
     <View className="flex-1">
-      <HeaderBack />
       <ScrollView className="bg-[#05081b] p-5">
         <Title className="mb-4">Editar Perfil</Title>
 

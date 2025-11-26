@@ -1,6 +1,5 @@
 import { Me } from "@/api/dto/me.dto";
 import { Button } from "@/components/Button/Button";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
@@ -57,7 +56,6 @@ export default function TransferirTicket() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-8">
         <Title>Transferir Entrada</Title>
         <Texto className="text-[#999] text-md text-center py-2 border-b-[0.2px] border-white/20">

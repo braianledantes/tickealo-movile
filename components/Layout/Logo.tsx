@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
-const icon = require("../../assets/images/tickealo.svg");
+const icon = require("@/assets/images/tickealo.svg");
 
 export function Logo() {
   return (

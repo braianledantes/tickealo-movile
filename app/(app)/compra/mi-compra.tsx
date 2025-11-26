@@ -2,7 +2,6 @@ import { CompraDto } from "@/api/dto/compras.dto";
 import { Button } from "@/components/Button/Button";
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import CompraEstado from "@/components/Compras/CompraEstado";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { ComprobanteView } from "@/components/Modal/Comprobante";
 import { CuentaBancaria } from "@/components/Productora/CuentaBancaria";
 import { Texto } from "@/components/Texto";
@@ -77,8 +76,6 @@ export default function MiCompra() {
 
   return (
     <View style={styles.container}>
-      <HeaderBack onHeight={setHeaderHeight} />
-
       {bannerUrl && (
         <Animated.View
           style={[

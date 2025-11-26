@@ -1,6 +1,5 @@
 import { CompraDto } from "@/api/dto/compras.dto";
 import { ComprasFiltro } from "@/components/Compras/ComprasFiltro";
-import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
 import { useRouter } from "expo-router";
@@ -41,9 +40,10 @@ export default function MisEntradas() {
   }
 
   return (
-    <SafeAreaView className="flex flex-1 bg-[#05081b]">
-      <Header />
-
+    <SafeAreaView
+      className="flex flex-1 bg-[#05081b]"
+      edges={["left", "right", "bottom"]}
+    >
       {compras.length === 0 && !loading ? (
         <View className="flex flex-1 justify-center items-center mx-20">
           <Texto bold className="text-[#CAF0F8] text-center tracking-wider">

@@ -1,10 +1,10 @@
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import ProgressTicket from "@/components/Validador/ProgressTicket";
 import { useEvento } from "@/hooks/useEvento";
 import { useTicketValidador } from "@/hooks/useTicketValidador";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import defaultEvent from "@/assets/images/defaultEvent.jpg";
 import { EventInfo } from "@/components/Eventos/EventInfo";
 import HistorialTicket from "@/components/Validador/HistorialTicket";
 import {
@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 export default function InfoEventoValidador() {
   const { eventoId } = useLocalSearchParams<{ eventoId: string }>();
@@ -55,8 +54,6 @@ export default function InfoEventoValidador() {
       : defaultEvent;
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
-
       <ScrollView className="flex flex-1 pb-20">
         {/* Imagen portada */}
         <Image
@@ -81,7 +78,7 @@ export default function InfoEventoValidador() {
 
       {/* Botón SCANNER */}
       <TouchableOpacity
-        onPress={() => router.push("/(app)/validador/validar-entradas")}
+        onPress={() => router.push("/(app)/(drawer)/validar-entrada")}
         activeOpacity={0.8}
         style={{
           position: "absolute",

@@ -1,6 +1,6 @@
+import defaultEvent from "@/assets/images/defaultEvent.jpg";
 import { Button } from "@/components/Button/Button";
 import { EntradaContador } from "@/components/Entradas/EntradaContador";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { CuponDescuento } from "@/components/Puntos/CuponDescuento";
 import { ResumenDescuento } from "@/components/Puntos/ResumenDescuento";
 import { Texto } from "@/components/Texto";
@@ -9,7 +9,6 @@ import { useCantEntradas } from "@/hooks/useCantEntradas";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, ScrollView, View } from "react-native";
-import defaultEvent from "../../../assets/images/defaultEvent.jpg";
 
 export default function InfoEntrada() {
   const {
@@ -62,8 +61,6 @@ export default function InfoEntrada() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
-
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 120 }}

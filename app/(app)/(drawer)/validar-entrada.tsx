@@ -1,6 +1,5 @@
 import { SecondaryButton } from "@/components/Button/SecondaryButton";
 import { Input } from "@/components/Input/Input";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { useValidarEntradas } from "@/hooks/useValidarEntradas";
 import { CameraView } from "expo-camera";
 import React, { useEffect, useRef } from "react";
@@ -31,8 +30,6 @@ export default function ValidarEntradas() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#05081b" }}>
-      <HeaderBack />
-
       <KeyboardAwareScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ flexGrow: 1, padding: 16 }}

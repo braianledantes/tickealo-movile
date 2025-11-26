@@ -1,5 +1,4 @@
 import { EventList } from "@/components/Eventos/EventList";
-import { Header } from "@/components/Layout/Header";
 import { ProductoraPerfil } from "@/components/Productora/ProductoraPerfil";
 import { Texto } from "@/components/Texto";
 import { useValidador } from "@/hooks/context/useValidador";
@@ -13,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ValidadorEventos() {
+export default function MiProductoraScreen() {
   const router = useRouter();
   const {
     productoras,
@@ -41,9 +40,10 @@ export default function ValidadorEventos() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#05081b]">
-      <Header />
-
+    <SafeAreaView
+      className="flex-1 bg-[#05081b]"
+      edges={["left", "right", "bottom"]}
+    >
       <View className="px-5 mt-4">
         <Texto bold className="text-[#CAF0F8]">
           PRODUCTORAS A LAS QUE PERTENECES

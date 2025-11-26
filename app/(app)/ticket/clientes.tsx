@@ -1,6 +1,5 @@
 import { ClienteList } from "@/components/Clientes/ClientesList";
 import { Input } from "@/components/Input/Input";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { Title } from "@/components/Title";
 import { useTicket } from "@/hooks/context/useTicket";
@@ -30,7 +29,6 @@ export default function TransferirTicket() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="px-4">
         <Title>Transferir Entrada</Title>
         <Texto className="text-[#999] text-md text-center py-2 px-5">

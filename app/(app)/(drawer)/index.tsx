@@ -19,7 +19,6 @@ import { ButtonScroll } from "@/components/Button/ButtonScroll";
 import { EventList } from "@/components/Eventos/EventList";
 import { EventSection } from "@/components/Eventos/EventSection";
 import { Busqueda } from "@/components/Input/Busqueda";
-import { Header } from "@/components/Layout/Header";
 import { ProvinciaPicker2 } from "@/components/Modal/ProvinciaPicker2";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useEventos } from "@/hooks/context/useEventos";
@@ -99,7 +98,7 @@ export default function Index() {
     return array.filter((e) => {
       const eventoProvinciaRaw = e.lugar?.provincia || "";
       const eventoProvincia = normalizarNombreProvincia(
-        eventoProvinciaRaw.toLowerCase()
+        eventoProvinciaRaw.toLowerCase(),
       );
       return eventoProvincia.includes(selectedProvincia);
     });
@@ -154,7 +153,7 @@ export default function Index() {
             easing: Easing.in(Easing.quad),
             useNativeDriver: true,
           }),
-        ])
+        ]),
       ).start();
     }
     // eslint-disable-next-line
@@ -163,9 +162,9 @@ export default function Index() {
   return (
     <SafeAreaView
       className="flex-1 bg-[#05081b]"
+      edges={["left", "right", "bottom"]}
       style={{ pointerEvents: "box-none" }}
     >
-      <Header />
       <ScrollView
         ref={scrollRef}
         onScroll={handleScroll}

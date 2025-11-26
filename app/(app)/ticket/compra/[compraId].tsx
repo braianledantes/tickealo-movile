@@ -1,6 +1,5 @@
 import { CompraDto, TicketDto } from "@/api/dto/compras.dto";
 import { IconButton } from "@/components/Button/IconButton";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
 import { resumenTickets } from "@/utils/Tickets";
@@ -33,7 +32,7 @@ export default function MiTicket() {
         const compras = (data?.data ?? []).map((compra: CompraDto) => ({
           ...compra,
           tickets: compra.tickets.filter(
-            (t: TicketDto) => t.estado !== "TRANSFERIDO"
+            (t: TicketDto) => t.estado !== "TRANSFERIDO",
           ),
         }));
 
@@ -70,7 +69,6 @@ export default function MiTicket() {
   if (!compraSeleccionada) {
     return (
       <View style={styles.container}>
-        <HeaderBack title="Mis tickets" />
         <View style={styles.loader}>
           <Text style={styles.textWhite}>Compra no encontrada</Text>
         </View>
@@ -85,8 +83,6 @@ export default function MiTicket() {
   console.log(compraSeleccionada.tickets);
   return (
     <View style={styles.container}>
-      <HeaderBack title="Mis tickets" />
-
       <Texto
         className="text-center tracking-wider py-2"
         style={{

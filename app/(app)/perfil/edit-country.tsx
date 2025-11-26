@@ -1,5 +1,4 @@
 import { DatosNacionalidad } from "@/components/Form/DatosNacionalidad";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/context/useAuth";
 import { useToast } from "@/hooks/context/useToast";
@@ -30,7 +29,6 @@ export default function EditCountry() {
   };
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-5">
         <Title className="mb-4">Cambiar Nacionalidad</Title>
         <DatosNacionalidad

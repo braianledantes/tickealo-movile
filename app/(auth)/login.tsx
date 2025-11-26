@@ -27,7 +27,7 @@ export default function Login() {
       showToast(
         "error",
         "Error",
-        "No se pudo iniciar sesión. Verifica tus datos"
+        "No se pudo iniciar sesión. Verifica tus datos",
       );
     } finally {
       setIsLoading(false);
@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   const navigateToRegisterCliente = () => {
-    router.push("/register-cliente");
+    router.push("/register");
   };
 
   return (

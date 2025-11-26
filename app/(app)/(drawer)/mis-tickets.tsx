@@ -1,5 +1,4 @@
 import { EntradasFiltro } from "@/components/Entradas/EntradasFiltro";
-import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
 import { useCompras } from "@/hooks/context/useCompras";
 import { useTicket } from "@/hooks/context/useTicket";
@@ -60,8 +59,10 @@ export default function MisTickets() {
   }
 
   return (
-    <SafeAreaView className="flex flex-1 bg-[#05081b]">
-      <Header />
+    <SafeAreaView
+      className="flex flex-1 bg-[#05081b]"
+      edges={["left", "right", "bottom"]}
+    >
       {noHayTickets ? (
         <View className="flex flex-1 justify-center items-center mx-20">
           <Texto bold className="text-[#CAF0F8] text-center tracking-wider">

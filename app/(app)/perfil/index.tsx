@@ -1,5 +1,4 @@
 import { Button } from "@/components/Button/Button";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import ProgressPuntosAcumulados from "@/components/Puntos/ProgressPuntosAcumulados";
 import { Texto } from "@/components/Texto";
@@ -15,7 +14,6 @@ export default function Profile() {
   const router = useRouter();
   return (
     <View className="flex-1">
-      <HeaderBack />
       <ScrollView className="bg-[#05081b] p-5 ">
         {/* Avatar */}
         <View className="flex-row justify-center">
@@ -71,7 +69,7 @@ export default function Profile() {
                   <Texto className="text-white text-xl">{user?.pais}</Texto>
                   <TouchableOpacity
                     activeOpacity={0.7}
-                    onPress={() => router.push("/(app)/Perfil/edit-country")}
+                    onPress={() => router.push("/perfil/edit-country")}
                   >
                     <AntDesign name="right" size={24} color="#4da6ff" />
                   </TouchableOpacity>
@@ -87,7 +85,7 @@ export default function Profile() {
           >
             Datos Personales
           </Texto>
-          <View className="border border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
+          <View className="border-2 border-[#1b1e5e] p-6 rounded-tl-2xl rounded-tr-2xl">
             <View className="flex-row">
               <View className="flex-1">
                 <Texto className="text-[#7a86b6] mb-2">Nombre</Texto>
@@ -100,10 +98,10 @@ export default function Profile() {
             </View>
           </View>
 
-          <View className="border border-2 border-[#1b1e5e] bg-[#0b1030] p-6 rounded-bl-2xl rounded-br-2xl">
+          <View className="border-2 border-[#1b1e5e] bg-[#0b1030] p-6 rounded-bl-2xl rounded-br-2xl">
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => router.push("/(app)/Perfil/edit-password")}
+              onPress={() => router.push("/perfil/edit-password")}
             >
               <View className="flex-row justify-between items-center">
                 <Texto
@@ -120,7 +118,7 @@ export default function Profile() {
         <View className="mt-6 mb-20">
           <Button
             title="Editar Perfil"
-            onPress={() => router.push("/(app)/Perfil/edit-profile")}
+            onPress={() => router.push("/perfil/edit")}
           />
         </View>
       </ScrollView>

@@ -1,6 +1,5 @@
 import { EventoDto } from "@/api/dto/evento.dto";
 import { EventList } from "@/components/Eventos/EventList";
-import { Header } from "@/components/Layout/Header";
 import { Texto } from "@/components/Texto";
 import { useFavorito } from "@/hooks/context/useFavoritos";
 import { useRouter } from "expo-router";
@@ -41,9 +40,10 @@ export default function MisEventosFavoritos() {
   const cantidad = response?.cantidad ?? 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-[#05081b]">
-      <Header />
-
+    <SafeAreaView
+      className="flex-1 bg-[#05081b]"
+      edges={["left", "right", "bottom"]}
+    >
       <View className="flex-1">
         {favoritos.length === 0 ? (
           <View className="flex flex-1 justify-center items-center mx-20">

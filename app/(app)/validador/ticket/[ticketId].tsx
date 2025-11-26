@@ -1,4 +1,3 @@
-import { Header } from "@/components/Layout/Header";
 import { useTicket } from "@/hooks/useTicket";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -6,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const Tick = require("../../../../assets/images/tick.png");
+const Tick = require("@/assets/images/tick.png");
 
 export default function TicketScreen() {
   const { ticketId } = useLocalSearchParams<{ ticketId: string }>();
@@ -52,7 +51,6 @@ export default function TicketScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-[#05081b]">
-      <Header />
       <View className="flex-1 justify-center items-center px-5">
         <Text
           style={{
@@ -102,7 +100,7 @@ export default function TicketScreen() {
         )}
 
         <TouchableOpacity
-          onPress={() => router.push("/(app)/validador/validar-entradas")}
+          onPress={() => router.push("/(app)/(drawer)/validar-entrada")}
           className="px-8 py-3 rounded-full"
           style={{ backgroundColor: valid ? "#03045E" : "#ff6b6b" }}
         >

@@ -80,7 +80,7 @@ export function formatDate(
   options: {
     date?: boolean; // incluir fecha
     time?: boolean; // incluir hora
-  } = { date: true, time: true }
+  } = { date: true, time: true },
 ) {
   const date =
     typeof timestamp === "number" ? new Date(timestamp) : new Date(timestamp);
@@ -94,7 +94,7 @@ export function formatDate(
         day: "2-digit",
         month: "short",
         year: "numeric",
-      })
+      }),
     );
   }
 
@@ -103,7 +103,7 @@ export function formatDate(
       date.toLocaleTimeString("es-AR", {
         hour: "2-digit",
         minute: "2-digit",
-      })
+      }),
     );
   }
 

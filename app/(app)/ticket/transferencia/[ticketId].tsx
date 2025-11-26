@@ -1,4 +1,3 @@
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Texto } from "@/components/Texto";
 import { TransferenciaNotificacion } from "@/components/Transferencia/TransferenciaNotificacion";
 import { useTicket } from "@/hooks/context/useTicket";
@@ -55,7 +54,6 @@ export default function MiEntrada() {
   const evento = ticketSeleccionado.ticket.entrada.evento;
   return (
     <View style={styles.container}>
-      <HeaderBack title="Mi ticket" />
       <ScrollView contentContainerStyle={styles.content}>
         <TransferenciaNotificacion ticket={ticketSeleccionado} />
 

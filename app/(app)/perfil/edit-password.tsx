@@ -1,5 +1,4 @@
 import { ClavePersonal } from "@/components/Form/ClavePersonal";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { Title } from "@/components/Title";
 import { useAuth } from "@/hooks/context/useAuth";
 import { router } from "expo-router";
@@ -19,7 +18,6 @@ export default function EditPassword() {
 
   return (
     <View className="flex-1 bg-[#05081b]">
-      <HeaderBack />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-5">
         <Title className="mb-4">Cambiar Contraseña</Title>
         <ClavePersonal

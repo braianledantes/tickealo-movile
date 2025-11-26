@@ -2,7 +2,6 @@ import { EventoDto } from "@/api/dto/evento.dto";
 import { FilterButton, FiltroItem } from "@/components/Button/FilterButton";
 import { FollowButton } from "@/components/Button/FollowButton";
 import { EventSection } from "@/components/Eventos/EventSection";
-import { HeaderBack } from "@/components/Layout/HeaderBack";
 import { UsuarioPerfil } from "@/components/Layout/UsuarioPerfil";
 import { Texto } from "@/components/Texto";
 import { useProductora } from "@/hooks/context/useProductora";
@@ -92,7 +91,6 @@ export default function Profile() {
 
   return (
     <View className="flex-1">
-      <HeaderBack title={productora?.nombre} />
       <ScrollView className="bg-[#05081b]">
         {/* Avatar */}
         <View className="flex-row justify-center px-4">
