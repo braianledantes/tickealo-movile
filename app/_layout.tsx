@@ -61,10 +61,6 @@ function RootNavigator() {
       <Stack>
         <Stack.Protected guard={!!accessToken}>
           <Stack.Screen
-            name="(app)"
-            options={{ title: "Inicio", headerShown: false }}
-          />
-          <Stack.Screen
             name="(app)/(drawer)"
             options={{ headerShown: false, title: "Inicio" }}
           />
