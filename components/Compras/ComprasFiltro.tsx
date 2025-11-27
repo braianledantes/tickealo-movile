@@ -5,7 +5,7 @@ import {
   obtenerComprasPorFiltro,
 } from "@/utils/filtrarCompras";
 import React, { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { FilterButton, FiltroItem } from "../Button/FilterButton";
 import { Texto } from "../Texto";
 import { Compra } from "./Compra";
@@ -49,7 +49,7 @@ export const ComprasFiltro: React.FC<ComprasFiltroProps> = ({
 
   // Inicializamos filtroActivo en el primer filtro que tenga contenido
   const [filtroActivo, setFiltroActivo] = useState<Filtro>(
-    filtrosConContenido[0]?.key as Filtro
+    filtrosConContenido[0]?.key as Filtro,
   );
 
   const comprasFiltradas = obtenerComprasPorFiltro(compras, filtroActivo);
@@ -65,7 +65,7 @@ export const ComprasFiltro: React.FC<ComprasFiltroProps> = ({
   }
 
   return (
-    <ScrollView className="flex-1 px-4">
+    <View className="flex-1 px-4">
       {/* Botones de filtro solo con contenido */}
       <FilterButton
         filtros={filtrosConContenido}
@@ -102,7 +102,7 @@ export const ComprasFiltro: React.FC<ComprasFiltroProps> = ({
           />
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

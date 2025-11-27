@@ -4,7 +4,12 @@ import { Texto } from "@/components/Texto";
 import { useFavorito } from "@/hooks/context/useFavoritos";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type ResponseDto = {
@@ -14,6 +19,7 @@ type ResponseDto = {
 export default function MisEventosFavoritos() {
   const { eventosFavoritos, loading, error } = useFavorito();
   const [response, setResponse] = useState<ResponseDto | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,6 +33,18 @@ export default function MisEventosFavoritos() {
     };
     fetchFavoritos();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const response = await eventosFavoritos();
+      if (response) setResponse(response);
+    } catch (err) {
+      console.error("Error refrescando favoritos:", err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -44,7 +62,16 @@ export default function MisEventosFavoritos() {
       className="flex-1 bg-[#05081b]"
       edges={["left", "right", "bottom"]}
     >
-      <View className="flex-1">
+      <ScrollView
+        className="flex-1"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#4da6ff"
+          />
+        }
+      >
         {favoritos.length === 0 ? (
           <View className="flex flex-1 justify-center items-center mx-20">
             <Texto bold className="text-[#CAF0F8] text-center tracking-wider">
@@ -64,7 +91,7 @@ export default function MisEventosFavoritos() {
             }
           />
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

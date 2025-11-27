@@ -1,7 +1,7 @@
 import { CompraDto, TransferenciaDto } from "@/api/dto/compras.dto";
 import { Filtro, META_FILTROS } from "@/utils/filtrarCompras";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { FilterButton, FiltroItem } from "../Button/FilterButton";
 import { Texto } from "../Texto";
 import { EntradaComprada } from "./EntradaComprada";
@@ -45,7 +45,7 @@ export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
   const meta = META_FILTROS[filtroActivo];
 
   return (
-    <ScrollView className="flex-1 px-4">
+    <View className="flex-1 px-4">
       <FilterButton
         filtros={filtros}
         filtroActivo={filtroActivo}
@@ -86,7 +86,7 @@ export const EntradasFiltro: React.FC<EntradaFiltroProps> = ({
           />
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

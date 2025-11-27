@@ -4,7 +4,12 @@ import { useCompras } from "@/hooks/context/useCompras";
 import { useTicket } from "@/hooks/context/useTicket";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MisTickets() {
@@ -24,6 +29,19 @@ export default function MisTickets() {
 
   const router = useRouter();
   const [noHayTickets, setNoHayTickets] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await cargarComprasPorEstado("ACEPTADA");
+      await ticketsTransferidos();
+    } catch (err) {
+      console.error("Error refrescando tickets:", err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     cargarComprasPorEstado("ACEPTADA");
@@ -74,24 +92,35 @@ export default function MisTickets() {
           {error || errorCompras}
         </Texto>
       ) : (
-        <EntradasFiltro
-          porUsar={comprasPendientesValidacion?.data || []}
-          usados={comprasValidadas?.data || []}
-          transferidos={transferidos || []}
-          onPressTicket={(item) => {
-            if ("tickets" in item) {
-              router.push({
-                pathname: "/ticket/compra/[compraId]",
-                params: { compraId: item.id.toString() },
-              });
-            } else if ("ticket" in item) {
-              router.push({
-                pathname: "/ticket/transferencia/[ticketId]",
-                params: { ticketId: item.ticket.id.toString() },
-              });
-            }
-          }}
-        />
+        <ScrollView
+          className="flex-1"
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#4da6ff"
+            />
+          }
+        >
+          <EntradasFiltro
+            porUsar={comprasPendientesValidacion?.data || []}
+            usados={comprasValidadas?.data || []}
+            transferidos={transferidos || []}
+            onPressTicket={(item) => {
+              if ("tickets" in item) {
+                router.push({
+                  pathname: "/ticket/compra/[compraId]",
+                  params: { compraId: item.id.toString() },
+                });
+              } else if ("ticket" in item) {
+                router.push({
+                  pathname: "/ticket/transferencia/[ticketId]",
+                  params: { ticketId: item.ticket.id.toString() },
+                });
+              }
+            }}
+          />
+        </ScrollView>
       )}
     </SafeAreaView>
   );
