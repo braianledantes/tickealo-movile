@@ -21,7 +21,7 @@ export default function ProgressPuntosAcumulados({
         toValue: 1,
         duration: 2200,
         useNativeDriver: false,
-      })
+      }),
     ).start();
     // eslint-disable-next-line
   }, []);

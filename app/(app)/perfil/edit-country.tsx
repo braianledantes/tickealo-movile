@@ -20,7 +20,7 @@ export default function EditCountry() {
         formData.append(key, value as string);
       });
       await actualizarPerfilCliente(formData);
-      router.replace("/");
+      router.back();
       setLoading(false);
       showToast("success", "Listo!", "Nacionalidad actualizada correctamente");
     } catch (err: any) {
