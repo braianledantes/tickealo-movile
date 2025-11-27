@@ -30,20 +30,20 @@ export function FavoriteButton({ evento }: Props) {
   };
 
   const toggleFavorito = async () => {
-    if (!evento.id) return;
-    const action = esFavorito ? eliminarFavorito : agregarFavorito;
-    const success = await action(evento.id);
-    if (success) {
-      setFavorito(!esFavorito);
-      if (!esFavorito) {
-        showToast(
-          "success",
-          "¡Listo!",
-          "Evento nuevo agregado a 'Mis favoritos'",
-        );
+    if (esFavorito) {
+      const success = await eliminarFavorito(evento.id);
+      if (success) {
+        setFavorito(false);
+      } else {
+        handleErrorToast(errorFavorito);
       }
     } else {
-      handleErrorToast(errorFavorito);
+      const success = await agregarFavorito(evento.id);
+      if (success) {
+        setFavorito(true);
+      } else {
+        handleErrorToast(errorFavorito);
+      }
     }
   };
 

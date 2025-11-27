@@ -1,9 +1,9 @@
-import { EventoDto } from "@/api/dto/evento.dto";
 import { Texto } from "@/components/Texto";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
+import { EventoFavoritoDto } from "@/api/dto/eventos-favoritos/obtener-eventos-favoritos.dto";
 import { EventCard } from "./EventCard";
 
 export function EventList({
@@ -12,16 +12,13 @@ export function EventList({
   onPressEvent,
 }: {
   title?: string | null;
-  events?: EventoDto[];
+  events?: EventoFavoritoDto[];
   onPressEvent?: (id: number) => void;
 }) {
   const router = useRouter();
-  if (events.length === 0) {
-    return null;
-  }
 
   return (
-    <ScrollView style={styles.content}>
+    <View style={styles.content}>
       <Texto bold className="text-[#90e0ef] tracking-wider mb-2">
         {title}
       </Texto>
@@ -47,7 +44,7 @@ export function EventList({
           }
         />
       ))}
-    </ScrollView>
+    </View>
   );
 }
 
