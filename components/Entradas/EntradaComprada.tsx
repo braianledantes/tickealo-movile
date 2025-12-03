@@ -37,37 +37,46 @@ export const EntradaComprada: React.FC<EntradaCompradaProps> = ({
           uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
         }}
         style={styles.image}
-        contentFit="cover"
+        resizeMode="cover"
       />
 
-      {/* Cuerpo izquierda */}
-      <LinearGradient
-        colors={["#0b1030", "#0f1a4a"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.leftGradient}
+      <View
+        style={{
+          flex: 1,
+          borderTopRightRadius: 30,
+          borderBottomRightRadius: 30,
+          overflow: "hidden",
+        }}
       >
-        <View style={styles.info}>
-          <Texto bold style={styles.eventName} numberOfLines={1}>
-            {evento.nombre}
-          </Texto>
+        <LinearGradient
+          colors={["#0b1030", "#0f1a4a"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.leftGradient}
+        >
+          <View style={styles.info}>
+            <Texto bold style={styles.eventName} numberOfLines={1}>
+              {evento.nombre}
+            </Texto>
 
-          <Texto style={styles.date}>
-            {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            })}
-          </Texto>
+            <Texto style={styles.date}>
+              {new Date(evento.inicioAt).toLocaleDateString("es-AR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })}
+            </Texto>
 
-          <Texto bold style={styles.label}>
-            ENTRADA
-          </Texto>
-          <Texto bold style={styles.tipo}>
-            {ticket.entrada.tipo}
-          </Texto>
-        </View>
-      </LinearGradient>
+            <Texto bold style={styles.label}>
+              ENTRADA
+            </Texto>
+            <Texto bold style={styles.tipo}>
+              {ticket.entrada.tipo}
+            </Texto>
+          </View>
+        </LinearGradient>
+      </View>
+      {/* Cuerpo izquierda */}
       {/* Cuerpo derecha */}
       <View style={styles.rightGradient}>
         <View style={styles.countBox}>
@@ -90,13 +99,9 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: "28%",
-    aspectRatio: 1 / 1.25,
-    borderTopLeftRadius: 26,
-    borderBottomLeftRadius: 26,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#0077B6",
+    width: 100,
+    height: "100%",
+    resizeMode: "cover",
   },
 
   /** ⬅️ Gradient izquierdo */
@@ -106,9 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#0077B6",
   },
 
   /** ➡️ Gradient derecho */
@@ -119,9 +121,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 25,
     backgroundColor: "#0b1030",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#0077B6",
   },
 
   info: {

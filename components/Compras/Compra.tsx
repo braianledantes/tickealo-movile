@@ -117,12 +117,8 @@ export const Compra: React.FC<EntradaCompradaProps> = ({
             source={{
               uri: evento.portadaUrl || "https://via.placeholder.com/140x160",
             }}
-            style={{
-              width: 100,
-              height: 120,
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-            }}
+            style={styles.responsiveImage}
+            resizeMode="cover"
           />
 
           {/* Wrapper para evitar bugs de iOS */}
@@ -210,5 +206,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 15,
+  },
+  responsiveImage: {
+    width: 100,
+    height: "100%",
+    resizeMode: "cover",
   },
 });
