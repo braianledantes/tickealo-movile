@@ -18,6 +18,7 @@ export interface EventoDto {
   esFavorito: boolean;
   tieneRecordatorio: boolean;
   comentarios?: ComentarioDto[];
+  cancelado: boolean;
 }
 
 export interface CuentaBancariaDto {

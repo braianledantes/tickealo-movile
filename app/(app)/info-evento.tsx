@@ -130,7 +130,7 @@ export default function InfoEvento() {
 
         <EntradaList evento={evento} />
 
-        <EventTimer fechaFin={evento.inicioAt} />
+        {!!!evento.cancelado && <EventTimer fechaFin={evento.inicioAt} />}
 
         <Estadisticas estadisticas={estadisticas} />
 

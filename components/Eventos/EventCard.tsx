@@ -11,6 +11,7 @@ type Props = {
   location: string;
   onPress: () => void;
   agotado?: boolean;
+  cancelado?: boolean;
 };
 
 export function EventCard({
@@ -20,6 +21,7 @@ export function EventCard({
   location,
   agotado,
   onPress,
+  cancelado,
 }: Props) {
   return (
     <TouchableOpacity
@@ -35,6 +37,13 @@ export function EventCard({
           <View style={styles.agotadoBadge}>
             <Texto bold className="text-white text-xs tracking-widest">
               AGOTADO
+            </Texto>
+          </View>
+        )}
+        {cancelado && (
+          <View style={styles.canceladoBadge}>
+            <Texto bold className="text-white text-xs tracking-widest">
+              CANCELADO
             </Texto>
           </View>
         )}
@@ -69,10 +78,6 @@ export function EventCard({
             </Texto>
           </View>
         )}
-
-        <Texto bold className="text-[#ffffff]">
-          Ver mas +
-        </Texto>
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -98,6 +103,24 @@ const styles = StyleSheet.create({
     top: 12,
     left: -25,
     backgroundColor: "red",
+    paddingVertical: 4,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 12,
+    transform: [{ rotate: "-45deg" }],
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 20,
+    pointerEvents: "none",
+  },
+
+  canceladoBadge: {
+    position: "absolute",
+    top: 18,
+    left: -25,
+    backgroundColor: "#111827",
     paddingVertical: 4,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 12,

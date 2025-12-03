@@ -158,7 +158,6 @@ export default function Index() {
     }
     // eslint-disable-next-line
   }, [noHayEventos, noHayEventosProvincia]);
-
   return (
     <SafeAreaView
       className="flex-1 bg-[#05081b]"

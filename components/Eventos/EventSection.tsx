@@ -44,6 +44,7 @@ export function EventSection({ title, color, eventos }: Props) {
           })}
           location={`${evento.lugar?.direccion || ""}, ${evento.lugar?.provincia || ""}`}
           agotado={evento.stockEntradas <= 0}
+          cancelado={!!evento.cancelado}
           onPress={() =>
             router.push({
               pathname: "/info-evento",

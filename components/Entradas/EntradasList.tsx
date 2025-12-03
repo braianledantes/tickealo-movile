@@ -21,7 +21,11 @@ export const EntradaList: React.FC<EntradaCardProps> = ({ evento }) => {
               fechaFin={evento.finAt}
               tipo={entrada.tipo}
               precio={entrada.precio}
-              disabled={evento.stockEntradas === 0 || entrada.stock === 0}
+              disabled={
+                evento.stockEntradas === 0 ||
+                entrada.stock === 0 ||
+                !!evento.cancelado
+              }
               onPress={() =>
                 router.push({
                   pathname: "/(app)/compra/InicioCompra",

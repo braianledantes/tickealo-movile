@@ -16,7 +16,6 @@ export function EventList({
   onPressEvent?: (id: number) => void;
 }) {
   const router = useRouter();
-
   return (
     <View style={styles.content}>
       <Texto bold className="text-[#90e0ef] tracking-wider mb-2">
@@ -34,6 +33,7 @@ export function EventList({
           })}
           location={`${event.lugar?.direccion ?? ""} ${event.lugar?.provincia ?? ""}`}
           agotado={event.stockEntradas <= 0}
+          cancelado={!!event.cancelado}
           onPress={() =>
             onPressEvent
               ? onPressEvent(event.id)
