@@ -32,7 +32,7 @@ export const FilterButton: React.FC<FiltrosProps> = ({
         <TouchableOpacity
           key={f.key}
           onPress={() => setFiltroActivo(f.key)}
-          className={`mr-2 px-4 rounded-xl border items-center justify-center 
+          className={`mr-2 px-4 rounded-3xl border items-center justify-center 
             ${
               filtroActivo === f.key
                 ? "bg-[#1E90FF] border-[#1E90FF]"
