@@ -54,7 +54,10 @@ export default function InfoEventoValidador() {
       : defaultEvent;
   return (
     <View className="flex-1 bg-[#05081b]">
-      <ScrollView className="flex flex-1 pb-20">
+      <ScrollView
+        className="flex flex-1"
+        contentContainerStyle={{ paddingBottom: 150 }}
+      >
         {/* Imagen portada */}
         <Image
           source={banner}

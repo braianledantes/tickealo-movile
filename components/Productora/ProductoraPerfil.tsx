@@ -55,7 +55,9 @@ export function ProductoraPerfil({
             }`}
             style={{
               borderRadius: 9999,
-              width: isSelected ? MAX_WIDTH : COLLAPSED_WIDTH,
+              ...(isSelected
+                ? { paddingRight: 12, paddingLeft: 12 }
+                : { width: COLLAPSED_WIDTH }),
               transitionDuration: "200ms",
             }}
           >
