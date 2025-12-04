@@ -1,9 +1,9 @@
 import {
-  deleteComentario,
-  getComentario,
-  getComentarios,
-  patchComentario,
-  postComentario,
+    deleteComentario,
+    getComentario,
+    getComentarios,
+    patchComentario,
+    postComentario,
 } from "@/api/comentarios";
 import { ComentarioDto } from "@/api/dto/comentario.dto";
 import React, { createContext, useState } from "react";
@@ -61,7 +61,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await getComentarios(eventoId);
       setComentarios(response || []);
     } catch (err: any) {
-      console.log("Error obteniendo comentarios del evento:", err);
+      console.error("Error obteniendo comentarios del evento:", err);
       setError("No se pudieron obtener los comentarios del evento.");
       setComentarios([]);
     } finally {
@@ -80,7 +80,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
       if (response) setComentarios((prev) => [response, ...prev]);
       return response;
     } catch (err: any) {
-      console.log("Error subiendo un nuevo comentario:", err);
+      console.error("Error subiendo un nuevo comentario:", err);
       setError("No se pudo subir el comentario.");
       return undefined;
     } finally {
@@ -103,7 +103,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
       }
       return response;
     } catch (err: any) {
-      console.log("Error editando comentario:", err);
+      console.error("Error editando comentario:", err);
       setError("No se pudo editar el comentario.");
       return undefined;
     } finally {
@@ -119,7 +119,7 @@ export const ComentariosProvider: React.FC<{ children: React.ReactNode }> = ({
       setComentarios((prev) => prev.filter((c) => c.id !== comentarioId));
       return true;
     } catch (err: any) {
-      console.log("Error eliminando comentario:", err);
+      console.error("Error eliminando comentario:", err);
       setError("No se pudo eliminar el comentario.");
       return false;
     } finally {

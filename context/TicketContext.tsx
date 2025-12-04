@@ -78,7 +78,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
       setUsados(filteredTickets ?? []);
       return response;
     } catch (err) {
-      console.log("Error obteniendo lista de tickets usados:", err);
+      console.error("Error obteniendo lista de tickets usados:", err);
       setError("Error obteniendo listado de tickets usados.");
     } finally {
       setLoadingUsados(false);
@@ -100,7 +100,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
       setPorUsar(filteredTickets ?? []);
       return response;
     } catch (err) {
-      console.log("Error obteniendo lista de tickets por usar:", err);
+      console.error("Error obteniendo lista de tickets por usar:", err);
       setError("Error obteniendo listado de tickets por usar.");
     } finally {
       setLoadingPorUsar(false);
@@ -118,7 +118,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
       setTickets(ticketsArray);
       return response;
     } catch (err) {
-      console.log("Error obteniendo lista de tickets por usar:", err);
+      console.error("Error obteniendo lista de tickets por usar:", err);
       setError("Error obteniendo listado de tickets por usar.");
     } finally {
       setLoadingTickets(false);
@@ -138,7 +138,7 @@ export const TicketProvider: React.FC<{ children: React.ReactNode }> = ({
       setClientes(filteredClientes ?? []);
       return response;
     } catch (err) {
-      console.log("Error obteniendo lista de clientes:", err);
+      console.error("Error obteniendo lista de clientes:", err);
       setError("Error obteniendo listado de clientes.");
     } finally {
       setLoadingClientes(false);

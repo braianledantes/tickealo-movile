@@ -23,7 +23,7 @@ export function ReminderButton({ evento }: Props) {
 
   const handleErrorToast = (error: string | null) => {
     if (error) showToast("error", "Error", error);
-    console.log(error);
+    console.error(error);
   };
 
   const toggleReminder = async () => {

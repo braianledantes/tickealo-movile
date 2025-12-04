@@ -85,7 +85,7 @@ export default function Index() {
         fetchSeguidos(),
       ]);
     } catch (err) {
-      console.log("Error refrescando:", err);
+      console.error("Error refrescando:", err);
     } finally {
       setRefreshing(false);
     }
@@ -128,7 +128,7 @@ export default function Index() {
           fetchSeguidos(),
         ]);
       } catch (err) {
-        //console.log("Error obteniendo los eventos:", err);
+        //console.error("Error obteniendo los eventos:", err);
         showToast("error", "Error", "Error obteniendo eventos");
       }
     };

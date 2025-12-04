@@ -88,7 +88,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             const updated = await currentUser();
             setUser(updated);
           } catch (err) {
-            console.log("Error al refrescar usuario:", err);
+            console.error("Error al refrescar usuario:", err);
           }
         },
         accessToken,

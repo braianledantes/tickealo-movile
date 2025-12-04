@@ -19,7 +19,7 @@ export default function TransferirTicket() {
       try {
         await listaClientes();
       } catch (err) {
-        console.log("Error obteniendo lista de clientes:", err);
+        console.error("Error obteniendo lista de clientes:", err);
         showToast("error", "Error", "Error obteniendo lista clientes");
       }
     };
