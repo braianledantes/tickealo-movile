@@ -28,8 +28,13 @@
       "permissions": [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_FINE_LOCATION",
-        "CAMERA"
-      ]
+        "CAMERA",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION"
+      ],
+      "package": "com.tickealo.tickealo"
     },
     "web": {
       "output": "static",
@@ -64,6 +69,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4874f2ee-ad48-4cc8-8e84-060a24d3ee6f"
+      }
+    },
+    "owner": "braianledantesfacu"
   }
 }
